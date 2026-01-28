@@ -56,6 +56,7 @@ def main():
         print("6. List all scenarios/events")
         print("7. Delete a scenario/event by index")
         print("8. Update a scenario/event by index")
+        print("9. Predict next event from recent events")
         print("0. Exit")
         choice = input("Select option: ").strip()
         if choice == '1':
@@ -112,6 +113,24 @@ def main():
                     print(f"No scenario/event at index {idx}.")
             else:
                 print("Invalid index.")
+        elif choice == '9':
+            print("Enter recent events (most recent last). Leave event_type blank to finish.")
+            recent_events = []
+            while True:
+                event_type = input("  event_type: ").strip()
+                if not event_type:
+                    break
+                event = {
+                    'event_type': event_type,
+                    'sensor_id': input("  sensor_id: ").strip(),
+                    'value': input("  value: ").strip()
+                }
+                recent_events.append(event)
+            prediction = ai_module.predict_next_event(recent_events)
+            if prediction:
+                print(f"Predicted next event: {prediction}")
+            else:
+                print("No prediction could be made from recent events.")
         elif choice == '0':
             print("Exiting.")
             break

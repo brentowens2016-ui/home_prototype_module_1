@@ -18,6 +18,42 @@ import json
 from typing import List, Dict, Any
 
 class PredictiveAIModule:
+    def predict_next_event(self, recent_events: list) -> dict:
+        """
+        Given a list of recent events, try to match against known chains and predict the next likely event.
+        Returns the predicted next event dict, or None if no match found.
+        """
+        # Only consider scenarios that are chains (have 'events' list)
+        best_match = None
+        best_match_length = 0
+        for scenario in self.scenarios:
+            chain = scenario.get('events')
+            if not chain or len(chain) < 2:
+                continue
+            # Try to match as much of the chain as possible to the end of recent_events
+            for i in range(len(chain) - 1):
+                # Compare chain[i:i+N] to recent_events[-N:]
+                N = len(recent_events)
+                if N == 0 or i + N > len(chain):
+                    continue
+                match = True
+                for j in range(N):
+                    # Compare event_type and sensor_id (can expand as needed)
+                    if (
+                        chain[i + j].get('event_type') != recent_events[j].get('event_type') or
+                        chain[i + j].get('sensor_id') != recent_events[j].get('sensor_id') or
+                        chain[i + j].get('value') != recent_events[j].get('value')
+                    ):
+                        match = False
+                        break
+                if match and N > best_match_length:
+                    best_match = chain[i + N] if (i + N) < len(chain) else None
+                    best_match_length = N
+        if best_match:
+            self.diagnostics.append(f"Predicted next event: {best_match}")
+        else:
+            self.diagnostics.append("No prediction could be made from recent events.")
+        return best_match
 
     def __init__(self):
         self.event_log: List[Dict[str, Any]] = []
