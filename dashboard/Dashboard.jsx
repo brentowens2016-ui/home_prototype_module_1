@@ -28,13 +28,17 @@
 // ---
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+
 import MappingEditor from "./MappingEditor";
 import DeviceAlerts from "./DeviceAlerts";
+
+import EmergencyContactsEditor from "./EmergencyContactsEditor";
+import SupportTickets from "./SupportTickets";
+import AuthPanel from "./AuthPanel";
 
 function BulbControl({ name, bulb, onChange }) {
   const [brightness, setBrightness] = useState(bulb.brightness);
   const [color, setColor] = useState(bulb.color);
-
   const handleOn = () => axios.post(`/bulbs/${name}/on`).then(() => onChange());
   const handleOff = () => axios.post(`/bulbs/${name}/off`).then(() => onChange());
   const handleBrightness = (e) => {
@@ -47,7 +51,6 @@ function BulbControl({ name, bulb, onChange }) {
     setColor(rgb);
     axios.post(`/bulbs/${name}/color`, null, { params: { r: rgb[0], g: rgb[1], b: rgb[2] } }).then(() => onChange());
   };
-
   return (
     <div style={{ border: "1px solid #ccc", margin: 8, padding: 8 }}>
       <h3>{name}</h3>
@@ -65,15 +68,45 @@ function BulbControl({ name, bulb, onChange }) {
   );
 }
 
+import AuthPanel from "./AuthPanel";
+
 export default function Dashboard() {
   const [bulbs, setBulbs] = useState({});
+  const [user, setUser] = useState(null); // { username, role, ... }
+  const [showDownload, setShowDownload] = useState(false);
   const fetchBulbs = () => axios.get("/bulbs").then((res) => setBulbs(res.data));
-  useEffect(() => { fetchBulbs(); }, []);
+  useEffect(() => { if (user) fetchBulbs(); }, [user]);
+
+  if (!user) {
+    return <AuthPanel onAuth={setUser} onShowDownload={() => setShowDownload(true)} />;
+  }
+
+  if (showDownload) {
+    return (
+      <div style={{ padding: 32 }}>
+        <h2>Download Local Agent</h2>
+        <p>Download the latest version of the local agent for your platform:</p>
+        <ul>
+          <li><a href="/downloads/agent-win.exe">Windows</a></li>
+          <li><a href="/downloads/agent-linux.tar.gz">Linux</a></li>
+          <li><a href="/downloads/agent-mac.dmg">macOS</a></li>
+        </ul>
+        <button onClick={() => setShowDownload(false)}>Back to Dashboard</button>
+      </div>
+    );
+  }
+
   return (
     <div>
       <h1>Smart Bulb Dashboard</h1>
+      <div style={{ marginBottom: 16 }}>
+        <span>Logged in as: {user.username} ({user.role})</span>
+        <button style={{ marginLeft: 16 }} onClick={() => setUser(null)}>Log Out</button>
+      </div>
       <DeviceAlerts />
       <MappingEditor />
+      <EmergencyContactsEditor userRole={user.role} />
+      <SupportTickets />
       {Object.entries(bulbs).map(([name, bulb]) => (
         <BulbControl key={name} name={name} bulb={bulb} onChange={fetchBulbs} />
       ))}

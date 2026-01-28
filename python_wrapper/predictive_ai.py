@@ -14,8 +14,13 @@ Usage:
 This module will grow as we teach and refine its logic together.
 """
 
+
 import json
 from typing import List, Dict, Any
+try:
+    from voip_module import VOIP_AVAILABLE, place_call
+except ImportError:
+    VOIP_AVAILABLE = False
 
 class PredictiveAIModule:
         def suggest_normal_state_and_chain(self, device_info: dict) -> dict:
@@ -95,10 +100,21 @@ class PredictiveAIModule:
         self.scenarios: List[Dict[str, Any]] = []
         self.diagnostics: List[str] = []
 
+
     def handle_event(self, event: Dict[str, Any]):
         """Process a new event (device, sensor, user, etc.)"""
         self.event_log.append(event)
-        # TODO: Add AI logic here (pattern detection, prediction, etc.)
+        # Emergency call-out logic
+        if event.get("event_type") == "call_out" and VOIP_AVAILABLE:
+            message = event.get("message") or "Emergency detected. Please respond."
+            escalation_level = event.get("escalation_level", 0)
+            try:
+                from voip_module import escalate_call_out
+                result = escalate_call_out(message, escalation_level)
+                self.diagnostics.append(f"Call-out escalation level {escalation_level}, success={result}")
+            except Exception as e:
+                self.diagnostics.append(f"Call-out escalation failed: {e}")
+        # ...existing code...
         self.diagnostics.append(f"Event received: {event}")
 
     def add_scenario(self, scenario: Dict[str, Any]):

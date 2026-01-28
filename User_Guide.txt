@@ -1,0 +1,153 @@
+Home Prototype Module 1 – User’s Guide
+
+Table of Contents
+1. Introduction
+2. System Requirements
+3. Download & Installation
+4. Initial Setup & Configuration
+5. Device Onboarding & Integration
+6. AI Training Templates & Usage
+7. Dashboard & Controls
+8. Automation & Rules
+9. Backup, Restore, and Updates
+10. Troubleshooting & Support
+11. Recommended Devices
+12. Glossary
+13. Reference Guide (Topic Index)
+
+---
+
+1. Introduction
+Welcome to Home Prototype Module 1! This guide will walk you through installing, configuring, and using your smart home platform, including device onboarding, AI training, and automation.
+
+2. System Requirements
+- Windows 10/11, macOS, or Linux
+- Python 3.9+
+- Node.js 16+
+- Rust toolchain (for advanced users)
+- Internet connection (for updates and remote features)
+
+3. Download & Installation
+A. Download
+- Visit the project’s GitHub or official website.
+- Download the latest release ZIP or clone the repository.
+
+B. Extract & Prepare
+- Extract the ZIP to your desired folder (e.g., C:\HomePrototype).
+- Open a terminal or command prompt in this folder.
+
+C. Python Environment
+- (Recommended) Create a virtual environment:
+  python -m venv venv
+  venv\Scripts\activate (Windows) or source venv/bin/activate (macOS/Linux)
+- Install Python dependencies:
+  pip install -r python_wrapper/requirements.txt
+
+D. Rust Device Logic (optional, for advanced users)
+- Install Rust: https://rustup.rs/
+- Build Rust extension:
+  cd rust_smart_bulbs
+  maturin develop --release
+
+E. Dashboard (React UI)
+- cd dashboard
+- npm install
+- npm run dev
+
+F. Start the API
+- cd python_wrapper
+- uvicorn api:app --reload
+
+4. Initial Setup & Configuration
+- Access the dashboard at http://localhost:5173
+- Log in or create an admin user (if prompted)
+- Configure your home layout and device mapping via the dashboard or by editing python_wrapper/device_mapping.json
+- Validate mapping using the dashboard or API
+
+5. Device Onboarding & Integration
+A. Supported Devices
+- Zigbee (via Zigbee2MQTT or compatible hub)
+- Kasa (TP-Link)
+- Home Assistant-compatible devices
+
+B. Adding Devices
+- Use the dashboard’s device onboarding wizard
+- For Zigbee: Pair devices using your Zigbee hub, then scan in the dashboard
+- For Kasa: Ensure devices are on the same network, then scan/add in dashboard
+- For Home Assistant: Use the integration menu to link your Home Assistant instance
+
+C. Device Mapping
+- Assign names, locations, and types to each device
+- Use Alexa-style names (e.g., “Living Room 1”)
+
+6. AI Training Templates & Usage
+A. Creating Scenarios
+- Use provided templates in python_wrapper/automation_templates.json
+- Example template:
+  {
+    "name": "Night Light",
+    "trigger": "motion_detected",
+    "action": "turn_on",
+    "device": "Hallway Light"
+  }
+- Edit or create new templates for custom automations
+
+B. Training the AI
+- Use the dashboard’s AI training section
+- Upload or edit scenario templates
+- Test automations in the dashboard
+
+7. Dashboard & Controls
+- Control devices, view status, and manage automations from the dashboard
+- Access analytics, system health, and event history
+- Use the mapping and automation editors for advanced configuration
+
+8. Automation & Rules
+- Create, edit, and delete automation rules in the dashboard
+- Use templates or build custom rules
+- Validate and test automations before enabling
+
+9. Backup, Restore, and Updates
+- Use the dashboard or API endpoints to create/restore backups
+- Upload OTA updates via the dashboard or /ota API
+- Regularly back up your configuration and device mapping
+
+10. Troubleshooting & Support
+- Check the dashboard’s diagnostics section for errors
+- Use the /diagnostics API for logs and health checks
+- For support, see the support section in the dashboard or contact the project maintainers
+
+11. Recommended Devices
+A. Zigbee
+- Philips Hue bulbs
+- IKEA TRÅDFRI
+- Aqara sensors
+- Sonoff Zigbee switches
+
+B. Kasa (TP-Link)
+- Kasa Smart Plugs (HS100/HS110/HS103)
+- Kasa Smart Switches
+- Kasa Smart Bulbs
+
+C. Home Assistant Compatible
+- See https://www.home-assistant.io/integrations/
+- Most Z-Wave, Zigbee, and Wi-Fi devices supported by Home Assistant
+
+12. Glossary
+- Automation: A rule or scenario that triggers device actions
+- Device Mapping: Assigning names, types, and locations to devices
+- OTA: Over-the-air update
+- Scenario: A set of triggers and actions for automation
+- Zigbee: A wireless protocol for smart home devices
+
+13. Reference Guide (Topic Index)
+- Installation: Section 3
+- Device Onboarding: Section 5
+- AI Training: Section 6
+- Automation: Section 8
+- Backup/Restore: Section 9
+- Troubleshooting: Section 10
+- Recommended Devices: Section 11
+- Glossary: Section 12
+
+For more details, see the README.md and API documentation at http://localhost:8000/docs (when running).

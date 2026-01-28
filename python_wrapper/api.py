@@ -41,6 +41,7 @@ FastAPI REST API for Smart Home Devices
 
 
 
+
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
@@ -49,8 +50,44 @@ from python_wrapper.lib import PySmartBulb
 from python_wrapper.mapping_api import get_mapping, set_mapping
 from python_wrapper.mapping_loader import validate_mapping_object
 
+from python_wrapper.contacts_api import router as contacts_router
 
-app = FastAPI()
+from python_wrapper.support_api import router as support_router
+
+from python_wrapper.users_api import router as users_router
+
+from python_wrapper.backup_api import router as backup_router
+
+from python_wrapper.notify_api import router as notify_router
+
+from python_wrapper.diagnostics_api import router as diagnostics_router
+
+from python_wrapper.automation_api import router as automation_router
+
+from python_wrapper.tts_api import router as tts_router
+from python_wrapper.ota_api import router as ota_router
+from python_wrapper.analytics_api import router as analytics_router
+
+
+
+
+app = FastAPI(
+    title="Home Prototype Module 1 API",
+    description="Comprehensive API for smart home, security, automation, and support features.",
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
+app.include_router(contacts_router)
+app.include_router(support_router)
+app.include_router(users_router)
+app.include_router(backup_router)
+app.include_router(notify_router)
+app.include_router(diagnostics_router)
+app.include_router(automation_router)
+app.include_router(tts_router)
+app.include_router(ota_router)
+app.include_router(analytics_router)
 @app.get("/mapping")
 def get_device_mapping():
     return get_mapping()

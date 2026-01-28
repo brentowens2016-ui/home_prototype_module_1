@@ -9,6 +9,11 @@
 //!
 //! This module defines the core device types and status enums for cross-language communication.
 //!
+//! # Contract Compliance
+//! - All device types/statuses must be mirrored in Python and Rust.
+//! - Annotate new features and document for FFI/API consumers.
+//! - Predictive AI module (python_wrapper/predictive_ai.py) uses these contracts for event/scenario typing and onboarding suggestions.
+//!
 //! ## Purpose
 //! - Provides a canonical set of device types and statuses for all smart home modules.
 //! - Ensures type-safe, versioned communication between Rust and Python layers.

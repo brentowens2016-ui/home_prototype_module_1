@@ -1,0 +1,64 @@
+"""
+automation_templates.json: Pre-built automation/scenario templates
+
+Each template includes:
+- label: Human-readable name
+- description: What the automation does
+- events: List of event dicts (as in scenario input)
+- triggers: List of trigger conditions (optional)
+
+Example:
+[
+  {
+    "label": "Night Mode",
+    "description": "Turn off all lights and arm security at 11pm.",
+    "events": [
+      {"event_type": "device_control", "device": "all_lights", "action": "off"},
+      {"event_type": "system_mode_change", "mode": "Night"},
+      {"event_type": "device_control", "device": "security_system", "action": "arm_home"}
+    ],
+    "triggers": [
+      {"type": "time", "value": "23:00"}
+    ]
+  },
+  {
+    "label": "Vacation Mode",
+    "description": "Simulate occupancy and arm system when away for extended period.",
+    "events": [
+      {"event_type": "system_mode_change", "mode": "Vacation"},
+      {"event_type": "device_control", "device": "all_lights", "action": "random_on_off"},
+      {"event_type": "device_control", "device": "security_system", "action": "arm_away"}
+    ],
+    "triggers": [
+      {"type": "manual"}
+    ]
+  }
+]
+"""
+
+[
+  {
+    "label": "Night Mode",
+    "description": "Turn off all lights and arm security at 11pm.",
+    "events": [
+      {"event_type": "device_control", "device": "all_lights", "action": "off"},
+      {"event_type": "system_mode_change", "mode": "Night"},
+      {"event_type": "device_control", "device": "security_system", "action": "arm_home"}
+    ],
+    "triggers": [
+      {"type": "time", "value": "23:00"}
+    ]
+  },
+  {
+    "label": "Vacation Mode",
+    "description": "Simulate occupancy and arm system when away for extended period.",
+    "events": [
+      {"event_type": "system_mode_change", "mode": "Vacation"},
+      {"event_type": "device_control", "device": "all_lights", "action": "random_on_off"},
+      {"event_type": "device_control", "device": "security_system", "action": "arm_away"}
+    ],
+    "triggers": [
+      {"type": "manual"}
+    ]
+  }
+]

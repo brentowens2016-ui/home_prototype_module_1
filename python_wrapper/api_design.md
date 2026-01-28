@@ -80,6 +80,67 @@ Each mapping entry must include:
 - `y` (number, optional): Y coordinate for spatial placement
 
 All IDs must be unique. All required fields must be present. See [mapping_loader.py](../python_wrapper/mapping_loader.py) for schema and validation logic.
+# Analytics & Reporting API
+
+## Endpoints
+
+### GET /analytics/events
+Returns event history. Supports filtering by start/end datetime and device name.
+
+**Query Parameters:**
+- `start` (datetime, optional): Start of time range
+- `end` (datetime, optional): End of time range
+- `device` (string, optional): Device name
+
+**Response Example:**
+```
+[
+	{
+		"timestamp": "2026-01-28T12:34:56",
+		"device": "Living Room 1",
+		"event": "on",
+		"details": { ... }
+	},
+	...
+]
+```
+
+### GET /analytics/device-usage
+Returns device usage statistics (e.g., on/off cycles, energy usage, etc.).
+
+**Response Example:**
+```
+[
+	{
+		"device": "Living Room 1",
+		"on_cycles": 42,
+		"energy_kwh": 12.5
+	},
+	...
+]
+```
+
+### GET /analytics/system-health
+Returns system health trends (e.g., uptime, error rates, resource usage).
+
+**Response Example:**
+```
+[
+	{
+		"timestamp": "2026-01-28T12:00:00",
+		"cpu_percent": 18.2,
+		"mem_percent": 42.7,
+		"errors": 0
+	},
+	...
+]
+```
+
+## Contract
+- Event history, device usage, and system health are stored as JSON arrays (see event_history.json, device_usage.json, system_health.json).
+- All endpoints return JSON arrays.
+- Designed for easy expansion to new analytics types and metrics.
+
 # REST API design for Smart Home Devices
 
 ## Endpoints

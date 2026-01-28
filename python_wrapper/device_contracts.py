@@ -1,3 +1,4 @@
+
 """
 Device contracts and type definitions for Python <-> Rust interop
 
@@ -13,18 +14,20 @@ This module defines the canonical device types and statuses for all smart home m
 # Purpose:
 # - Ensures type-safe, versioned communication between Python and Rust layers.
 # - Must be kept in sync with `rust_smart_bulbs/device_contracts.rs`.
+# - **Contract compliance:** All device types/statuses must be mirrored in Rust and Python. Annotate new features and document for FFI/API consumers.
+# - **AI integration:** Predictive AI module ([predictive_ai.py]) uses these contracts for event/scenario typing and onboarding suggestions.
 #
 # Service Type:
 # - Shared contract (not a service)
 # - Used by both device logic (Rust) and orchestration/API (Python)
 #
 # Linked Dependencies:
-# - Used by: api.py (API), lib.py (FFI), Rust contracts
+# - Used by: api.py (API), lib.py (FFI), Rust contracts, predictive_ai.py (AI)
 # - No external dependencies
 #
 # Update Guidance:
 # - When adding new device types or statuses, update both Python and Rust contracts.
-# - Document all changes for FFI and API consumers.
+# - Document all changes for FFI, API, and AI consumers.
 """
 from enum import Enum
 

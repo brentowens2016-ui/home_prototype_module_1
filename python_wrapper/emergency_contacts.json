@@ -1,0 +1,36 @@
+"""
+emergency_contacts.json: Contact list for call-out/escalation protocols
+
+Structure:
+- emergency_services: main emergency number (e.g., 911)
+- contacts: list of up to 7 optional emergency contacts
+
+Example:
+{
+  "emergency_services": {
+    "name": "911",
+    "phone": "911"
+  },
+  "contacts": [
+    {"name": "Alice Smith", "phone": "+15551234567"},
+    {"name": "Bob Jones", "phone": "+15557654321"}
+    // up to 7 contacts
+  ]
+}
+"""
+
+{
+  "emergency_services": {
+    "name": "911",
+    "phone": "911"
+  },
+  "contacts": [
+    {"name": "Contact 1", "phone": ""},
+    {"name": "Contact 2", "phone": ""},
+    {"name": "Contact 3", "phone": ""},
+    {"name": "Contact 4", "phone": ""},
+    {"name": "Contact 5", "phone": ""},
+    {"name": "Contact 6", "phone": ""},
+    {"name": "Contact 7", "phone": ""}
+  ]
+}
