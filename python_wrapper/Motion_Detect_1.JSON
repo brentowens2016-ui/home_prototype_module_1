@@ -1,0 +1,13 @@
+{ 
+
+  "event_type": "motion monitor", 
+
+  "sensor": "motion detector 1", 
+
+  "location": "Front hallway", 
+
+  "state": "closed", 
+
+  "timestamp": 1769600002
+
+} 

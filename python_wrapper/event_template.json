@@ -1,0 +1,33 @@
+# Event/Scenario Input Template for Predictive AI Module
+#
+# Fill in the fields below for each event or scenario you want to teach the AI.
+# Save as a .json file or copy into the scenario input script when prompted.
+
+{
+  "event_type": "sensor_trigger",        # e.g., "sensor_trigger", "user_action", "system_mode_change"
+  "label": "Open_Front_Door",            # Human-readable label for the event/scenario
+  "sensor_type": "contact",              # e.g., "contact", "motion", "pressure", "switch"
+  "sensor_id": "front_door_contact",     # Unique ID or name for the sensor
+  "location": "Front Door",              # Physical or logical location
+  "value": "open",                       # State or value (e.g., "open", "closed", "on", "off", "broken")
+  "timestamp": 1769600000                 # Unix timestamp (optional, can be auto-filled)
+}
+
+# Example for a user action:
+# {
+#   "event_type": "user_action",
+#   "label": "User_Unlocks_Door",
+#   "action": "unlock",
+#   "target": "Front Door",
+#   "user_id": "user123",
+#   "timestamp": 1769600001
+# }
+
+# Example for a system mode change:
+# {
+#   "event_type": "system_mode_change",
+#   "label": "Set_Mode_Away",
+#   "mode": "Away",
+#   "trigger": "user",
+#   "timestamp": 1769600002
+# }

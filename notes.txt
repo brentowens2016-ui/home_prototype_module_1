@@ -1,3 +1,19 @@
+============================
+Future TODO: Voice Controls & Implementation
+============================
+
+1. Design a modular voice input handler (Python module or microservice).
+2. Research and select a speech-to-text (STT) engine (e.g., Vosk, Google Speech, Azure Speech, or similar).
+3. Prototype with text-based command simulation before integrating real voice input.
+4. Define trigger phrases and command formats for automation and emergency escalation.
+5. Integrate voice commands as events in the global event/trigger pipeline (same as dashboard/sensor triggers).
+6. Plan for context-aware commands (e.g., only allow certain actions in specific modes like "At Home" or "Away").
+7. Implement confirmation/feedback for critical actions (e.g., emergency call-outs).
+8. Support both local and cloud-based STT for flexibility and privacy.
+9. Add voice command diagnostics and logging for debugging and improvement.
+10. Iterate and tune voice accuracy and intent recognition after core automation/AI logic is stable.
+
+// Add more ideas or requirements as they arise!
 # notes.txt
 
 This file is for brainstorming, general ideas, and comments. Use it to jot down thoughts, plans, and potential ToDo items for future sessions.

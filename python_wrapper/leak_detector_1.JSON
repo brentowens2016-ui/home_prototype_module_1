@@ -1,0 +1,16 @@
+  
+{
+  "event_type": "sensor_trigger", 
+
+  "sensor_type": "contact", 
+
+  "sensor_id": "Leak_Detector_1", 
+
+  "location": "Kitchen_Sink", 
+
+  "value": "open",  # or "broken" 
+
+  "label": "Open_Kitchen_Sink", 
+  "timestamp": 1769600000 
+
+} 

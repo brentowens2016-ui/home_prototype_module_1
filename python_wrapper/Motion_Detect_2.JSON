@@ -1,0 +1,13 @@
+{ 
+
+  "event_type": "motion monitor", 
+
+  "sensor": "motion detector 2", 
+
+  "location": "Living Room", 
+
+  "state": "closed", 
+
+  "timestamp": 1769600002
+
+} 
