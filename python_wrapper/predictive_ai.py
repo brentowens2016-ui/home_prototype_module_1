@@ -18,6 +18,41 @@ import json
 from typing import List, Dict, Any
 
 class PredictiveAIModule:
+        def suggest_normal_state_and_chain(self, device_info: dict) -> dict:
+            """
+            Suggest the likely normal state and possible chain placement for a new device.
+            device_info: {"sensor_type": ..., "sensor_id": ..., "location": ..., ...}
+            Returns: {"suggested_normal_state": ..., "suggested_chains": [chain_ids]}
+            """
+            # Heuristic: suggest normal state based on sensor type
+            sensor_type = device_info.get("sensor_type", "").lower()
+            normal_state = None
+            if sensor_type in ("contact", "door", "window"):
+                normal_state = "closed"
+            elif sensor_type in ("motion", "pir"):
+                normal_state = "inactive"
+            elif sensor_type in ("pressure", "mat", "bed"):
+                normal_state = "open"  # Not pressed
+            elif sensor_type in ("leak", "water"):
+                normal_state = "dry"
+            elif sensor_type in ("switch",):
+                normal_state = "off"
+            # Search for chains where similar devices are present
+            suggested_chains = []
+            for scenario in self.scenarios:
+                chain = scenario.get('events')
+                if not chain:
+                    continue
+                for event in chain:
+                    if event.get('sensor_type') == sensor_type:
+                        suggested_chains.append(scenario.get('sequence_id', scenario.get('label', 'unknown_chain')))
+                        break
+            result = {
+                "suggested_normal_state": normal_state,
+                "suggested_chains": suggested_chains
+            }
+            self.diagnostics.append(f"Suggest for {device_info.get('sensor_id')}: {result}")
+            return result
     def predict_next_event(self, recent_events: list) -> dict:
         """
         Given a list of recent events, try to match against known chains and predict the next likely event.
