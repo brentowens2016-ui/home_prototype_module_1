@@ -1,11 +1,9 @@
-# Dockerfile for Rust smart bulbs
-FROM rust:latest as builder
-WORKDIR /app
+FROM python:3.11-slim
+WORKDIR /app/python_wrapper
+COPY requirements.txt .
 COPY . .
-ENV PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1
-RUN cargo build --release
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+CMD ["python", "-m", "python_wrapper"]
 
-FROM debian:buster-slim
-WORKDIR /app
-COPY --from=builder /app/target/release/rust_smart_bulbs ./rust_smart_bulbs
-CMD ["./rust_smart_bulbs"]
+
