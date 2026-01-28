@@ -31,10 +31,8 @@ import axios from "axios";
 
 import MappingEditor from "./MappingEditor";
 import DeviceAlerts from "./DeviceAlerts";
-
-import EmergencyContactsEditor from "./EmergencyContactsEditor";
 import SupportTickets from "./SupportTickets";
-
+import AuthPanel from "./AuthPanel";
 
 function BulbControl({ name, bulb, onChange }) {
   const [brightness, setBrightness] = useState(bulb.brightness);
