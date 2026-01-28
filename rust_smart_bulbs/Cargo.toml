@@ -1,0 +1,27 @@
+[package.metadata]
+#
+# Rust Smart Bulbs Crate
+#
+# Purpose:
+# - Provides device logic for smart home system, exposed to Python via FFI (PyO3/maturin)
+# - Used by: python_wrapper (FFI), dashboard (indirectly via API)
+#
+# Structure:
+# - src/main.rs: Device logic
+# - src/device_contracts.rs: Shared contracts
+# - src/lib.rs: FFI bindings
+#
+# Update Guidance:
+# - When adding new device types, update both Rust and Python contracts and FFI bindings
+# - Ensure crate-type = ["cdylib"] for Python extension
+#
+[package]
+name = "rust_smart_bulbs"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.21", features = ["extension-module"] }

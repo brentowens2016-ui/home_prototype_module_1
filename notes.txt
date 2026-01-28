@@ -1,0 +1,182 @@
+# notes.txt
+
+This file is for brainstorming, general ideas, and comments. Use it to jot down thoughts, plans, and potential ToDo items for future sessions.
+
+---
+
+(Write below this line)
+
+---
+
+Brainstorming: Pressure Sensors & Integration
+
+- Exploring pressure sensors for beds, chairs, and position detection throughout the household.
+- Considering integration options:
+  - rppal (Raspberry Pi GPIO library)
+  - MQTT for messaging and device state updates
+  - Home Assistant integration for automation and dashboard control
+  - Zigbee pressure strips, Zigbee routers, Zigbee coordinators
+  - Establishing a Zigbee mesh network for sensors (connected in parallel)
+- Planning to monitor sensor states on the desktop/control dashboard.
+- Hardware not yet purchased; ideas may be prototyped in software ahead of hardware acquisition.
+- May require microprocessors/relays for pressure switches.
+- Will document further research and integration strategies here as ideas develop.
+
+---
+
+[2026-01-27]
+Connection & Testing Guide: Zigbee/Sensor Hardware
+
+1. Use USB Zigbee coordinators (CC2531, ConBee II, Sonoff Zigbee dongle) for plug-and-play connection to your computer.
+2. Run Zigbee coordinator software (zigpy, zigbee2mqtt, etc.) inside a Docker container or virtual machine for isolation and safety.
+3. Connect Zigbee routers and sensors to the mesh network via the coordinator; monitor/control them through the backend and dashboard.
+4. For safe packaging and removability:
+   - Use USB extension cables or powered hubs for easy access and quick removal.
+   - Document all hardware connections and software dependencies here for future reference.
+   - Unplug USB devices when not in use; stop Docker containers/VMs to disconnect software access.
+   - Avoid running as administrator/root unless required by hardware drivers.
+5. For testing:
+   - Start the Docker container/VM with Zigbee software.
+   - Plug in the coordinator and verify device detection.
+   - Pair Zigbee routers/sensors and confirm network formation.
+   - Use backend API and dashboard to monitor device status.
+
+Best practices:
+- Keep hardware removable and software isolated to minimize risk to your computer.
+- Always document changes and configurations in notes.txt.
+- Unplug and power down hardware when not actively testing.
+
+[End of guide]
+
+---
+
+[2026-01-27]
+Brainstorming: Zigbee Router Monitoring & Equipment
+
+- Goal: Monitor Zigbee routers and mesh network status in Dashboard.
+- Backend: Plan to use zigpy, bellows, or zigbee2mqtt for Zigbee communication in Python.
+- UI: Dashboard will have a ZigbeeRouters.jsx component to display router/network status.
+- REST API: Will expose router/sensor status via new endpoints in python_wrapper/api.py.
+
+Equipment suggestions:
+- Zigbee Coordinator: CC2531 USB dongle, ConBee II, or Sonoff Zigbee 3.0 USB Dongle Plus
+- Zigbee Routers: IKEA Tradfri repeater, Sonoff Zigbee plug, or any Zigbee-certified router device
+- Sensors: Aqara pressure strips, Tuya Zigbee pressure sensors
+- Raspberry Pi (for running coordinator software)
+
+Implementation will begin after hardware acquisition. All ideas and plans documented for future reference.
+
+---
+
+[2026-01-27]
+Zigbee Router Device Capacity
+
+- One Zigbee router can typically support 10–15 pressure strips (Zigbee end devices) within its signal range.
+- Zigbee mesh networks are designed to handle dozens of end devices per router, depending on hardware and firmware.
+- For best reliability, ensure all strips are within the router’s range and test for connectivity issues.
+- If dropped connections or delays occur, add a second router to improve network stability.
+- Regularly test and monitor network performance as more devices are added.
+
+---
+
+[2026-01-27]
+Zigbee Router Placement Suggestions
+
+- Place routers in central locations to maximize coverage (e.g., hallways, living rooms).
+- Avoid placing routers near large metal objects, microwaves, or Wi-Fi routers to reduce interference.
+- If possible, position routers on different floors to extend coverage vertically.
+- For large homes, place routers so that each sensor/strip is within range of at least one router or the coordinator.
+- Test signal strength and reliability after initial placement; move routers as needed to eliminate dead zones.
+- Consider outlets near pressure strips or areas with multiple sensors for convenient power and coverage.
+
+Best practice: Start with minimal routers, test, and add more only if needed.
+
+---
+
+[2026-01-27]
+Testing & Calibration Plan
+
+- Initial testing will use only a few pressure strips for individual calibration.
+- Each strip will be calibrated to respond to the system when its circuit is closed.
+- Expansion to more strips and sensors will be implemented as resources allow.
+- Calibration data and response logic will be documented for each strip to ensure reliable integration.
+- System will be designed for easy addition of new strips/sensors in the future.
+
+---
+
+[2026-01-27]
+Entryway Coverage Calculation & Router Placement
+
+- Entryway dimensions: 30 ft long x 8 ft wide
+- Pressure strips spaced every 2–3 ft (centered in pathway):
+  - 2 ft intervals: 15 strips
+  - 3 ft intervals: 10 strips
+- Strips can be placed at key transition points (e.g., near breakfast bar, kitchen/dining entry).
+
+Zigbee Router Placement:
+- Zigbee routers typically cover 10–20 meters (33–66 ft) indoors, but walls/interference may reduce range.
+- One router placed on the breakfast bar (25 ft from front door) should cover the entryway strips, assuming minimal obstructions.
+- If signal is weak or unreliable, add a second router midway down the entryway for redundancy.
+- Test signal strength after initial placement and adjust as needed.
+
+Best practice: Start with one router on the breakfast bar, expand only if coverage issues arise.
+
+---
+
+[2026-01-27]
+Project Scope & Modularity
+
+- This system is for beta testing various devices and configurations; it will not be permanently installed in the home.
+- All hardware and software components will be packaged for easy removal and future expansion.
+- The project is being built in modules to allow flexible upgrades and integration of new devices as needed.
+- Documentation and organization will support rapid deployment and reconfiguration for future phases.
+
+
+
+
+01/278/26 7:34PM    Notes:
+I am thinking that this project needs a mapping engine:
+reasoning:  placement and tracking of foot-falls, falls of people, needs to be pin-pointed.
+I think the engine config. should include incrimental room sized, overall home/apt/sizes incrimental sized, in set up of specific account.
+modular room placement, or the ability to design interior walls and barriers, walk-ways, living areas should be known to the dashboard
+display location of specific sensor's location, and track movement over sensors.
+
+idea:  refer to mapping engine of Irobot, the home sweeper?  Walls are moveable, then area lines can be drawn after the robot maps 
+floor plan.  But since no robot to do the mapping, then the abilty to size the room and place it in perspective position, as defined by 
+the user, at setup of the program in terminal.
+
+Engine should be able to be editable, within the dashboard, by the user.
+Logic behind this, is that people sometimes add rooms, add living spaces, some homes/apts, and other dwellings are multiple story
+homes, so  the ability to indicate and map additional floors, within the home, should be considered included in this engine.
+
+Flow of setup (Suggested):
+primary ground floor and optional other floors should be able to be selected by user.  Each floor of the home, should be sized and 
+drawn in the map, according to modular placement, within the map.
+
+Stairs and elevators should be optional additions, additions to show bathrooms, closets, and other room spaces should be considered.
+
+let user select number of floors, number of bathrooms, number of closets, number of regular rooms and master bedroom with master bathroom.
+
+let user use a questionaire, to select what elements should be populated in the map.  sizes should be individualized to each space and walking paths (hallways).
+then give user a slider, to indicate room size (range from 10 sq feet to  120 sq feet for homes under 1000 square feet total house living space, for smaller to medium sized homes)
+give user user a slider for a home that has a range of 1000 square feet to 2000 square feet of total living space.
+give user a slider for a home that is over 2000 square feet to 5000 square feet of total living space.
+
+Room modules should allow for the user to create each room space, closet spaces, and bathrooms, to scale with a maximum size of the total home 
+sqare footage declared in selection of home square footage.  each scale should not exceed 1/3rd of total living square footage.
+
+room dividers should be linear, lines that work on an axis that can rotate, to acccomodate straight line borders for each room, walk space,
+closet, bathrooms, pantries, wash rooms, service rooms, etc...
+
+User, during set-up will set up location (exact address, apartment/unit number (if applicable), city, state, and zip),
+User during set up will set up a phone number for the home/user, and all family members, friends, and emergency contacts, which will
+be notified if a safety issue (falls, intrusion, other personal issues) are detected by the system, via tty/voice/text messaging.
+User will have to set up local Emergency Services phone numbers, and preference to set up 911 contact if system esculates to an emergency.
+this should be done during setup.
+
+I am thinking that during set up, this mapping should be done, by the user.
+
+I am thinking that this mapping engine should be done using Python part of this program, which also should be the primary monitoring, using Rust for dynmaic
+services, maybe the call-out services. 
+
+The map engine, and the final display of home footprint, should be displayed on the dashboard, with user controls. placement is optional.

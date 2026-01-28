@@ -19,7 +19,6 @@ impl SmartBulb {
         self.is_on = true;
         println!("{} is now ON", self.name);
     }
-
     pub fn turn_off(&mut self) {
         self.is_on = false;
         println!("{} is now OFF", self.name);

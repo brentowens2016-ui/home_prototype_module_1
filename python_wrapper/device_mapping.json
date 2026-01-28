@@ -1,0 +1,13 @@
+[
+  {
+    "id": "zigbee_0x00158d0001a2b3c4",
+    "location": "Bed 1",
+    "type": "pressure",
+    "function": "bed_occupied"
+  },
+  {
+    "id": "zigbee_0x00158d0001a2b3c5",
+    "location": "Chair 2",
+    "type": "pressure"
+  }
+]

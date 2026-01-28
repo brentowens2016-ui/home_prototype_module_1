@@ -10,37 +10,47 @@ This module defines the canonical device types and statuses for all smart home m
 #   - Chapter 12: Organizing Code with Modules and Packages (see module structure)
 #   - Enum usage: see also Python docs (https://docs.python.org/3/library/enum.html)
 #
-Purpose:
-- Ensures type-safe, versioned communication between Python and Rust layers.
-- Must be kept in sync with `rust_smart_bulbs/device_contracts.rs`.
-
-Service Type:
-- Shared contract (not a service)
-- Used by both device logic (Rust) and orchestration/API (Python)
-
-Linked Dependencies:
-- Used by: api.py (API), lib.py (FFI), Rust contracts
-- No external dependencies
-
-Update Guidance:
-- When adding new device types or statuses, update both Python and Rust contracts.
-- Document all changes for FFI and API consumers.
-
----
+# Purpose:
+# - Ensures type-safe, versioned communication between Python and Rust layers.
+# - Must be kept in sync with `rust_smart_bulbs/device_contracts.rs`.
+#
+# Service Type:
+# - Shared contract (not a service)
+# - Used by both device logic (Rust) and orchestration/API (Python)
+#
+# Linked Dependencies:
+# - Used by: api.py (API), lib.py (FFI), Rust contracts
+# - No external dependencies
+#
+# Update Guidance:
+# - When adding new device types or statuses, update both Python and Rust contracts.
+# - Document all changes for FFI and API consumers.
+"""
 from enum import Enum
 
 class DeviceType(Enum):
+    """
+    Canonical device types for all smart home modules.
+    (See also: rust_smart_bulbs/device_contracts.rs)
+    """
     SMART_BULB = "smart_bulb"
     SMART_SWITCH = "smart_switch"
     SENSOR = "sensor"
     UNKNOWN = "unknown"
 
 class DeviceStatus(Enum):
+    """
+    Canonical device statuses for all smart home modules.
+    (See also: rust_smart_bulbs/device_contracts.rs)
+    """
     ON = "on"
     OFF = "off"
     UNKNOWN = "unknown"
 
 class DeviceContract:
+    """
+    Python-side representation of a device contract for FFI/API.
+    """
     def __init__(self, name: str, device_type: DeviceType, status: DeviceStatus):
         self.name = name
         self.device_type = device_type
