@@ -1,5 +1,5 @@
 # Dockerfile for Rust smart bulbs
-FROM rust:1.76 as builder
+FROM rust:latest as builder
 WORKDIR /app
 COPY . .
 RUN cargo build --release
