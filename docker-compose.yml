@@ -13,8 +13,6 @@ services:
   rust_smart_bulbs:
     build: ./rust_smart_bulbs
     container_name: rust_smart_bulbs
-    volumes:
-      - ./rust_smart_bulbs:/app
 
   dashboard:
     build:
