@@ -34,7 +34,7 @@ import DeviceAlerts from "./DeviceAlerts";
 
 import EmergencyContactsEditor from "./EmergencyContactsEditor";
 import SupportTickets from "./SupportTickets";
-import AuthPanel from "./AuthPanel";
+
 
 function BulbControl({ name, bulb, onChange }) {
   const [brightness, setBrightness] = useState(bulb.brightness);
@@ -68,7 +68,7 @@ function BulbControl({ name, bulb, onChange }) {
   );
 }
 
-import AuthPanel from "./AuthPanel";
+
 
 export default function Dashboard() {
   const [bulbs, setBulbs] = useState({});
