@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  backend:
+    build: ./python_wrapper
+    container_name: home_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./python_wrapper:/app
+    command: uvicorn api:app --host 0.0.0.0 --port 8000 --reload
+    working_dir: /app
+
+  rust_smart_bulbs:
+    build: ./rust_smart_bulbs
+    container_name: rust_smart_bulbs
+    volumes:
+      - ./rust_smart_bulbs:/app
+    working_dir: /app
+    command: cargo run
+
+  dashboard:
+    build:
+      context: ./dashboard
+    container_name: home_dashboard
+    working_dir: /app
+    volumes:
+      - ./dashboard:/app
+    ports:
+      - "3000:3000"
+    command: npm run dev
