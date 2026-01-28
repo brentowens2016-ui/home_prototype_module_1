@@ -2,6 +2,7 @@
 FROM rust:latest as builder
 WORKDIR /app
 COPY . .
+ENV PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1
 RUN cargo build --release
 
 FROM debian:buster-slim
