@@ -25,3 +25,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 pyo3 = { version = "0.21", features = ["extension-module"] }
+
+[[bin]]
+name = "rust_smart_bulbs"
+path = "src/main.rs"
