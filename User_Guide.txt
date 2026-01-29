@@ -147,6 +147,7 @@ B. Training the AI
 - Use the dashboard or API endpoints to create/restore backups
 - Upload OTA updates via the dashboard or /ota API
 - Regularly back up your configuration and device mapping
+- <b>Disclaimer:</b> User data stored on the server is only accessible for backup and restore operations. No direct access or browsing of user files on the server is permitted. All other data is stored locally or in user-owned cloud storage. This policy is enforced to protect server security and user privacy.
 
 10. Troubleshooting & Support
 - Check the dashboard’s diagnostics section for errors

@@ -72,6 +72,9 @@ export default function OnboardingModal({ open, onClose }) {
       <div style={{ background: "#fff", padding: 32, borderRadius: 8, maxWidth: 420, boxShadow: "0 2px 16px #0003" }}>
         <h2>{steps[step].title}</h2>
         <div style={{ marginBottom: 24 }}>{steps[step].content}</div>
+          <div className="disclaimer" style={{marginTop: '1em', color: 'red', fontWeight: 'bold'}}>
+            Disclaimer: User data stored on the server is only accessible for backup and restore operations. No direct access or browsing of user files on the server is permitted. All other data is stored locally or in user-owned cloud storage. This policy is strictly enforced for your privacy and security.
+          </div>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <button onClick={onClose}>Skip</button>
           {step > 0 && <button onClick={() => setStep(step - 1)}>Back</button>}

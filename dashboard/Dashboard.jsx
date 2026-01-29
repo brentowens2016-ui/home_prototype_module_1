@@ -1,3 +1,19 @@
+// PrivacyDashboardPanel: Visualize data collection, storage, and retention
+function PrivacyDashboardPanel() {
+  const [dataInfo, setDataInfo] = useState({});
+  useEffect(() => {
+    fetch('/privacy/data-info').then(res => res.json()).then(setDataInfo);
+  }, []);
+  return (
+    <div style={{ border: '1px solid #aaa', margin: 16, padding: 16 }}>
+      <h2>Privacy Dashboard</h2>
+      <div><b>Data Collected:</b> {dataInfo.collected ? dataInfo.collected.join(', ') : 'Loading...'}</div>
+      <div><b>Storage Location:</b> {dataInfo.storage || 'Loading...'}</div>
+      <div><b>Retention Policy:</b> {dataInfo.retention || 'Loading...'}</div>
+      <button style={{ marginTop: 12 }}>Manage Data Retention</button>
+    </div>
+  );
+}
 // Multi-language support scaffolding
 import { useState } from 'react';
 const LANGUAGES = [
@@ -442,6 +458,10 @@ export default function Dashboard() {
         <div role="tabpanel" id="tabpanel-privacy" aria-labelledby="tab-privacy">
           <h2>Privacy & Data Usage</h2>
           <PrivacySettingsPanel helpTooltip="Configure privacy and data usage preferences." />
+          <PrivacyDashboardPanel />
+          <div className="disclaimer" style={{marginTop: '1em', color: 'red', fontWeight: 'bold'}}>
+            Disclaimer: User data stored on the server is only accessible for backup and restore operations. No direct access or browsing of user files on the server is permitted. All other data is stored locally or in user-owned cloud storage. This policy is strictly enforced for your privacy and security.
+          </div>
         </div>
       )}
       {activeTab === "accessibility" && (

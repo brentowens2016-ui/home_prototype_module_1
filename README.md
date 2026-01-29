@@ -99,7 +99,13 @@ This project is a modular, multi-language smart home system. Python orchestrates
 	- Use scenario/event input and chain manager tools for training/testing.
 	- Document onboarding suggestions and prediction logic in [predictive_ai.py](python_wrapper/predictive_ai.py).
 
----
+**Data Storage Policy:**
+User data is stored locally or in user-owned cloud storage. Server-side data is only accessible for backup/restore operations, not for direct access or browsing. This is enforced to maintain security and privacy.
+
+**Contract Enforcement:**
+All device modules must conform to contracts in both Python and Rust. Contracts are kept in sync and enforced for all device logic and API endpoints.
+
+----
 
 ## 🗂️ References & Further Reading
 

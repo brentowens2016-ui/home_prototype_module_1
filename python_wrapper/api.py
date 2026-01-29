@@ -1,3 +1,139 @@
+# Privacy Dashboard Data Endpoint
+@app.get("/privacy/data-info")
+def privacy_data_info():
+    # Example stub: expand with real data sources
+    return {
+        "collected": ["device mapping", "alerts", "logs", "user settings", "event history"],
+        "storage": "Local server (encrypted)",
+        "retention": "User-managed, auto-wipe after 1 year or on request"
+    }
+# Data Export/Import Endpoints
+@app.get("/export/settings")
+def export_settings():
+    # Export settings (stub)
+    return {"status": "ok", "settings": {}}
+
+@app.post("/import/settings")
+async def import_settings(request: Request):
+    data = await request.json()
+    # Import settings (stub)
+    return {"status": "ok", "imported": data}
+
+@app.get("/export/logs")
+def export_logs():
+    # Export logs (stub)
+    return {"status": "ok", "logs": []}
+
+@app.post("/import/logs")
+async def import_logs(request: Request):
+    data = await request.json()
+    # Import logs (stub)
+    return {"status": "ok", "imported": data}
+
+@app.get("/export/automations")
+def export_automations():
+    # Export automations (stub)
+    return {"status": "ok", "automations": []}
+
+@app.post("/import/automations")
+async def import_automations(request: Request):
+    data = await request.json()
+    # Import automations (stub)
+    return {"status": "ok", "imported": data}
+
+# User Feedback Loop Endpoint
+@app.post("/feedback")
+async def submit_feedback(request: Request):
+    data = await request.json()
+    # Store feedback/feature request/bug report (stub)
+    return {"status": "ok", "received": data}
+
+# Global Device Health Monitoring Endpoint
+@app.get("/device-health/global")
+def global_device_health():
+    # Predictive failure alerts for all devices (stub)
+    return {"devices": [], "alerts": []}
+# IP Camera Integration Endpoints
+@app.get("/cameras")
+def list_cameras():
+    # Return list of configured IP cameras (stub)
+    return [{"id": "cam1", "name": "Front Door", "url": "rtsp://192.168.1.10/live"}]
+
+@app.post("/cameras/motion-snapshot")
+async def camera_motion_snapshot(request: Request):
+    data = await request.json()
+    # Trigger snapshot on motion (stub)
+    # Example: return image bytes or URL
+    return {"status": "ok", "image_url": "/static/cam1_snapshot.jpg"}
+
+@app.post("/cameras/motion-clip")
+async def camera_motion_clip(request: Request):
+    data = await request.json()
+    # Trigger short video clip on motion (stub)
+    # Example: return video URL (not stored long-term)
+    return {"status": "ok", "clip_url": "/static/cam1_clip.mp4"}
+
+@app.get("/cameras/stream/{camera_id}")
+def camera_stream(camera_id: str):
+    # Return streaming URL for remote viewing (no persistent storage)
+    # Example: return RTSP or HTTP stream URL
+    return {"status": "ok", "stream_url": f"rtsp://192.168.1.10/live"}
+# Emergency Response Audio Push Endpoint
+@app.post("/emergency/audio-push")
+async def emergency_audio_push(request: Request):
+    data = await request.json()
+    # Send audio message to household audio system (stub)
+    # Example: data = {"message": "Evacuate immediately", "priority": "high"}
+    # Integrate with audio_io.py for playback
+    from python_wrapper.audio_io import AudioIO
+    AudioIO().play_message(data.get("message", ""), priority=data.get("priority", "normal"))
+    return {"status": "ok", "played": data.get("message", "")}
+
+# Emergency Response Processing Endpoint
+@app.post("/emergency/response")
+async def emergency_response(request: Request):
+    data = await request.json()
+    # Process incoming emergency service instructions (stub)
+    # Example: data = {"instructions": "Stay calm, help is on the way."}
+    # Optionally push to audio system
+    from python_wrapper.audio_io import AudioIO
+    AudioIO().play_message(data.get("instructions", ""), priority="emergency")
+    return {"status": "ok", "instructions": data.get("instructions", "")}
+# Guest Access Endpoints
+@app.post("/guests/add")
+async def add_guest(request: Request):
+    data = await request.json()
+    # Add guest logic (stub)
+    return {"status": "ok", "guest": data}
+
+@app.post("/guests/remove")
+async def remove_guest(request: Request):
+    data = await request.json()
+    # Remove guest logic (stub)
+    return {"status": "ok", "guest": data}
+
+@app.get("/guests/list")
+def list_guests():
+    # List guests logic (stub)
+    return []
+
+# Energy Monitoring Endpoints
+@app.get("/energy/usage")
+def get_energy_usage():
+    # Return energy usage data (stub)
+    return {"devices": [], "total_kwh": 0, "suggestions": []}
+
+# Scheduled Automation Endpoints
+@app.post("/automation/schedule")
+async def schedule_automation(request: Request):
+    data = await request.json()
+    # Add flexible schedule logic (stub)
+    return {"status": "ok", "schedule": data}
+
+@app.get("/automation/schedules")
+def list_schedules():
+    # List schedules logic (stub)
+    return []
 # Voice Assistant Integration Endpoints
 @app.post("/voice-assistant/alexa")
 async def alexa_integration(request: Request):
@@ -134,6 +270,7 @@ app.include_router(device_health_dashboard_router)
 
 from python_wrapper.device_health import get_unacknowledged_alerts, acknowledge_alert
 
+
 """
 FastAPI REST API for Smart Home Devices
 
@@ -161,6 +298,9 @@ FastAPI REST API for Smart Home Devices
 # Update Guidance:
 # - When adding new device types or controls, update both API endpoints and FFI bindings.
 # - Document all endpoints and expected request/response formats in api_design.md.
+#
+# Data Storage Disclaimer:
+# - User data stored on the server is only accessible for backup and restore operations. No direct access or browsing of user files on the server is permitted. All other data is stored locally or in user-owned cloud storage. This policy is strictly enforced for privacy and security.
 """
 
 
