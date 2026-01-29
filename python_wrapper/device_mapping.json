@@ -9,5 +9,21 @@
     "id": "zigbee_0x00158d0001a2b3c5",
     "location": "Chair 2",
     "type": "pressure"
+  },
+  {
+    "id": "hdmi_hub_tv_livingroom",
+    "location": "Living Room TV",
+    "type": "hdmi_hub",
+    "function": "audio_video_endpoint",
+    "hardware": "Raspberry Pi 4",
+    "features": ["HDMI out", "USB mic", "Wi-Fi"]
+  },
+  {
+    "id": "hdmi_hub_tv_bedroom",
+    "location": "Master Bedroom TV",
+    "type": "hdmi_hub",
+    "function": "audio_video_endpoint",
+    "hardware": "Intel NUC",
+    "features": ["HDMI out", "Far-field mic", "Ethernet"]
   }
 ]
