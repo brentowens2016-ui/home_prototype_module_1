@@ -1,6 +1,10 @@
 //
 // Smart Home Dashboard UI (React)
 //
+// Copyright (c) 2026 Brent [Your Last Name]. All rights reserved.
+// Author/Owner: Brent [Your Last Name]
+// Contributor: GitHub Copilot (AI code assistant)
+//
 // # Learning References
 // - Python for Dummies
 //   - Chapter 16: Web Programming Basics (see REST API concepts)
@@ -33,6 +37,41 @@ import MappingEditor from "./MappingEditor";
 import DeviceAlerts from "./DeviceAlerts";
 import SupportTickets from "./SupportTickets";
 import AuthPanel from "./AuthPanel";
+import AIVoicePanel from "./AIVoicePanel";
+import AudioConfigPanel from "./AudioConfigPanel";
+import AdminInvitePanel from "./AdminInvitePanel";
+import AdminUserManager from "./AdminUserManager";
+import AdminAuditLog from "./AdminAuditLog";
+import EmailLogPanel from "./EmailLogPanel";
+import OnboardingModal from "./OnboardingModal";
+
+const DASHBOARD_TABS = {
+  user: [
+    { key: "devices", label: "Devices & Controls" },
+    { key: "mapping", label: "Mapping & Automation" },
+    { key: "support", label: "Support & Tickets" },
+  ],
+  tech: [
+    { key: "devices", label: "Devices & Controls" },
+    { key: "mapping", label: "Mapping & Automation" },
+    { key: "support", label: "Support & Tickets" },
+    { key: "impersonate", label: "Impersonate User" },
+  ],
+  admin: [
+    { key: "admin", label: "Admin Dashboard" },
+    { key: "users", label: "User Management" },
+    { key: "logs", label: "Logs & Audit" },
+    { key: "devices", label: "Devices & Controls" },
+    { key: "mapping", label: "Mapping & Automation" },
+    { key: "support", label: "Support & Tickets" },
+  ]
+};
+
+// Helper: get user role from auth/session (stub for now)
+function getUserRole() {
+  // TODO: Replace with real auth/session logic
+  return window.localStorage.getItem("user_role") || "user";
+}
 
 function BulbControl({ name, bulb, onChange }) {
   const [brightness, setBrightness] = useState(bulb.brightness);
@@ -68,12 +107,87 @@ function BulbControl({ name, bulb, onChange }) {
 
 
 
+// Watermark component for copyright/ownership assertion
+function Watermark() {
+  return (
+    <div style={{
+      position: "fixed",
+      bottom: 10,
+      right: 20,
+      opacity: 0.18,
+      fontSize: 18,
+      pointerEvents: "none",
+      zIndex: 9999,
+      color: "#222"
+    }}>
+      © 2026 Brent [Your Last Name] · Powered by GitHub Copilot
+    </div>
+  );
+}
+
+// Main Dashboard component (role-based tab filtering, ARIA attributes)
+export default function Dashboard() {
+  const role = getUserRole();
+  const tabs = DASHBOARD_TABS[role] || DASHBOARD_TABS.user;
+  const [activeTab, setActiveTab] = useState(tabs[0].key);
+
+  return (
+    <div role="application" aria-label="Smart Home Dashboard">
+      <nav aria-label="Dashboard Navigation">
+        <ul style={{ display: "flex", gap: 16, listStyle: "none", padding: 0 }}>
+          {tabs.map(tab => (
+            <li key={tab.key}>
+              <button
+                aria-label={tab.label}
+                aria-current={activeTab === tab.key ? "page" : undefined}
+                onClick={() => setActiveTab(tab.key)}
+                style={{ fontWeight: activeTab === tab.key ? "bold" : "normal" }}
+              >
+                {tab.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <main aria-live="polite" tabIndex={-1}>
+        {/* Render tab content based on activeTab and role */}
+        {activeTab === "devices" && <DeviceAlerts />}
+        {activeTab === "mapping" && <MappingEditor />}
+        {activeTab === "support" && <SupportTickets />}
+        {role === "admin" && activeTab === "admin" && <AdminAuditLog />}
+        {role === "admin" && activeTab === "users" && <AdminUserManager />}
+        {role === "admin" && activeTab === "logs" && <EmailLogPanel />}
+        {/* Only show admin panels for admin role */}
+      </main>
+      <Watermark />
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const [bulbs, setBulbs] = useState({});
   const [user, setUser] = useState(null); // { username, role, ... }
   const [showDownload, setShowDownload] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [activeTab, setActiveTab] = useState(null);
   const fetchBulbs = () => axios.get("/bulbs").then((res) => setBulbs(res.data));
   useEffect(() => { if (user) fetchBulbs(); }, [user]);
+  useEffect(() => {
+    if (user && !localStorage.getItem("onboarding_complete")) {
+      setShowOnboarding(true);
+    }
+    if (user && !activeTab) {
+      // Set default tab based on role
+      if (user.role === "admin") setActiveTab("admin");
+      else if (user.role === "tech") setActiveTab("devices");
+      else setActiveTab("devices");
+    }
+  }, [user]);
+
+  const handleOnboardingClose = () => {
+    setShowOnboarding(false);
+    localStorage.setItem("onboarding_complete", "1");
+  };
 
   if (!user) {
     return <AuthPanel onAuth={setUser} onShowDownload={() => setShowDownload(true)} />;
@@ -94,20 +208,87 @@ export default function Dashboard() {
     );
   }
 
+  // Role-based tab set
+  let roleTabs = DASHBOARD_TABS[user.role] || DASHBOARD_TABS.user;
+
+  // Strictly hide admin/tech tabs from users
+  if (user.role !== "admin" && user.role !== "tech") {
+    roleTabs = DASHBOARD_TABS.user;
+  }
+
+  // Tabbed/layered dashboard
   return (
     <div>
-      <h1>Smart Bulb Dashboard</h1>
+      <OnboardingModal open={showOnboarding} onClose={handleOnboardingClose} />
+      <h1>Smart Home Dashboard</h1>
       <div style={{ marginBottom: 16 }}>
         <span>Logged in as: {user.username} ({user.role})</span>
-        <button style={{ marginLeft: 16 }} onClick={() => setUser(null)}>Log Out</button>
+        <button style={{ marginLeft: 16 }} onClick={() => setUser(null)} title="Log out of your account">Log Out</button>
       </div>
-      <DeviceAlerts />
-      <MappingEditor />
-      <EmergencyContactsEditor userRole={user.role} />
-      <SupportTickets />
-      {Object.entries(bulbs).map(([name, bulb]) => (
-        <BulbControl key={name} name={name} bulb={bulb} onChange={fetchBulbs} />
-      ))}
+      <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+        {roleTabs.map(tab => (
+          <button
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key)}
+            style={{ fontWeight: activeTab === tab.key ? "bold" : "normal" }}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+      {/* Layered/tabbed content by role and tab */}
+      {activeTab === "admin" && user.role === "admin" && (
+        <div>
+          <h2>Admin Dashboard</h2>
+          <AdminInvitePanel />
+          <AdminUserManager />
+        </div>
+      )}
+      {activeTab === "users" && user.role === "admin" && (
+        <div>
+          <h2>User Management</h2>
+          <AdminUserManager />
+        </div>
+      )}
+      {activeTab === "logs" && user.role === "admin" && (
+        <div>
+          <h2>Logs & Audit</h2>
+          <AdminAuditLog />
+          <EmailLogPanel />
+        </div>
+      )}
+      {activeTab === "devices" && (
+        <div>
+          <h2>Devices & Controls</h2>
+          <DeviceAlerts />
+          {Object.entries(bulbs).map(([name, bulb]) => (
+            <BulbControl key={name} name={name} bulb={bulb} onChange={fetchBulbs} helpTooltip="Control this smart bulb." />
+          ))}
+        </div>
+      )}
+      {activeTab === "mapping" && (
+        <div>
+          <h2>Mapping & Automation</h2>
+          <MappingEditor helpTooltip="Map devices to rooms and set up automation rules here." />
+          <AudioConfigPanel helpTooltip="Configure audio devices and settings." />
+          <AIVoicePanel user={user} helpTooltip="AI voice assistant configuration." />
+        </div>
+      )}
+      {activeTab === "support" && (
+        <div>
+          <h2>Support & Tickets</h2>
+          <EmergencyContactsEditor userRole={user.role} helpTooltip="Manage emergency contacts for alerts." />
+          <SupportTickets helpTooltip="Submit and track support requests." />
+        </div>
+      )}
+      {activeTab === "impersonate" && user.role === "tech" && (
+        <div>
+          <h2>Impersonate User Dashboard</h2>
+          <p>Enter a username to view their dashboard as tech support (read-only):</p>
+          {/* Implement impersonation UI here, e.g., input and fetch user dashboard */}
+        </div>
+      )}
+      <Watermark />
     </div>
   );
 }
