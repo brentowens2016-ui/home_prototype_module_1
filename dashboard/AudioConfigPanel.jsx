@@ -80,6 +80,11 @@ export default function AudioConfigPanel() {
       <button onClick={handleSave} disabled={saving} style={{ marginTop: 12 }}>
         {saving ? "Saving..." : "Save Configuration"}
       </button>
+
+        <div style={{ marginTop: 32 }}>
+          <h3>Map Audio Device to Room</h3>
+          <AudioDeviceRoomMapper devices={devices} />
+        </div>
     </div>
   );
 }

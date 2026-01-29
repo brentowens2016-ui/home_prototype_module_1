@@ -26,6 +26,27 @@ class AudioIO:
         self.room = room  # Room name or zone
         self.endpoint_id = endpoint_id  # Device mapping ID (e.g., hdmi_hub_tv_livingroom)
 
+    def get_local_volume(self) -> int:
+        # Stub: Replace with actual system volume query
+        try:
+            import sounddevice as sd
+            # This is a placeholder; actual implementation may require OS-specific APIs
+            return 50
+        except Exception:
+            return 50
+
+    def set_local_volume(self, volume: int):
+        # Stub: Replace with actual system volume set
+        pass
+
+    def get_device_volume(self) -> int:
+        # Stub: Replace with actual device volume query
+        return 50
+
+    def set_device_volume(self, volume: int):
+        # Stub: Replace with actual device volume set
+        pass
+
     @staticmethod
     def list_devices() -> List[AudioDeviceInfo]:
         """Discover all available audio devices."""

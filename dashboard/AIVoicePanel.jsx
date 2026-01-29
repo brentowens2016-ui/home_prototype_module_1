@@ -84,6 +84,11 @@ export default function AIVoicePanel({ user }) {
       {ttsAudio && (
         <audio controls src={URL.createObjectURL(ttsAudio)} />
       )}
+        <div style={{ marginTop: 16, borderTop: "1px solid #eee", paddingTop: 12 }}>
+          <h3>Voice Volume Controls</h3>
+          <LocalVolumeControl />
+          <DeviceVolumeControl rooms={rooms} />
+        </div>
     </div>
   );
 }

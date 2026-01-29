@@ -349,6 +349,8 @@ from python_wrapper.analytics_api import router as analytics_router
 from python_wrapper.audio_io import AudioIO
 import python_wrapper.device_mapping as device_mapping
 
+from python_wrapper.mapping_engine import get_mapping as engine_get_mapping, set_mapping as engine_set_mapping, validate_mapping as engine_validate_mapping
+
 from python_wrapper.device_discovery import discover_wifi_devices
 
 # --- Wi-Fi Device Discovery Endpoint ---
@@ -371,6 +373,83 @@ async def set_integration(request: Request):
     # Here, update integration settings (stub)
     # For demo, just return success
     return {"status": "ok", "integration": data}
+
+# --- Modular Audio Device Management Endpoints ---
+from python_wrapper.audio_mapping_api import router as audio_mapping_router
+from python_wrapper.audio_config_api import router as audio_config_router
+
+# List all available audio devices (with room mapping info)
+@app.get("/audio/devices")
+def api_list_audio_devices():
+    from python_wrapper.audio_mapping_api import list_audio_devices
+    return list_audio_devices()
+
+# --- Voice Control Endpoints ---
+@app.get("/voice/volume/local")
+def get_local_volume():
+    # Stub: Replace with actual local volume logic
+    try:
+        from python_wrapper.audio_io import AudioIO
+        return {"volume": AudioIO().get_local_volume()}
+    except Exception:
+        return {"volume": 50}
+
+@app.post("/voice/volume/local")
+async def set_local_volume(request: Request):
+    data = await request.json()
+    vol = int(data.get("volume", 50))
+    try:
+        from python_wrapper.audio_io import AudioIO
+        AudioIO().set_local_volume(vol)
+        return {"status": "ok", "volume": vol}
+    except Exception:
+        return {"status": "error", "volume": vol}
+
+@app.get("/voice/volume/device/{device_index}")
+def get_device_volume(device_index: int):
+    try:
+        from python_wrapper.audio_io import AudioIO
+        return {"volume": AudioIO(output_device=device_index).get_device_volume()}
+    except Exception:
+        return {"volume": 50}
+
+@app.post("/voice/volume/device/{device_index}")
+async def set_device_volume(device_index: int, request: Request):
+    data = await request.json()
+    vol = int(data.get("volume", 50))
+    try:
+        from python_wrapper.audio_io import AudioIO
+        AudioIO(output_device=device_index).set_device_volume(vol)
+        return {"status": "ok", "volume": vol}
+    except Exception:
+        return {"status": "error", "volume": vol}
+
+# Map an audio device to a room
+@app.post("/audio/map_room")
+async def api_map_audio_device_to_room(request: Request):
+    from python_wrapper.audio_mapping_api import map_audio_device_to_room, RoomMappingRequest
+    data = await request.json()
+    req = RoomMappingRequest(**data)
+    return map_audio_device_to_room(req)
+
+# Get current audio device to room mapping
+@app.get("/audio/room_map")
+def api_get_audio_room_map():
+    from python_wrapper.audio_mapping_api import get_audio_room_map
+    return get_audio_room_map()
+
+# Get/set default audio input/output device config
+@app.get("/audio/config")
+def api_get_audio_config():
+    from python_wrapper.audio_config_api import get_audio_config
+    return get_audio_config()
+
+@app.post("/audio/config")
+async def api_set_audio_config(request: Request):
+    from python_wrapper.audio_config_api import set_audio_config, AudioConfigModel
+    data = await request.json()
+    cfg = AudioConfigModel(**data)
+    return set_audio_config(cfg)
 @app.get("/hdmi-hubs")
 def list_hdmi_hubs():
     # Filter device_mapping for hdmi_hub type
@@ -519,19 +598,17 @@ def ack_alert(device_id: str):
 
 @app.get("/mapping")
 def get_device_mapping():
-    return get_mapping()
+    return engine_get_mapping()
 
 
 @app.post("/mapping")
 async def upload_device_mapping(request: Request):
     try:
         mapping = await request.json()
-        validate_mapping_object(mapping)  # Will raise if invalid
-        # Enforce device/tier limits
-        limit_error = check_mapping_limits(mapping)
-        if limit_error:
-            return JSONResponse(status_code=400, content={"error": limit_error})
-        set_mapping(mapping)
+        err = engine_validate_mapping(mapping)
+        if err:
+            return JSONResponse(status_code=400, content={"error": err})
+        engine_set_mapping(mapping)
         return {"status": "ok"}
     except Exception as e:
         return JSONResponse(status_code=400, content={"error": str(e)})

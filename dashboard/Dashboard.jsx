@@ -26,6 +26,7 @@ const LANGUAGES = [
 ];
 // StorageUsagePanel: Shows user storage usage and quota
 import { useEffect, useState } from 'react';
+    { key: "appointment", label: "Request Appointment/Estimate" },
 function StorageUsagePanel() {
   const [usage, setUsage] = useState(0);
   const [quota, setQuota] = useState(512 * 1024 * 1024); // 0.5 GB default
@@ -37,6 +38,7 @@ function StorageUsagePanel() {
       <b>Storage Usage:</b> {((usage / 1024 / 1024).toFixed(1))} MB / {(quota / 1024 / 1024).toFixed(0)} MB
       <div style={{ background: '#eee', height: 8, width: 200, marginTop: 4 }}>
         <div style={{ background: usage > quota * 0.9 ? '#e74c3c' : '#4a90e2', height: 8, width: `${Math.min(usage / quota * 200, 200)}px` }} />
+    { key: "appointment", label: "Request Appointment/Estimate" },
       </div>
       {usage > quota * 0.9 && <span style={{ color: '#e74c3c', fontSize: 12 }}>Warning: Approaching storage limit!</span>}
     </div>
@@ -133,6 +135,8 @@ import EmailLogPanel from "./EmailLogPanel";
 import OnboardingModal from "./OnboardingModal";
 import AdminNotifications from "./AdminNotifications";
 import ThirdPartyDevicesPanel from "./ThirdPartyDevicesPanel";
+import AppointmentRequestForm from "./AppointmentRequestForm";
+import MappingEnginePanel from "./MappingEnginePanel";
 
 import NotificationSettingsPanel from "./NotificationSettingsPanel";
 import PrivacySettingsPanel from "./PrivacySettingsPanel";
@@ -143,16 +147,19 @@ const DASHBOARD_TABS = {
   user: [
     { key: "devices", label: "Devices & Controls" },
     { key: "mapping", label: "Mapping & Automation" },
+    { key: "mapping_engine", label: "Device Mapping Engine" },
     { key: "updates", label: "Updates & Recovery" },
     { key: "notifications", label: "Notification Settings" },
     { key: "privacy", label: "Privacy & Data Usage" },
     { key: "accessibility", label: "Accessibility" },
     { key: "security", label: "Security" },
     { key: "support", label: "Support & Tickets" },
+    { key: "appointment", label: "Request Appointment/Estimate" },
   ],
   tech: [
     { key: "devices", label: "Devices & Controls" },
     { key: "mapping", label: "Mapping & Automation" },
+    { key: "mapping_engine", label: "Device Mapping Engine" },
     { key: "updates", label: "Updates & Recovery" },
     { key: "notifications", label: "Notification Settings" },
     { key: "privacy", label: "Privacy & Data Usage" },
@@ -160,6 +167,7 @@ const DASHBOARD_TABS = {
     { key: "security", label: "Security" },
     { key: "support", label: "Support & Tickets" },
     { key: "impersonate", label: "Impersonate User" },
+    { key: "appointment", label: "Request Appointment/Estimate" },
   ],
   admin: [
     { key: "admin", label: "Admin Dashboard" },
@@ -167,13 +175,15 @@ const DASHBOARD_TABS = {
     { key: "logs", label: "Logs & Audit" },
     { key: "devices", label: "Devices & Controls" },
     { key: "mapping", label: "Mapping & Automation" },
+    { key: "mapping_engine", label: "Device Mapping Engine" },
     { key: "updates", label: "Updates & Recovery" },
     { key: "notifications", label: "Notification Settings" },
     { key: "privacy", label: "Privacy & Data Usage" },
     { key: "accessibility", label: "Accessibility" },
     { key: "security", label: "Security" },
     { key: "support", label: "Support & Tickets" },
-    { key: "third_party_devices", label: "Third-Party Devices" }
+    { key: "third_party_devices", label: "Third-Party Devices" },
+    { key: "appointment", label: "Request Appointment/Estimate" },
   ]
 };
 // Updates & Recovery Panel (placeholder)
@@ -271,6 +281,32 @@ export default function Dashboard() {
   const role = getUserRole();
   const tabs = DASHBOARD_TABS[role] || DASHBOARD_TABS.user;
   const [activeTab, setActiveTab] = useState(tabs[0].key);
+
+  // Subscription info state
+  const [subscription, setSubscription] = useState(null);
+  useEffect(() => {
+    axios.get("/users/subscription").then(res => setSubscription(res.data)).catch(() => setSubscription(null));
+  }, []);
+
+  // Subscription panel
+  function SubscriptionPanel() {
+    if (!subscription) return <div>Loading subscription info...</div>;
+    return (
+      <div style={{ border: "1px solid #aaa", margin: 16, padding: 16, background: "#f8faff" }}>
+        <h2>Subscription Level</h2>
+        <div><b>Level:</b> {subscription.level}</div>
+        <div><b>Status:</b> {subscription.status}</div>
+        <div><b>Renewal Date:</b> {subscription.renewal_date}</div>
+        <div><b>Features:</b> {Array.isArray(subscription.features) ? subscription.features.join(", ") : subscription.features}</div>
+        <div style={{ marginTop: 8 }}>
+          <button disabled={subscription.status !== "active"}>Manage Subscription</button>
+        </div>
+        <div style={{ marginTop: 8, color: "#888", fontSize: 13 }}>
+          Subscription fees cover access to the software platform and standard support only. Hardware, installation, interfaces, wiring, electrical or plumbing work, and custom programming for new features or hardware are not included and may require separate agreements or fees.
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div role="application" aria-label="Smart Home Dashboard">
@@ -383,6 +419,7 @@ export default function Dashboard() {
           </select>
         </label>
       </div>
+        <SubscriptionPanel />
       <StorageUsagePanel />
       <div style={{ marginBottom: 16 }}>
         <span>Logged in as: {user.username} ({user.role})</span>
@@ -443,6 +480,11 @@ export default function Dashboard() {
           <AIVoicePanel user={user} helpTooltip="AI voice assistant configuration." />
         </div>
       )}
+      {activeTab === "mapping_engine" && (
+        <div role="tabpanel" id="tabpanel-mapping-engine" aria-labelledby="tab-mapping-engine">
+          <MappingEnginePanel />
+        </div>
+      )}
       {activeTab === "updates" && (
         <div role="tabpanel" id="tabpanel-updates" aria-labelledby="tab-updates">
           <UpdatesRecoveryPanel user={user} />
@@ -484,6 +526,11 @@ export default function Dashboard() {
           <SupportCollaborationPanel user={user} />
         </div>
       )}
+        {activeTab === "appointment" && (
+          <div role="tabpanel" id="tabpanel-appointment" aria-labelledby="tab-appointment">
+            <AppointmentRequestForm />
+          </div>
+        )}
       {activeTab === "impersonate" && (user.role === "tech" || user.role === "admin") && (
         <ImpersonateUserDashboardPanel currentUser={user} />
       )}
