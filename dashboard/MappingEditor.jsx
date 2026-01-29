@@ -1,13 +1,39 @@
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import FloorplanGrid from "./FloorplanGrid";
 import AutomationRulesEditor from "./AutomationRulesEditor";
+import RoomManager from "./RoomManager";
+
+// Tier limits must match backend
+const TIER_LIMITS = {
+  free:    { max_devices: 10, max_sqft: 800 },
+  basic:   { max_devices: 25, max_sqft: 1600 },
+  premium: { max_devices: 50, max_sqft: 2400 },
+};
 
 export default function MappingEditor() {
+
   const [mapping, setMapping] = useState([]);
   const [rules, setRules] = useState([]);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [rooms, setRooms] = useState([]);
+  const [totalSqft, setTotalSqft] = useState(2000);
+  const [userTier, setUserTier] = useState("free");
+  const [tierInfo, setTierInfo] = useState(TIER_LIMITS["free"]);
+
+  // Fetch user info for tier and sqft
+  useEffect(() => {
+    axios.get("/users", { headers: { "X-Role": "admin" } })
+      .then(res => {
+        const admin = res.data.find(u => u.role === "admin") || res.data[0];
+        setUserTier(admin?.subscription_tier || "free");
+        setTotalSqft(admin?.declared_sqft || 0);
+        setTierInfo(TIER_LIMITS[admin?.subscription_tier] || TIER_LIMITS["free"]);
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     axios.get("/mapping").then(res => setMapping(res.data)).catch(() => setMapping([]));
@@ -18,7 +44,12 @@ export default function MappingEditor() {
     setMapping(m => m.map((entry, i) => i === idx ? { ...entry, [field]: value } : entry));
   };
 
+
   const handleAddDevice = () => {
+    if (mapping.length >= tierInfo.max_devices) {
+      setError(`Device limit reached for your tier (${userTier}: ${tierInfo.max_devices} devices).`);
+      return;
+    }
     setMapping(m => [
       ...m,
       {
@@ -37,9 +68,21 @@ export default function MappingEditor() {
     setMapping(m => m.filter((_, i) => i !== idx));
   };
 
+
   const handleSave = () => {
     setSaving(true);
     setError("");
+    // Frontend check before sending
+    if (totalSqft > tierInfo.max_sqft) {
+      setError(`Your declared square footage (${totalSqft}) exceeds the limit for your subscription tier (${userTier}: ${tierInfo.max_sqft} sqft). Please upgrade your plan.`);
+      setSaving(false);
+      return;
+    }
+    if (mapping.length > tierInfo.max_devices) {
+      setError(`Device mapping exceeds allowed devices for your tier (${userTier}: ${tierInfo.max_devices} devices). Please upgrade your plan or remove devices.`);
+      setSaving(false);
+      return;
+    }
     axios.post("/mapping", mapping)
       .then(() => setError("Saved!"))
       .catch(e => setError(e.response?.data?.error || "Save failed"))
@@ -52,8 +95,18 @@ export default function MappingEditor() {
 
   return (
     <div style={{ border: "1px solid #aaa", margin: 16, padding: 16 }}>
-      <h2>Device Mapping Editor</h2>
-      <FloorplanGrid mapping={mapping} onMove={handleMove} />
+      <h2>Device & Room Mapping Editor</h2>
+      <div style={{ marginBottom: 8 }}>
+        <b>Subscription Tier:</b> {userTier} &nbsp;|&nbsp;
+        <b>Max Devices:</b> {tierInfo.max_devices} &nbsp;|&nbsp;
+        <b>Max Sqft:</b> {tierInfo.max_sqft}
+      </div>
+      <div style={{ marginBottom: 8 }}>
+        <b>Current Devices:</b> {mapping.length} &nbsp;|&nbsp;
+        <b>Declared Sqft:</b> {totalSqft}
+      </div>
+      <RoomManager rooms={rooms} setRooms={setRooms} totalSqft={totalSqft} setTotalSqft={setTotalSqft} />
+      <FloorplanGrid mapping={mapping} rooms={rooms} onMove={handleMove} />
       <AutomationRulesEditor mapping={mapping} rules={rules} setRules={setRules} />
       {mapping.length === 0 && <div>No mapping loaded.</div>}
       {mapping.map((entry, idx) => (

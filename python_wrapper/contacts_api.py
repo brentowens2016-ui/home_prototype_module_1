@@ -27,5 +27,9 @@ def update_contacts(payload: Dict):
         raise HTTPException(status_code=400, detail="Missing required fields.")
     if not isinstance(payload["contacts"], list) or len(payload["contacts"]) > 7:
         raise HTTPException(status_code=400, detail="Contacts must be a list of up to 7 entries.")
+    # Validate mobile field
+    for contact in payload["contacts"]:
+        if "mobile" not in contact:
+            contact["mobile"] = ""
     save_contacts(payload)
     return {"status": "ok"}

@@ -1,3 +1,78 @@
+"""
+Automation API: scheduling and conditional automations
+"""
+import os
+import json
+import time
+from fastapi import APIRouter, Request
+from fastapi.responses import JSONResponse
+
+AUTOMATIONS_PATH = os.path.join(os.path.dirname(__file__), "automations.json")
+
+router = APIRouter()
+
+def load_automations():
+    if os.path.exists(AUTOMATIONS_PATH):
+        with open(AUTOMATIONS_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return []
+
+def save_automations(automations):
+    with open(AUTOMATIONS_PATH, "w", encoding="utf-8") as f:
+        json.dump(automations, f, indent=2)
+
+# List all automations
+@router.get("/automations")
+def list_automations():
+    return load_automations()
+
+# Add or update an automation (with schedule/condition)
+@router.post("/automations")
+async def add_automation(request: Request):
+    data = await request.json()
+    automations = load_automations()
+    # If id exists, update; else add new
+    idx = next((i for i, a in enumerate(automations) if a.get("id") == data.get("id")), None)
+    if idx is not None:
+        automations[idx] = data
+    else:
+        automations.append(data)
+    save_automations(automations)
+    return {"status": "ok"}
+
+# Remove an automation
+@router.post("/automations/delete")
+async def delete_automation(request: Request):
+    data = await request.json()
+    automations = load_automations()
+    automations = [a for a in automations if a.get("id") != data.get("id")]
+    save_automations(automations)
+    return {"status": "deleted"}
+
+# For demo: endpoint to trigger automations (simulate schedule/condition)
+@router.post("/automations/trigger")
+async def trigger_automations(request: Request):
+    data = await request.json()
+    now = int(time.time())
+    automations = load_automations()
+    triggered = []
+    for a in automations:
+        # Check schedule (if present)
+        schedule = a.get("schedule")
+        if schedule:
+            # Example: schedule = {"type": "cron", "cron": "0 7 * * *"} or {"type": "interval", "seconds": 3600}
+            # For demo, just check if "force" in data or always trigger
+            if not data.get("force"):
+                continue
+        # Check condition (if present)
+        condition = a.get("condition")
+        if condition:
+            # Example: condition = {"type": "state", "device": "Living Room 1", "state": "on"}
+            # For demo, just check if "force" in data or always trigger
+            if not data.get("force"):
+                continue
+        triggered.append(a.get("id"))
+    return {"triggered": triggered}
 import os
 import json
 from fastapi import APIRouter, HTTPException, Request

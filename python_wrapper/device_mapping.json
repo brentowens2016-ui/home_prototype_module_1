@@ -25,5 +25,21 @@
     "function": "audio_video_endpoint",
     "hardware": "Intel NUC",
     "features": ["HDMI out", "Far-field mic", "Ethernet"]
+  },
+  {
+    "id": "hardwired_panel_1",
+    "location": "Main Entry",
+    "type": "security_hardwired",
+    "function": "intrusion_detection",
+    "hardware": "Honeywell Vista 20P",
+    "features": ["door sensor", "motion sensor", "alarm relay"]
+  },
+  {
+    "id": "wifi_cam_1",
+    "location": "Garage",
+    "type": "security_wifi",
+    "function": "video_surveillance",
+    "hardware": "Ring Camera",
+    "features": ["HD video", "Wi-Fi", "motion alert"]
   }
 ]

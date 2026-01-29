@@ -1,4 +1,76 @@
+"""
+Backup API: scheduled backups and admin restore endpoints
+"""
 import os
+import json
+import time
+import shutil
+from fastapi import APIRouter, Request
+from fastapi.responses import JSONResponse
+
+BACKUP_DIR = os.path.join(os.path.dirname(__file__), "backups")
+CRITICAL_FILES = [
+    "users.json", "device_mapping.json", "device_alerts.json", "device_health.json",
+    "event_history.json", "admin_audit_log.json", "email_log.json"
+]
+
+router = APIRouter()
+
+def ensure_backup_dir():
+    if not os.path.exists(BACKUP_DIR):
+        os.makedirs(BACKUP_DIR)
+
+def backup_all():
+    ensure_backup_dir()
+    ts = int(time.time())
+    backup_files = []
+    for fname in CRITICAL_FILES:
+        src = os.path.join(os.path.dirname(__file__), fname)
+        if os.path.exists(src):
+            dst = os.path.join(BACKUP_DIR, f"{fname}.{ts}.bak")
+            shutil.copy2(src, dst)
+            backup_files.append(dst)
+    return backup_files
+
+def list_backups():
+    ensure_backup_dir()
+    files = os.listdir(BACKUP_DIR)
+    return sorted(files)
+
+def restore_backup(filename):
+    ensure_backup_dir()
+    src = os.path.join(BACKUP_DIR, filename)
+    if not os.path.exists(src):
+        return False
+    # Determine original file
+    orig = filename.split(".")[0] + ".json"
+    dst = os.path.join(os.path.dirname(__file__), orig)
+    shutil.copy2(src, dst)
+    return True
+
+# Endpoint: trigger backup (admin)
+@router.post("/backup/run")
+def run_backup():
+    files = backup_all()
+    return {"status": "ok", "files": files}
+
+# Endpoint: list backups
+@router.get("/backup/list")
+def get_backup_list():
+    return list_backups()
+
+# Endpoint: restore backup (admin)
+@router.post("/backup/restore")
+async def restore(request: Request):
+    data = await request.json()
+    filename = data.get("filename")
+    if not filename:
+        return JSONResponse(status_code=400, content={"error": "Missing filename"})
+    ok = restore_backup(filename)
+    if ok:
+        return {"status": "restored", "file": filename}
+    else:
+        return JSONResponse(status_code=404, content={"error": "Backup not found"})
 import shutil
 import zipfile
 from fastapi import APIRouter, HTTPException, Request

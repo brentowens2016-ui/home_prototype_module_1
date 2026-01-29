@@ -8,7 +8,7 @@
 
   "location": "Master_Bathroom_Sink", 
 
-  "value": "open",  # or "broken" 
+  "value": "open",
 
   "label": "Open_Master_Bathroom_Sink", 
   "timestamp": 1769600000 

@@ -1,0 +1,20 @@
+============================
+User Guide
+============================
+
+(Your user guide content goes here...)
+
+---
+
+Legal & Privacy Disclosures
+
+Privacy Policy (Draft):
+We value your privacy. This system collects only the data necessary to provide monitoring, automation, and safety features. Data is not sold or shared with third parties except as required by law or to provide core services. You may review, update, or request deletion of your data at any time. Our privacy practices may change to comply with legal requirements or policy updates; you will be notified of any changes.
+
+Terms of Service (Draft):
+By using this system, you agree to abide by all applicable laws and our user agreement. Subscription fees cover access to the software platform and standard support only. Hardware, installation, interfaces, wiring, electrical or plumbing work, and custom programming for new features or hardware are not included and may require separate agreements or fees. Use of the system is at your own risk. We reserve the right to update these terms at any time.
+
+Legal Disclaimer / Disclosure (Draft):
+This system is designed to assist with monitoring and safety, but no system can guarantee detection or prevention of all incidents. We are not liable for any failure to detect, respond to, or prevent bodily harm, injury, or death to users, family members, or others. Users are responsible for maintaining their equipment and ensuring emergency contacts and procedures are up to date. Use of this system constitutes acceptance of these terms.
+
+All boilerplate policies and disclosures must be reviewed and updated by legal counsel before public release.

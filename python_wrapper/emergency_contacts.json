@@ -12,8 +12,8 @@ Example:
     "phone": "911"
   },
   "contacts": [
-    {"name": "Alice Smith", "phone": "+15551234567"},
-    {"name": "Bob Jones", "phone": "+15557654321"}
+    {"name": "Alice Smith", "phone": "+15551234567", "mobile": "15551234567"},
+    {"name": "Bob Jones", "phone": "+15557654321", "mobile": "15557654321"}
     // up to 7 contacts
   ]
 }
@@ -25,12 +25,12 @@ Example:
     "phone": "911"
   },
   "contacts": [
-    {"name": "Contact 1", "phone": ""},
-    {"name": "Contact 2", "phone": ""},
-    {"name": "Contact 3", "phone": ""},
-    {"name": "Contact 4", "phone": ""},
-    {"name": "Contact 5", "phone": ""},
-    {"name": "Contact 6", "phone": ""},
-    {"name": "Contact 7", "phone": ""}
+    {"name": "Contact 1", "phone": "", "mobile": ""},
+    {"name": "Contact 2", "phone": "", "mobile": ""},
+    {"name": "Contact 3", "phone": "", "mobile": ""},
+    {"name": "Contact 4", "phone": "", "mobile": ""},
+    {"name": "Contact 5", "phone": "", "mobile": ""},
+    {"name": "Contact 6", "phone": "", "mobile": ""},
+    {"name": "Contact 7", "phone": "", "mobile": ""}
   ]
 }

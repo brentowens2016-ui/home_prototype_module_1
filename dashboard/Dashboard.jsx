@@ -44,6 +44,8 @@ import AdminUserManager from "./AdminUserManager";
 import AdminAuditLog from "./AdminAuditLog";
 import EmailLogPanel from "./EmailLogPanel";
 import OnboardingModal from "./OnboardingModal";
+import AdminNotifications from "./AdminNotifications";
+import ThirdPartyDevicesPanel from "./ThirdPartyDevicesPanel";
 
 const DASHBOARD_TABS = {
   user: [
@@ -64,6 +66,7 @@ const DASHBOARD_TABS = {
     { key: "devices", label: "Devices & Controls" },
     { key: "mapping", label: "Mapping & Automation" },
     { key: "support", label: "Support & Tickets" },
+    { key: "third_party_devices", label: "Third-Party Devices" }
   ]
 };
 
@@ -225,10 +228,15 @@ export default function Dashboard() {
         <span>Logged in as: {user.username} ({user.role})</span>
         <button style={{ marginLeft: 16 }} onClick={() => setUser(null)} title="Log out of your account">Log Out</button>
       </div>
-      <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+      <div style={{ display: "flex", gap: 8, marginBottom: 16 }} role="tablist" aria-label="Dashboard Tabs">
         {roleTabs.map(tab => (
           <button
             key={tab.key}
+            role="tab"
+            aria-selected={activeTab === tab.key}
+            aria-controls={`tabpanel-${tab.key}`}
+            id={`tab-${tab.key}`}
+            tabIndex={activeTab === tab.key ? 0 : -1}
             onClick={() => setActiveTab(tab.key)}
             style={{ fontWeight: activeTab === tab.key ? "bold" : "normal" }}
           >
@@ -238,27 +246,28 @@ export default function Dashboard() {
       </div>
       {/* Layered/tabbed content by role and tab */}
       {activeTab === "admin" && user.role === "admin" && (
-        <div>
+        <div role="tabpanel" id="tabpanel-admin" aria-labelledby="tab-admin">
           <h2>Admin Dashboard</h2>
           <AdminInvitePanel />
           <AdminUserManager />
+          <AdminNotifications />
         </div>
       )}
       {activeTab === "users" && user.role === "admin" && (
-        <div>
+        <div role="tabpanel" id="tabpanel-users" aria-labelledby="tab-users">
           <h2>User Management</h2>
           <AdminUserManager />
         </div>
       )}
       {activeTab === "logs" && user.role === "admin" && (
-        <div>
+        <div role="tabpanel" id="tabpanel-logs" aria-labelledby="tab-logs">
           <h2>Logs & Audit</h2>
           <AdminAuditLog />
           <EmailLogPanel />
         </div>
       )}
       {activeTab === "devices" && (
-        <div>
+        <div role="tabpanel" id="tabpanel-devices" aria-labelledby="tab-devices">
           <h2>Devices & Controls</h2>
           <DeviceAlerts />
           {Object.entries(bulbs).map(([name, bulb]) => (
@@ -267,7 +276,7 @@ export default function Dashboard() {
         </div>
       )}
       {activeTab === "mapping" && (
-        <div>
+        <div role="tabpanel" id="tabpanel-mapping" aria-labelledby="tab-mapping">
           <h2>Mapping & Automation</h2>
           <MappingEditor helpTooltip="Map devices to rooms and set up automation rules here." />
           <AudioConfigPanel helpTooltip="Configure audio devices and settings." />
@@ -275,17 +284,22 @@ export default function Dashboard() {
         </div>
       )}
       {activeTab === "support" && (
-        <div>
+        <div role="tabpanel" id="tabpanel-support" aria-labelledby="tab-support">
           <h2>Support & Tickets</h2>
           <EmergencyContactsEditor userRole={user.role} helpTooltip="Manage emergency contacts for alerts." />
           <SupportTickets helpTooltip="Submit and track support requests." />
         </div>
       )}
       {activeTab === "impersonate" && user.role === "tech" && (
-        <div>
+        <div role="tabpanel" id="tabpanel-impersonate" aria-labelledby="tab-impersonate">
           <h2>Impersonate User Dashboard</h2>
           <p>Enter a username to view their dashboard as tech support (read-only):</p>
           {/* Implement impersonation UI here, e.g., input and fetch user dashboard */}
+        </div>
+      )}
+      {activeTab === "third_party_devices" && user.role === "admin" && (
+        <div role="tabpanel" id="tabpanel-third-party-devices" aria-labelledby="tab-third-party-devices">
+          <ThirdPartyDevicesPanel />
         </div>
       )}
       <Watermark />

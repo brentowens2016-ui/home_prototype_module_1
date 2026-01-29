@@ -18,7 +18,11 @@ Usage:
 
 import os
 import json
-from cryptography.fernet import Fernet
+try:
+    from cryptography.fernet import Fernet
+    CRYPTO_AVAILABLE = True
+except ImportError:
+    CRYPTO_AVAILABLE = False
 
 # Secure credential storage
 CRED_FILE = os.path.join(os.path.dirname(__file__), "credentials.enc")
@@ -52,7 +56,11 @@ def load_credentials():
 
 # Example: Kasa device onboarding
 try:
-    from kasa import Discover, SmartPlug
+    try:
+        from kasa import Discover, SmartPlug
+        KASA_AVAILABLE = True
+    except ImportError:
+        KASA_AVAILABLE = False
     KASA_AVAILABLE = True
 except ImportError:
     KASA_AVAILABLE = False

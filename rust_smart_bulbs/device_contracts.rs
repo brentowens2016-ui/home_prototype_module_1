@@ -31,6 +31,27 @@
 //! - When adding new device types or statuses, update both Rust and Python contracts.
 //! - Document all changes for FFI and API consumers.
 //!
+//! # Cross-language contract mapping
+//! --------------------------------
+//! Rust enum variant <-> Python enum value mapping:
+//!
+//! DeviceType:
+//!   Rust:         Python Enum:      Python String:
+//!   SmartBulb     SMART_BULB        "smart_bulb"
+//!   SmartSwitch   SMART_SWITCH      "smart_switch"
+//!   Sensor        SENSOR            "sensor"
+//!   Unknown       UNKNOWN           "unknown"
+//!
+//! DeviceStatus:
+//!   Rust:         Python Enum:      Python String:
+//!   On            ON                "on"
+//!   Off           OFF               "off"
+//!   Unknown       UNKNOWN           "unknown"
+//!
+//! When adding new device types/statuses, update both Rust and Python contracts and this mapping table.
+//!
+//! Conversion helpers should be implemented in the Python layer for FFI boundary.
+//!
 //! ---
 /// Enumerates all supported device types.
 #[derive(Debug, Clone)] // Ch. 6 Enums
@@ -41,6 +62,10 @@ pub enum DeviceType {
     SmartSwitch,
     /// Sensor (e.g., temperature, motion)
     Sensor,
+    /// Hardwired security system
+    SecurityHardwired,
+    /// Wi-Fi based security system
+    SecurityWiFi,
     /// Unknown or unsupported device
     Unknown,
 }

@@ -21,14 +21,19 @@ from typing import List, Dict
 
 # Wi-Fi (mDNS/Bonjour) discovery
 try:
-    from zeroconf import Zeroconf, ServiceBrowser
+    try:
+        from zeroconf import Zeroconf, ServiceBrowser
+        ZEROCONF_AVAILABLE = True
+    except ImportError:
+        ZEROCONF_AVAILABLE = False
     ZEROCONF_AVAILABLE = True
 except ImportError:
     ZEROCONF_AVAILABLE = False
 
-# Bluetooth discovery
+
+# Bluetooth (BLE) discovery using bleak
 try:
-    import bluetooth  # PyBluez
+    from bleak import BleakScanner
     BLUETOOTH_AVAILABLE = True
 except ImportError:
     BLUETOOTH_AVAILABLE = False
@@ -38,17 +43,20 @@ HOME_ASSISTANT_BT_NAMES = [
     "Kasa", "Zigbee", "Philips Hue", "IKEA", "Sonoff", "Shelly", "Tuya"
 ]
 
+
 class DeviceListener:
     def __init__(self):
         self.devices = []
     def add_service(self, zeroconf, type, name):
         info = zeroconf.get_service_info(type, name)
         if info:
-            self.devices.append({
+            self.devices.append({})
 
+def discover_wifi_devices() -> List[Dict]:
     if not ZEROCONF_AVAILABLE:
         print("zeroconf not installed. Skipping Wi-Fi mDNS discovery.")
         return []
+    from zeroconf import Zeroconf, ServiceBrowser
     zeroconf = Zeroconf()
     listener = DeviceListener()
     browser = ServiceBrowser(zeroconf, "_http._tcp.local.", listener)
@@ -57,18 +65,21 @@ class DeviceListener:
     zeroconf.close()
     return listener.devices
 
+import asyncio
 def discover_bluetooth_devices() -> List[Dict]:
     if not BLUETOOTH_AVAILABLE:
-        print("PyBluez not installed. Skipping Bluetooth discovery.")
+        print("bleak not installed. Skipping Bluetooth discovery.")
         return []
-    print("Scanning for Bluetooth devices...")
-    found = bluetooth.discover_devices(duration=8, lookup_names=True)
-    filtered = [
-        {"address": addr, "name": name}
-        for addr, name in found
-        if any(hn in (name or "") for hn in HOME_ASSISTANT_BT_NAMES)
-    ]
-    return filtered
+    print("Scanning for Bluetooth (BLE) devices...")
+    async def scan():
+        devices = await BleakScanner.discover(timeout=8.0)
+        filtered = [
+            {"address": d.address, "name": d.name}
+            for d in devices
+            if any(hn in (d.name or "") for hn in HOME_ASSISTANT_BT_NAMES)
+        ]
+        return filtered
+    return asyncio.run(scan())
 
 def main():
     print("=== Device Discovery ===")

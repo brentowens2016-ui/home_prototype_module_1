@@ -15,7 +15,7 @@ function getIcon(type) {
   return DEVICE_TYPE_ICONS[type] || DEVICE_TYPE_ICONS.unknown;
 }
 
-export default function FloorplanGrid({ mapping, onMove }) {
+export default function FloorplanGrid({ mapping, rooms = [], onMove }) {
   // Simple 20x20 grid, 600x600px
   const gridSize = 20;
   const cellSize = 30;
@@ -54,6 +54,26 @@ export default function FloorplanGrid({ mapping, onMove }) {
           />
         ))
       )}
+      {/* Rooms as rectangles */}
+      {rooms.map((room, idx) => (
+        <div
+          key={room.name + idx}
+          style={{
+            position: "absolute",
+            left: room.x * cellSize,
+            top: room.y * cellSize,
+            width: (room.w || 4) * cellSize,
+            height: (room.h || 4) * cellSize,
+            background: "rgba(200,220,255,0.25)",
+            border: "2px solid #4a90e2",
+            borderRadius: 8,
+            zIndex: 1,
+            pointerEvents: "none"
+          }}
+        >
+          <span style={{ position: "absolute", left: 4, top: 4, fontWeight: "bold", color: "#235" }}>{room.name}</span>
+        </div>
+      ))}
       {/* Devices */}
       {mapping.map((entry, idx) => (
         <div

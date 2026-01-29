@@ -21,7 +21,7 @@ export default function EmergencyContactsEditor({ userRole }) {
 
   const handleAddContact = () => {
     if (contacts.contacts.length < 7) {
-      setContacts(c => ({ ...c, contacts: [...c.contacts, { name: "", phone: "", email: "" }] }));
+      setContacts(c => ({ ...c, contacts: [...c.contacts, { name: "", phone: "", email: "", mobile: "" }] }));
     }
   };
 
@@ -52,6 +52,7 @@ export default function EmergencyContactsEditor({ userRole }) {
           <div>Name: <input value={ct.name} onChange={e => handleContactChange(idx, "name", e.target.value)} disabled={isSpecialAccess} /></div>
           <div>Phone: <input value={ct.phone} onChange={e => handleContactChange(idx, "phone", e.target.value)} disabled={isSpecialAccess} /></div>
           <div>Email: <input value={ct.email || ""} onChange={e => handleContactChange(idx, "email", e.target.value)} disabled={isSpecialAccess} /></div>
+          <div>Mobile: <input value={ct.mobile || ""} onChange={e => handleContactChange(idx, "mobile", e.target.value)} disabled={isSpecialAccess} /></div>
           {!isSpecialAccess && <button onClick={() => handleRemoveContact(idx)} style={{ color: "red", marginTop: 4 }}>Remove</button>}
         </div>
       ))}
