@@ -67,9 +67,18 @@ export default function AuthPanel({ onAuth, onShowDownload }) {
 
   const handleSignup = () => {
     setError("");
-    axios.post("/users", { username: form.email, password: form.password, access_mode: selectedPlan === "annual" ? "paid_annual" : "paid_monthly", payment_status: paymentComplete ? "paid" : "unpaid" })
-      .then(() => { setMessage("Signup successful! Please log in."); setMode("login"); })
-      .catch(e => setError(e.response?.data?.detail || "Signup failed"));
+    // Beta: check invitation before signup
+    axios.get(`/users/invited/${encodeURIComponent(form.email)}`)
+      .then(res => {
+        if (!res.data.invited) {
+          setError("Invitation required for beta signup. Please check your email or contact support.");
+          return;
+        }
+        axios.post("/users", { username: form.email, password: form.password, access_mode: "beta", payment_status: paymentComplete ? "paid" : "unpaid" })
+          .then(() => { setMessage("Signup successful! Please log in."); setMode("login"); })
+          .catch(e => setError(e.response?.data?.detail || "Signup failed"));
+      })
+      .catch(() => setError("Could not verify invitation status. Try again later."));
   };
 
   const handleRequestReset = () => {
@@ -87,37 +96,37 @@ export default function AuthPanel({ onAuth, onShowDownload }) {
   };
 
   return (
-    <div style={{ border: "1px solid #888", padding: 24, maxWidth: 400, margin: "32px auto" }}>
-      <h2>{mode === "login" ? "Login" : mode === "signup" ? "Sign Up" : "Reset Password"}</h2>
+    <div style={{ border: "1px solid #888", padding: 24, maxWidth: 400, margin: "32px auto" }} role="main" aria-label="Authentication Panel" tabIndex={-1}>
+      <h2 aria-live="polite">{mode === "login" ? "Login" : mode === "signup" ? "Sign Up" : "Reset Password"}</h2>
       {mode !== "reset" && (
         <div>
-          <div>Email: <input value={form.email} onChange={e => handleChange("email", e.target.value)} /></div>
-          <div>Password: <input type="password" value={form.password} onChange={e => handleChange("password", e.target.value)} /></div>
+          <div>Email: <input value={form.email} onChange={e => handleChange("email", e.target.value)} aria-label="Email address" aria-required="true" /></div>
+          <div>Password: <input type="password" value={form.password} onChange={e => handleChange("password", e.target.value)} aria-label="Password" aria-required="true" /></div>
         </div>
       )}
       {mode === "signup" && billingConfig && (
         <div style={{ fontSize: 13, color: "#555", margin: "8px 0" }}>
           <div>
             <label>Choose Plan: </label>
-            <select value={selectedPlan} onChange={e => setSelectedPlan(e.target.value)}>
+            <select value={selectedPlan} onChange={e => setSelectedPlan(e.target.value)} aria-label="Choose subscription plan">
               {billingConfig.billing_options.map(opt => (
                 <option key={opt.interval} value={opt.interval}>{opt.label} (${opt.amount}/{opt.interval})</option>
               ))}
             </select>
           </div>
           <div ref={paypalRef} style={{ margin: "16px 0" }} />
-          {!paymentComplete && <div style={{ color: "#b00" }}>Payment required to sign up.</div>}
+          {!paymentComplete && <div style={{ color: "#b00" }} aria-live="assertive">Payment required to sign up.</div>}
         </div>
       )}
       {mode === "reset" && (
         <div>
-          <div>Email: <input value={form.email} onChange={e => handleChange("email", e.target.value)} /></div>
-          <div>Reset Token: <input value={form.token} onChange={e => handleChange("token", e.target.value)} /></div>
-          <div>New Password: <input type="password" value={form.new_password} onChange={e => handleChange("new_password", e.target.value)} /></div>
+          <div>Email: <input value={form.email} onChange={e => handleChange("email", e.target.value)} aria-label="Email address" aria-required="true" /></div>
+          <div>Reset Token: <input value={form.token} onChange={e => handleChange("token", e.target.value)} aria-label="Reset token" aria-required="true" /></div>
+          <div>New Password: <input type="password" value={form.new_password} onChange={e => handleChange("new_password", e.target.value)} aria-label="New password" aria-required="true" /></div>
         </div>
       )}
-      {error && <div style={{ color: "red", margin: 8 }}>{error}</div>}
-      {message && <div style={{ color: "green", margin: 8 }}>{message}</div>}
+      {error && <div style={{ color: "red", margin: 8 }} aria-live="assertive">{error}</div>}
+      {message && <div style={{ color: "green", margin: 8 }} aria-live="polite">{message}</div>}
       <div style={{ marginTop: 16 }}>
         {mode === "login" && <>
           <button onClick={handleLogin}>Login</button>
