@@ -1,4 +1,108 @@
+SECURE HDMI HUB/TV INTEGRATION (DISCREET AUDIO/VIDEO ENDPOINTS)
+
+Goal: Use a secure, HDMI-connected hub (hidden near TV/router) to relay voice commands and responses via the TV, enabling two-way AI interactivity with no visible microphones or wiring.
+
+Architecture:
+- Hub connects to TV via HDMI (audio/video out, possible audio in via HDMI-ARC/eARC)
+- Hub connects to home network (Ethernet or Wi-Fi)
+- Hub runs local software for voice capture, AI relay, and casting/streaming
+- TV acts as discreet room endpoint (no visible mics/wires)
+- Each hub is mapped to a room in the backend
+
+Checklist:
+- [ ] Research and select suitable HDMI hub hardware (see below)
+- [ ] Prototype Linux-based hub software (voice capture, casting, secure relay)
+- [ ] Integrate hub with backend audio mapping and room assignment
+- [ ] Implement secure local processing and encrypted comms
+- [ ] Add support for HDMI-ARC/eARC for audio input (if TV supports)
+- [ ] Add support for Chromecast/DLNA/Miracast for streaming/casting
+- [ ] Document setup and privacy/security features
+
+Suggested Hubs/Peripherals:
+- Raspberry Pi 4/5 with HDMI out, USB mic (hidden), Wi-Fi/Ethernet
+- Intel NUC or similar mini-PC
+- Commercial HDMI streaming/casting boxes (with Linux support)
+- USB/HDMI audio capture dongles (for HDMI-ARC/eARC input)
+- Optional: Far-field microphone array (hidden in TV bezel or entertainment center)
+
+Notes:
+- All hardware should be hidden or integrated for maximum discretion
+- No visible microphones or wires in living space
+- TV appears as a normal device, but is a full AI audio/video endpoint
+==============================================================
+BlueOcean Account url: https://cloud.digitalocean.com/droplets/547886544/graphs?i=d042d0&period=hour
+
+========================================================================================
+
 ============================
+============================
+PRIORITY TODO & PROGRESS CHECKLIST
+  - [XX ] Integrate privacy policy, terms of service, and legal disclaimers throughout the app:
+        - Display full text and require acceptance before signup, download, or installation
+        - Add persistent links in dashboard/app footer and settings
+        - Require acceptance for commercial inquiries and scheduling
+        - Include in user manual and onboarding materials
+============================
+
+1. Legal & Privacy Foundation
+  - [x] Draft/review privacy policy, terms of service, and disclosures
+
+---
+-[xx] Boilerplate Drafts: Privacy Policy, Terms of Service, and Disclosures
+
+-[xx] Privacy Policy (Draft):
+We value your privacy. This system collects only the data necessary to provide monitoring, automation, and safety features. Data is not sold or shared with third parties except as required by law or to provide core services. You may review, update, or request deletion of your data at any time. Our privacy practices may change to comply with legal requirements or policy updates; you will be notified of any changes.
+
+-[xx]Terms of Service (Draft):
+By using this system, you agree to abide by all applicable laws and our user agreement. Subscription fees cover access to the software platform and standard support only. Hardware, installation, interfaces, wiring, electrical or plumbing work, and custom programming for new features or hardware are not included and may require separate agreements or fees. Use of the system is at your own risk. We reserve the right to update these terms at any time.
+
+-[xx] Legal Disclaimer / Disclosure (Draft):
+This system is designed to assist with monitoring and safety, but no system can guarantee detection or prevention of all incidents. We are not liable for any failure to detect, respond to, or prevent bodily harm, injury, or death to users, family members, or others. Users are responsible for maintaining their equipment and ensuring emergency contacts and procedures are up to date. Use of this system constitutes acceptance of these terms.
+
+All boilerplate policies and disclosures must be reviewed and updated by legal counsel before public release.
+  - [ ] Implement acceptance dialog in signup/install process
+  - [ ] Ensure legal text is accessible and conspicuous
+  - [ ] Add boilerplate and disclaimers
+
+2. Audio System Upgrade for AI Interactions
+  - [ ] Plan/design upgraded audio I/O system (hardware/software)
+  - [ ] Implement core audio feedback and interaction features
+  - [ ] In-house testing for clarity and reliability
+  ---
+  AUDIO SYSTEM UPGRADE: AI INTERACTIONS
+
+  MVP (Current Desk-side Audio):
+  - [ ] Implement modular Python audio interface (audio_io.py) for input/output
+  - [ ] Use current system default speaker/microphone for all AI interactions
+  - [ ] Integrate audio interface with FastAPI backend (python_wrapper/)
+  - [ ] Add config option for selecting audio device (future-proof)
+  - [ ] Test audio input/output with basic AI prompt/response
+
+  Future Expansion (Room-based Audio):
+  - [ ] Design audio interface to support multiple devices (by name/ID)
+  - [ ] Map audio devices to rooms/zones in device mapping
+  - [ ] Add REST API endpoints for device management/selection
+  - [ ] Update dashboard UI for audio device mapping
+  - [ ] Document setup/expansion steps in User_Guide.txt
+
+  Notes:
+  - Start with current system audio, but keep interface modular for easy expansion.
+  - Use sounddevice or PyAudio for cross-platform compatibility.
+3. Subscription Levels & User Flows
+  - [ ] Update frontend to display/explain subscription levels
+  - [ ] Connect subscription logic to backend
+  - [ ] Add conspicuous display of terms/disclosures before checkout/download
+
+4. Appointment/Estimate Request Form
+  - [ ] Add form to frontend for commercial users to request estimates/schedule appointments
+  - [ ] Integrate with backend for notifications/scheduling
+
+5. Testing & Feedback
+  - [x] Test core stack in-house (backend, dashboard, device logic)
+  - [ ] Test new features in-house before inviting external testers
+  - [ ] Gather feedback, fix bugs, and iterate
+
+---
 Future TODO: Voice Controls & Implementation
 ============================
 
@@ -20,8 +124,148 @@ This file is for brainstorming, general ideas, and comments. Use it to jot down 
 
 ---
 
+
 (Write below this line)
 
+---
+MARKET RESEARCH: Smart Home/Monitoring System Subscriptions (2026)
+
+1. Basic Subscription (Monitoring)
+  - Device status monitoring, dashboard access, basic notifications, limited automation, device/room limits.
+  - $5–$10/month (sometimes free for self-monitored plans).
+  - Examples: SimpliSafe, Ring, Wyze, SmartThings (free/basic tiers).
+
+2. Expanded/Plus Subscription
+  - Adds cloud video storage, advanced automation, multi-user, 3rd-party integrations, priority support.
+  - $10–$20/month.
+  - Examples: Ring Protect Plus, SimpliSafe Interactive, Abode Pro, SmartThings Premium.
+
+3. Professional/Commercial Monitoring
+  - 24/7 pro monitoring, compliance, multi-site, analytics, reporting, dedicated support.
+  - $20–$50+/month (higher for large/commercial sites).
+  - Examples: ADT, Vivint, SimpliSafe Pro, Alarm.com commercial.
+
+4. Invite-Only/Special Access
+  - Read-only/monitoring for caregivers, doctors, emergency contacts. No device control.
+  - Usually bundled in higher tiers or by admin invite; not a separate charge.
+
+Market Observations:
+  - Free/low-cost basic tiers are common; advanced features require paid plans.
+  - Professional monitoring is a major upsell, often with contracts.
+  - Family/household roles are common; admin/guest/caregiver granularity is rare.
+  - Commercial/enterprise features are usually custom-quoted.
+  - Pricing is monthly/annual SaaS, with annual discounts.
+
+---
+This section is for reference when designing/pricing your own subscription levels and feature sets.
+
+---
+
+BlueOcean / Virtual Server Access Info
+
+- IP Address: __________________________
+- Hostname: ____________________________
+- URL: _________________________________
+- Notes: Use this section to record the IP address, hostname, or URL for your BlueOcean/virtual server project storage. Update as needed so you never lose access.
+
+---
+
+TODO: User Agreement – Subscription Coverage Clarification
+
+---
+
+TODO: Commercial Signup, Inquiry, and Scheduling Workflow
+
+---
+
+NOTES: Scalability, Liability, SLAs, and User/Admin Roles
+
+- Liability insurance and/or bonding will be required for both residential and commercial deployments. Blanket coverage should be explored.
+- Service Level Agreements (SLAs): Will need to be parsed into specific topics for future discussion and drafting.
+- Each location (home or commercial site) will be a separate subscription; user groups are confined to the household/facility and their emergency contacts.
+- Family members can have read/monitor-only roles until upgraded by support or an admin.
+- Maintenance staff for commercial sites will be assigned as site-level admins (not backend/system-wide admins).
+- Two types of admin roles:
+  - Site Authorized Admin: Admin privileges for a specific site/location (multiple people possible).
+  - System/Backend Admin: Higher-level admin for backend/server management (restricted access).
+- Similar admin/monitor role structure should be implemented for household subscriptions (e.g., Mom/Dad/Adults as admins, others as monitor-only users).
+
+- On website/signup, require user to select Home Use or Commercial Use.
+- If Commercial Use:
+  - Redirect to a detailed inquiry form (facility type, location, square footage, rooms, requirements, contact info).
+  - Inform user that a custom quote will be provided.
+  - Offer a scheduling tool for consultation/site survey (calendar picker or callback request).
+  - Send confirmation/reminders to both client and team.
+- If Home Use:
+  - Proceed with standard checkout and subscription pricing.
+- Make pricing transparency clear: commercial installs require site-specific quote due to complexity and support needs.
+
+- Clearly state in the user agreement that subscription fees only cover access to the software/service and standard support.
+- Hardware, installation, interfaces, wiring, electrical or plumbing work, and custom programming for new features or hardware are NOT included in the subscription and may require separate agreements or fees.
+- Example language: "Subscription fees cover access to the software platform and standard support only. Hardware, installation, interfaces, wiring, electrical or plumbing work, and custom programming for new features or hardware are not included and may require separate agreements or fees."
+---
+
+TODO: Explore Affiliate Programs for Smart Home Equipment/Software
+
+- Research affiliate programs for Kasa (TP-Link), Zigbee-compatible devices, and other smart home brands.
+- Investigate retailer affiliate programs (Amazon Associates, Best Buy, etc.) for monetizing product recommendations and sales leads.
+- Document options for integrating affiliate links into the dashboard, website, or user documentation.
+- Evaluate potential revenue and compliance requirements for affiliate marketing in the smart home context.
+---
+
+TODO: Modular AI Training & Suggestion Interfaces
+
+- Design modular AI training and suggestion features:
+  - User module: Everyday feedback, suggestions, and interactions (text/audio), no technical controls.
+  - Admin/technician module: Advanced training, diagnostics, technical suggestions, logs, and configuration.
+- Ensure only authorized users (admins/technicians) can access technical features.
+- Both modules active for admins; only user module visible for regular users.
+- Security: Prevent unauthorized access to system-level controls and technical details.
+---
+
+TODO: Privacy Acceptance Dialog
+
+- Implement an accept/decline dialog during setup/installation that presents clear, boilerplate privacy and data use disclosures.
+- Disclosure should state:
+  - What data is collected and how it is used
+  - Data is not currently sold or used for other purposes, but this may change to comply with laws, user agreements, or privacy policies
+  - Reference to privacy policy and user agreement, with links or access to full text
+  - Explicit acceptance required to proceed; decline exits or disables setup
+- Example language:
+  "By clicking Accept, you acknowledge that you have read and understood our Privacy Policy and User Agreement. Your data is not currently sold or used for any other purposes, but this may change as required by law or policy updates. You will be notified of any changes and may review our policies at any time."
+
+Must be implemented before beta or public release.
+---
+
+TODO: AI Assistant Tone, Learning, and Customization
+
+- Assistant Tone: Ensure all spoken responses are calm, clear, and reassuring—no unnecessary fluff or overly casual language. Prioritize trust and clarity, especially for urgent or sensitive events.
+- Standard Library: Develop a well-crafted set of default phrases and responses (core vocabulary) for all common events, commands, and clarifications.
+- Learning & Expansion: Enable the AI to expand its vocabulary and phrasing over time, learning from user interactions and preferences, but always within boundaries of clarity and appropriateness.
+- Contextual Integrity: System should understand context (who, where, when, what’s happening) and tailor responses accordingly—different tones or levels of detail for emergencies vs. routine events.
+- Customizability: Allow users and families to adjust the assistant’s style, vocabulary, and which types of questions or notifications they want to receive.
+- Benefits: Users feel respected and in control; system adapts to different households and personalities; communication is always clear, never overwhelming or confusing.
+
+Next steps: Structure the standard library, design customization and learning features, and plan user management of these options.
+---
+
+Session Log: Jan 28, 2026
+
+- Fixed multi-stage Docker build and deployment for Rust, Python (FastAPI), and React services.
+- Resolved persistent Rust binary not found error by:
+  - Adding explicit [[bin]] section to Cargo.toml
+  - Removing volume mount from rust_smart_bulbs in docker-compose.yml to prevent overwriting built binary
+  - Forcing Docker rebuilds with --no-cache
+- Fixed backend (FastAPI) container startup by:
+  - Creating requirements.txt with fastapi and uvicorn[standard]
+  - Updating python_wrapper/Dockerfile to COPY requirements.txt before pip install
+  - Ensuring correct build context and working directory
+- Committed and pushed all changes to GitHub, then pulled and rebuilt on the server
+- Verified all containers (backend, dashboard, rust_smart_bulbs) now build and start successfully
+- Discussed how these fixes will reduce beta testing issues
+- Noted the value of real-world troubleshooting for learning
+
+Next session: Pick up with further testing, automation, or new features as needed.
 ---
 
 Brainstorming: Pressure Sensors & Integration
