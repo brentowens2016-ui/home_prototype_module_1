@@ -1,4 +1,28 @@
 //! # Smart Bulb Module for Home Automation
+use aes::Aes128;
+use block_modes::{BlockMode, Cfb};
+use block_modes::block_padding::Pkcs7;
+use base64::{encode, decode};
+type AesCfb = Cfb<Aes128>;
+
+const AES_KEY: &[u8; 16] = b"ThisIsASecretKey123";
+const AES_IV: &[u8; 16] = b"ThisIsAnIV456789";
+
+pub fn double_encrypt(data: &[u8]) -> String {
+    // First layer: AES
+    let cipher = AesCfb::new_from_slices(AES_KEY, AES_IV).unwrap();
+    let encrypted1 = cipher.encrypt_vec(data);
+    // Second layer: base64
+    encode(&encrypted1)
+}
+
+pub fn double_decrypt(data: &str) -> Vec<u8> {
+    // Second layer: base64
+    let encrypted1 = decode(data).unwrap();
+    // First layer: AES
+    let cipher = AesCfb::new_from_slices(AES_KEY, AES_IV).unwrap();
+    cipher.decrypt_vec(&encrypted1).unwrap()
+}
 //!
 //! This module implements the core logic for smart bulbs in the modular smart home system.
 //!

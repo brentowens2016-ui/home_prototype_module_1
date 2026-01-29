@@ -81,7 +81,28 @@ from python_wrapper.analytics_api import router as analytics_router
 from python_wrapper.audio_io import AudioIO
 import python_wrapper.device_mapping as device_mapping
 
-# --- HDMI Hub & Audio Endpoint API ---
+from python_wrapper.device_discovery import discover_wifi_devices
+
+# --- Wi-Fi Device Discovery Endpoint ---
+@app.get("/discover-wifi")
+def discover_wifi():
+    return discover_wifi_devices()
+
+# --- Wi-Fi Device Connection Endpoint ---
+@app.post("/connect-wifi-devices")
+async def connect_wifi_devices(request: Request):
+    device_ids = await request.json()
+    # Here, connect logic would be implemented (stub)
+    # For demo, just return success
+    return {"status": "connected", "devices": device_ids}
+
+# --- Home Assistant/Appliance Integration Endpoint ---
+@app.post("/integration")
+async def set_integration(request: Request):
+    data = await request.json()
+    # Here, update integration settings (stub)
+    # For demo, just return success
+    return {"status": "ok", "integration": data}
 @app.get("/hdmi-hubs")
 def list_hdmi_hubs():
     # Filter device_mapping for hdmi_hub type
@@ -115,6 +136,55 @@ def list_audio_endpoints():
         return JSONResponse(status_code=500, content={"error": str(e)})
 # --- FastAPI app and endpoints ---
 from starlette.middleware.base import BaseHTTPMiddleware
+from cryptography.fernet import Fernet
+from Crypto.Cipher import AES
+import base64
+
+
+# --- Double Encryption Middleware ---
+FERNET_KEY = Fernet.generate_key()
+fernet = Fernet(FERNET_KEY)
+AES_KEY = b'ThisIsASecretKey123'  # 16 bytes for AES-128
+AES_IV = b'ThisIsAnIV456789'      # 16 bytes IV
+
+def double_encrypt(data: bytes) -> bytes:
+    # First layer: Fernet
+    encrypted1 = fernet.encrypt(data)
+    # Second layer: AES
+    cipher = AES.new(AES_KEY, AES.MODE_CFB, AES_IV)
+    encrypted2 = cipher.encrypt(encrypted1)
+    return base64.b64encode(encrypted2)
+
+def double_decrypt(data: bytes) -> bytes:
+    # Second layer: AES
+    encrypted2 = base64.b64decode(data)
+    cipher = AES.new(AES_KEY, AES.MODE_CFB, AES_IV)
+    decrypted1 = cipher.decrypt(encrypted2)
+    # First layer: Fernet
+    decrypted2 = fernet.decrypt(decrypted1)
+    return decrypted2
+
+class DoubleEncryptionMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        # Decrypt incoming request body if present
+        if request.method in ("POST", "PUT", "PATCH"):
+            body = await request.body()
+            if body:
+                try:
+                    decrypted = double_decrypt(body)
+                    request._body = decrypted
+                except Exception:
+                    pass
+        response = await call_next(request)
+        # Encrypt outgoing response
+        if hasattr(response, "body") and response.body:
+            try:
+                encrypted = double_encrypt(response.body)
+                response.body = encrypted
+                response.headers["Content-Type"] = "application/octet-stream"
+            except Exception:
+                pass
+        return response
 
 # --- Global API Rate Limiting Middleware ---
 RATE_LIMITS = {}
@@ -134,24 +204,25 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         return response
 
 app = FastAPI(
-    app.add_middleware(RateLimitMiddleware)
-    @app.get("/email-log")
-    def get_email_log():
-        log_path = os.path.join(os.path.dirname(__file__), "email_log.json")
-        if not os.path.exists(log_path):
-            return []
-        try:
-            with open(log_path, "r", encoding="utf-8") as f:
-                log = json.load(f)
-            return log
-        except Exception as e:
-            return JSONResponse(status_code=500, content={"error": f"Failed to read email log: {str(e)}"})
     title="Home Prototype Module 1 API",
     description="Comprehensive API for smart home, security, automation, and support features.",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
 )
+app.add_middleware(DoubleEncryptionMiddleware)
+app.add_middleware(RateLimitMiddleware)
+@app.get("/email-log")
+def get_email_log():
+    log_path = os.path.join(os.path.dirname(__file__), "email_log.json")
+    if not os.path.exists(log_path):
+        return []
+    try:
+        with open(log_path, "r", encoding="utf-8") as f:
+            log = json.load(f)
+        return log
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": f"Failed to read email log: {str(e)}"})
 app.include_router(contacts_router)
 app.include_router(support_router)
 app.include_router(users_router)

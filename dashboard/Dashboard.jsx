@@ -32,6 +32,21 @@
 // ---
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { doubleEncrypt, doubleDecrypt } from "./encryption";
+// Axios double encryption interceptor
+axios.interceptors.request.use(async config => {
+  if (config.data) {
+    config.data = await doubleEncrypt(config.data);
+    config.headers["Content-Type"] = "application/octet-stream";
+  }
+  return config;
+});
+axios.interceptors.response.use(async response => {
+  if (response.headers["content-type"] === "application/octet-stream" && response.data) {
+    response.data = await doubleDecrypt(response.data);
+  }
+  return response;
+});
 
 import MappingEditor from "./MappingEditor";
 import DeviceAlerts from "./DeviceAlerts";

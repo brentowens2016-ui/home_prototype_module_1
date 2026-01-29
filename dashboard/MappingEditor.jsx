@@ -13,32 +13,43 @@ const TIER_LIMITS = {
 };
 
 export default function MappingEditor() {
-
-  const [mapping, setMapping] = useState([]);
-  const [rules, setRules] = useState([]);
-  const [error, setError] = useState("");
-  const [saving, setSaving] = useState(false);
-  const [rooms, setRooms] = useState([]);
-  const [totalSqft, setTotalSqft] = useState(2000);
-  const [userTier, setUserTier] = useState("free");
-  const [tierInfo, setTierInfo] = useState(TIER_LIMITS["free"]);
-
-  // Fetch user info for tier and sqft
-  useEffect(() => {
-    axios.get("/users", { headers: { "X-Role": "admin" } })
-      .then(res => {
-        const admin = res.data.find(u => u.role === "admin") || res.data[0];
-        setUserTier(admin?.subscription_tier || "free");
-        setTotalSqft(admin?.declared_sqft || 0);
-        setTierInfo(TIER_LIMITS[admin?.subscription_tier] || TIER_LIMITS["free"]);
-      })
-      .catch(() => {});
-  }, []);
-
-  useEffect(() => {
-    axios.get("/mapping").then(res => setMapping(res.data)).catch(() => setMapping([]));
-  }, []);
-
+  const [trainingMode, setTrainingMode] = useState(false);
+  return (
+    <div style={{ border: "1px solid #aaa", margin: 16, padding: 16 }}>
+      <h2>Device & Room Mapping Editor</h2>
+      <div style={{ marginBottom: 8 }}>
+        <b>Subscription Tier:</b> {userTier} &nbsp;|&nbsp;
+        <b>Max Devices:</b> {tierInfo.max_devices} &nbsp;|&nbsp;
+        <b>Max Sqft:</b> {tierInfo.max_sqft}
+      </div>
+      <div style={{ marginBottom: 8 }}>
+        <b>Current Devices:</b> {mapping.length} &nbsp;|&nbsp;
+        <b>Declared Sqft:</b> {totalSqft}
+      </div>
+      <div style={{ marginBottom: 12 }}>
+        <label><input type="checkbox" checked={trainingMode} onChange={e => setTrainingMode(e.target.checked)} /> Training Mode: Edit Device Actions & Automations</label>
+      </div>
+      <RoomManager rooms={rooms} setRooms={setRooms} totalSqft={totalSqft} setTotalSqft={setTotalSqft} />
+      <FloorplanGrid mapping={mapping} rooms={rooms} onMove={handleMove} />
+      <AutomationRulesEditor mapping={mapping} rules={rules} setRules={setRules} trainingMode={trainingMode} />
+      {mapping.length === 0 && <div>No mapping loaded.</div>}
+      {mapping.map((entry, idx) => (
+        <div key={entry.id || idx} style={{ marginBottom: 12, padding: 8, border: "1px solid #eee" }}>
+          {/* ...existing code... */}
+          {trainingMode && (
+            <div style={{ marginTop: 8, background: "#f9f9f9", padding: 8, borderRadius: 4 }}>
+              <b>Edit Device Actions (Training Mode):</b>
+              <input placeholder="Action Name" value={entry.action || ""} onChange={e => handleFieldChange(idx, "action", e.target.value)} style={{ marginLeft: 8 }} />
+              <input placeholder="Automation Trigger" value={entry.trigger || ""} onChange={e => handleFieldChange(idx, "trigger", e.target.value)} style={{ marginLeft: 8 }} />
+            </div>
+          )}
+        </div>
+      ))}
+      <button onClick={handleAddDevice} style={{ marginRight: 8 }}>Add Device</button>
+      <button onClick={handleSave} disabled={saving}>Save Mapping</button>
+      {error && <div style={{ color: error === "Saved!" ? "green" : "red" }}>{error}</div>}
+    </div>
+  );
 
   const handleFieldChange = (idx, field, value) => {
     setMapping(m => m.map((entry, i) => i === idx ? { ...entry, [field]: value } : entry));
@@ -55,11 +66,12 @@ export default function MappingEditor() {
       {
         id: '',
         location: '',
-        type: 'pressure',
+        type: '',
         function: '',
         room: '',
         x: 0,
-        y: 0
+        y: 0,
+        personalized: false
       }
     ]);
   };
@@ -119,6 +131,7 @@ export default function MappingEditor() {
               value={entry.type}
               onChange={e => handleFieldChange(idx, "type", e.target.value)}
             >
+              <option value="">Select Type</option>
               <option value="pressure">Pressure Sensor</option>
               <option value="motion">Motion Sensor</option>
               <option value="door">Door Sensor</option>
@@ -128,6 +141,9 @@ export default function MappingEditor() {
               <option value="smoke">Smoke Detector</option>
               <option value="co">CO Detector</option>
               <option value="alarm">Alarm</option>
+              <option value="appliance">Smart Appliance</option>
+              <option value="alexa">Alexa/Home Assistant</option>
+              <option value="google_home">Google Home</option>
               <option value="other">Other (user-defined)</option>
             </select>
             {entry.type === "other" && (
@@ -138,6 +154,9 @@ export default function MappingEditor() {
           <div>Room: <input value={entry.room || ""} onChange={e => handleFieldChange(idx, "room", e.target.value)} /></div>
           <div>X: <input type="number" value={entry.x || 0} onChange={e => handleFieldChange(idx, "x", Number(e.target.value))} /></div>
           <div>Y: <input type="number" value={entry.y || 0} onChange={e => handleFieldChange(idx, "y", Number(e.target.value))} /></div>
+          <div>
+            <label><input type="checkbox" checked={entry.personalized} onChange={e => handleFieldChange(idx, "personalized", e.target.checked)} /> Personalized Device</label>
+          </div>
           <button onClick={() => handleRemoveDevice(idx)} style={{ marginTop: 4, color: "red" }}>Remove</button>
         </div>
       ))}

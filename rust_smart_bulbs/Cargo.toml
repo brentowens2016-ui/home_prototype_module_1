@@ -24,6 +24,10 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
+aes = "0.8"
+block-modes = "0.9"
+block-padding = "0.3"
+base64 = "0.21"
 pyo3 = { version = "0.21", features = ["extension-module"] }
 
 [[bin]]

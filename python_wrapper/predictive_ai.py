@@ -23,6 +23,37 @@ except ImportError:
     VOIP_AVAILABLE = False
 
 class PredictiveAIModule:
+    def suggest_adaptive_actions(self, user_id: str) -> list:
+        """Suggest adaptive actions based on user behavior and recent events."""
+        # Example: If user often turns on lights at 7pm, suggest automation
+        actions = []
+        recent = [e for e in self.event_log if e.get("user_id") == user_id][-20:]
+        light_events = [e for e in recent if e.get("event_type") == "bulb_on"]
+        if len(light_events) > 5:
+            actions.append({"suggestion": "Automate lights at this time?", "type": "automation"})
+        # Add more adaptive logic as needed
+        self.diagnostics.append(f"Adaptive actions for {user_id}: {actions}")
+        return actions
+
+    def automate_device_control(self):
+        """Automatically control devices based on learned scenarios and predictions."""
+        # Example: If prediction matches, trigger device control
+        if self.event_log and self.scenarios:
+            recent_events = self.event_log[-3:]
+            prediction = self.predict_next_event(recent_events)
+            if prediction:
+                # Here, trigger device control (stub)
+                self.diagnostics.append(f"Automated device control: {prediction}")
+                # Integrate with device API as needed
+        return
+
+    def track_user_behavior(self, event: dict):
+        """Track user behavior for learning and personalization."""
+        user_id = event.get("user_id")
+        if user_id:
+            # Log user actions for future learning
+            self.diagnostics.append(f"Tracking behavior for user {user_id}: {event}")
+        # Extend with more analytics as needed
         def suggest_normal_state_and_chain(self, device_info: dict) -> dict:
             """
             Suggest the likely normal state and possible chain placement for a new device.
