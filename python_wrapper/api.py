@@ -1,13 +1,10 @@
-from python_wrapper.device_health import get_unacknowledged_alerts, acknowledge_alert
-# Device health/alert endpoints
-@app.get("/alerts")
-def get_alerts():
-    return get_unacknowledged_alerts()
+from python_wrapper.backup_api import router as backup_router
+app.include_router(backup_router)
+from python_wrapper.device_health_dashboard_api import router as device_health_dashboard_router
+app.include_router(device_health_dashboard_router)
 
-@app.post("/alerts/ack")
-def ack_alert(device_id: str):
-    acknowledge_alert(device_id)
-    return {"status": "ok"}
+
+from python_wrapper.device_health import get_unacknowledged_alerts, acknowledge_alert
 
 """
 FastAPI REST API for Smart Home Devices
@@ -44,21 +41,29 @@ FastAPI REST API for Smart Home Devices
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
+import time
+from fastapi.responses import JSONResponse
+import os
+import json
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import Dict
 from python_wrapper.lib import PySmartBulb
-from python_wrapper.mapping_api import get_mapping, set_mapping
+from python_wrapper.mapping_api import get_mapping, set_mapping, check_mapping_limits
 from python_wrapper.mapping_loader import validate_mapping_object
 
+
 from python_wrapper.contacts_api import router as contacts_router
-
 from python_wrapper.support_api import router as support_router
-
 from python_wrapper.users_api import router as users_router
-
 from python_wrapper.backup_api import router as backup_router
+from python_wrapper.audio_mapping_api import router as audio_mapping_router
+from python_wrapper.hdmi_hub_api import router as hdmi_hub_router
+from python_wrapper.ai_voice_api import router as ai_voice_router
+from python_wrapper.audio_config_api import router as audio_config_router
 
 from python_wrapper.notify_api import router as notify_router
+from python_wrapper.webhooks_api import router as webhooks_router
 
 from python_wrapper.diagnostics_api import router as diagnostics_router
 
@@ -71,7 +76,76 @@ from python_wrapper.analytics_api import router as analytics_router
 
 
 
+
+# --- FastAPI app and endpoints ---
+from python_wrapper.audio_io import AudioIO
+import python_wrapper.device_mapping as device_mapping
+
+# --- HDMI Hub & Audio Endpoint API ---
+@app.get("/hdmi-hubs")
+def list_hdmi_hubs():
+    # Filter device_mapping for hdmi_hub type
+    try:
+        with open(os.path.join(os.path.dirname(__file__), "device_mapping.json"), "r", encoding="utf-8") as f:
+            mapping = json.load(f)
+        hubs = [dev for dev in mapping if dev.get("type") == "hdmi_hub"]
+        return hubs
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})
+
+@app.get("/audio-endpoints")
+def list_audio_endpoints():
+    # List mapped audio endpoints (room/device association)
+    try:
+        with open(os.path.join(os.path.dirname(__file__), "device_mapping.json"), "r", encoding="utf-8") as f:
+            mapping = json.load(f)
+        endpoints = [
+            {
+                "id": dev.get("id"),
+                "location": dev.get("location"),
+                "hardware": dev.get("hardware"),
+                "features": dev.get("features"),
+                "type": dev.get("type"),
+                "function": dev.get("function"),
+            }
+            for dev in mapping if dev.get("type") in ("hdmi_hub", "audio_endpoint")
+        ]
+        return endpoints
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})
+# --- FastAPI app and endpoints ---
+from starlette.middleware.base import BaseHTTPMiddleware
+
+# --- Global API Rate Limiting Middleware ---
+RATE_LIMITS = {}
+RATE_LIMIT_WINDOW = 60  # seconds
+RATE_LIMIT_MAX = 60    # max requests per window per IP
+class RateLimitMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        ip = request.client.host if request.client else "unknown"
+        now = int(time.time())
+        window = now // RATE_LIMIT_WINDOW
+        key = f"{ip}:{window}"
+        count = RATE_LIMITS.get(key, 0)
+        if count >= RATE_LIMIT_MAX:
+            return JSONResponse(status_code=429, content={"error": "Global rate limit exceeded"})
+        RATE_LIMITS[key] = count + 1
+        response = await call_next(request)
+        return response
+
 app = FastAPI(
+    app.add_middleware(RateLimitMiddleware)
+    @app.get("/email-log")
+    def get_email_log():
+        log_path = os.path.join(os.path.dirname(__file__), "email_log.json")
+        if not os.path.exists(log_path):
+            return []
+        try:
+            with open(log_path, "r", encoding="utf-8") as f:
+                log = json.load(f)
+            return log
+        except Exception as e:
+            return JSONResponse(status_code=500, content={"error": f"Failed to read email log: {str(e)}"})
     title="Home Prototype Module 1 API",
     description="Comprehensive API for smart home, security, automation, and support features.",
     version="1.0.0",
@@ -83,20 +157,41 @@ app.include_router(support_router)
 app.include_router(users_router)
 app.include_router(backup_router)
 app.include_router(notify_router)
+app.include_router(webhooks_router)
 app.include_router(diagnostics_router)
 app.include_router(automation_router)
 app.include_router(tts_router)
 app.include_router(ota_router)
 app.include_router(analytics_router)
+app.include_router(audio_mapping_router)
+app.include_router(hdmi_hub_router)
+app.include_router(ai_voice_router)
+app.include_router(audio_config_router)
+
+# Device health/alert endpoints
+@app.get("/alerts")
+def get_alerts():
+    return get_unacknowledged_alerts()
+
+@app.post("/alerts/ack")
+def ack_alert(device_id: str):
+    acknowledge_alert(device_id)
+    return {"status": "ok"}
+
 @app.get("/mapping")
 def get_device_mapping():
     return get_mapping()
+
 
 @app.post("/mapping")
 async def upload_device_mapping(request: Request):
     try:
         mapping = await request.json()
         validate_mapping_object(mapping)  # Will raise if invalid
+        # Enforce device/tier limits
+        limit_error = check_mapping_limits(mapping)
+        if limit_error:
+            return JSONResponse(status_code=400, content={"error": limit_error})
         set_mapping(mapping)
         return {"status": "ok"}
     except Exception as e:
