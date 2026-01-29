@@ -25,8 +25,13 @@ export default function AudioConfigPanel() {
   };
 
   return (
-    <div style={{ border: "2px solid #4a90e2", margin: 16, padding: 16 }}>
+    <div style={{ border: "2px solid #4a90e2", margin: 16, padding: 16, position: "relative" }}>
       <h2>Audio Device Configuration</h2>
+      {/* Watermark and copyright */}
+      <div style={{ position: "absolute", bottom: 8, right: 12, fontSize: 12, color: "#b0b0b0", pointerEvents: "none", userSelect: "none" }}>
+        &copy; 2026 Brent [Your Last Name], Author/Creator<br />
+        GitHub Copilot, Contributor
+      </div>
       <div>
         <label>Input Device: </label>
         <select value={config.input_device_index ?? ""} onChange={e => handleChange("input_device_index", Number(e.target.value))}>
