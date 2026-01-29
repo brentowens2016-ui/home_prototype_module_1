@@ -7,26 +7,51 @@
 //
 import React, { useState } from "react";
 
+
 const steps = [
   {
     title: "Welcome to the Smart Home Dashboard!",
-    content: "This dashboard lets you control, monitor, and automate your smart home devices."
+    content: "Let's get your smart home set up. This guided onboarding will walk you through the essential configuration steps."
   },
   {
-    title: "Device Controls",
-    content: "Use the device panels to turn bulbs on/off, adjust brightness, and set colors."
+    title: "Step 1: Device Mapping",
+    content: (
+      <span>
+        Assign devices to rooms and set up automation rules.<br />
+        <b>Action:</b> <a href="#mapping" onClick={() => window.scrollTo(0, document.getElementById('tabpanel-mapping')?.offsetTop || 0)}>Go to Mapping Editor</a>
+      </span>
+    )
   },
   {
-    title: "Mapping & Automation",
-    content: "The Mapping Editor lets you assign devices to rooms and create automation rules."
+    title: "Step 2: Emergency Contacts",
+    content: (
+      <span>
+        Add emergency contacts for alerts and notifications.<br />
+        <b>Action:</b> <a href="#support" onClick={() => window.scrollTo(0, document.getElementById('tabpanel-support')?.offsetTop || 0)}>Go to Emergency Contacts Editor</a>
+      </span>
+    )
   },
   {
-    title: "Alerts & Logs",
-    content: "Admins can view device alerts, audit logs, and email notifications for full oversight."
+    title: "Step 3: Notification Preferences",
+    content: (
+      <span>
+        Configure how you receive alerts and notifications.<br />
+        <b>Action:</b> <a href="#notifications" onClick={() => window.scrollTo(0, document.getElementById('tabpanel-admin')?.offsetTop || 0)}>Go to Notification Settings</a>
+      </span>
+    )
   },
   {
-    title: "Support & Settings",
-    content: "Access support tickets, manage users, and configure advanced settings from the admin panels."
+    title: "Step 4: Support & Help",
+    content: (
+      <span>
+        Access support tickets and help resources.<br />
+        <b>Action:</b> <a href="#support" onClick={() => window.scrollTo(0, document.getElementById('tabpanel-support')?.offsetTop || 0)}>Go to Support Tickets</a>
+      </span>
+    )
+  },
+  {
+    title: "Setup Complete!",
+    content: "Your smart home is now configured. You can revisit these panels anytime from the dashboard tabs."
   }
 ];
 

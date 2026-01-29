@@ -47,15 +47,28 @@ import OnboardingModal from "./OnboardingModal";
 import AdminNotifications from "./AdminNotifications";
 import ThirdPartyDevicesPanel from "./ThirdPartyDevicesPanel";
 
+import NotificationSettingsPanel from "./NotificationSettingsPanel";
+import PrivacySettingsPanel from "./PrivacySettingsPanel";
+import AccessibilitySettingsPanel from "./AccessibilitySettingsPanel";
+import SecuritySettingsPanel from "./SecuritySettingsPanel";
+
 const DASHBOARD_TABS = {
   user: [
     { key: "devices", label: "Devices & Controls" },
     { key: "mapping", label: "Mapping & Automation" },
+    { key: "notifications", label: "Notification Settings" },
+    { key: "privacy", label: "Privacy & Data Usage" },
+    { key: "accessibility", label: "Accessibility" },
+    { key: "security", label: "Security" },
     { key: "support", label: "Support & Tickets" },
   ],
   tech: [
     { key: "devices", label: "Devices & Controls" },
     { key: "mapping", label: "Mapping & Automation" },
+    { key: "notifications", label: "Notification Settings" },
+    { key: "privacy", label: "Privacy & Data Usage" },
+    { key: "accessibility", label: "Accessibility" },
+    { key: "security", label: "Security" },
     { key: "support", label: "Support & Tickets" },
     { key: "impersonate", label: "Impersonate User" },
   ],
@@ -65,6 +78,10 @@ const DASHBOARD_TABS = {
     { key: "logs", label: "Logs & Audit" },
     { key: "devices", label: "Devices & Controls" },
     { key: "mapping", label: "Mapping & Automation" },
+    { key: "notifications", label: "Notification Settings" },
+    { key: "privacy", label: "Privacy & Data Usage" },
+    { key: "accessibility", label: "Accessibility" },
+    { key: "security", label: "Security" },
     { key: "support", label: "Support & Tickets" },
     { key: "third_party_devices", label: "Third-Party Devices" }
   ]
@@ -283,6 +300,30 @@ export default function Dashboard() {
           <AIVoicePanel user={user} helpTooltip="AI voice assistant configuration." />
         </div>
       )}
+      {activeTab === "notifications" && (
+        <div role="tabpanel" id="tabpanel-notifications" aria-labelledby="tab-notifications">
+          <h2>Notification Settings</h2>
+          <NotificationSettingsPanel helpTooltip="Configure notification channels and preferences." />
+        </div>
+      )}
+      {activeTab === "privacy" && (
+        <div role="tabpanel" id="tabpanel-privacy" aria-labelledby="tab-privacy">
+          <h2>Privacy & Data Usage</h2>
+          <PrivacySettingsPanel helpTooltip="Configure privacy and data usage preferences." />
+        </div>
+      )}
+      {activeTab === "accessibility" && (
+        <div role="tabpanel" id="tabpanel-accessibility" aria-labelledby="tab-accessibility">
+          <h2>Accessibility</h2>
+          <AccessibilitySettingsPanel helpTooltip="Configure accessibility preferences." />
+        </div>
+      )}
+      {activeTab === "security" && (
+        <div role="tabpanel" id="tabpanel-security" aria-labelledby="tab-security">
+          <h2>Security</h2>
+          <SecuritySettingsPanel helpTooltip="Configure 2FA, encryption, and OTA update controls." />
+        </div>
+      )}
       {activeTab === "support" && (
         <div role="tabpanel" id="tabpanel-support" aria-labelledby="tab-support">
           <h2>Support & Tickets</h2>
@@ -290,12 +331,8 @@ export default function Dashboard() {
           <SupportTickets helpTooltip="Submit and track support requests." />
         </div>
       )}
-      {activeTab === "impersonate" && user.role === "tech" && (
-        <div role="tabpanel" id="tabpanel-impersonate" aria-labelledby="tab-impersonate">
-          <h2>Impersonate User Dashboard</h2>
-          <p>Enter a username to view their dashboard as tech support (read-only):</p>
-          {/* Implement impersonation UI here, e.g., input and fetch user dashboard */}
-        </div>
+      {activeTab === "impersonate" && (user.role === "tech" || user.role === "admin") && (
+        <ImpersonateUserDashboardPanel currentUser={user} />
       )}
       {activeTab === "third_party_devices" && user.role === "admin" && (
         <div role="tabpanel" id="tabpanel-third-party-devices" aria-labelledby="tab-third-party-devices">
