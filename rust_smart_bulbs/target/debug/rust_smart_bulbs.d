@@ -1,1 +1,1 @@
-C:\Users\brent\home_prototype_module_1\rust_smart_bulbs\target\debug\rust_smart_bulbs.exe: C:\Users\brent\home_prototype_module_1\rust_smart_bulbs\src\device_contracts.rs C:\Users\brent\home_prototype_module_1\rust_smart_bulbs\src\lib.rs C:\Users\brent\home_prototype_module_1\rust_smart_bulbs\src\main.rs
+C:\Users\brent\home_prototype_module_1\rust_smart_bulbs\target\debug\rust_smart_bulbs.dll: C:\Users\brent\home_prototype_module_1\rust_smart_bulbs\src\device_contracts.rs C:\Users\brent\home_prototype_module_1\rust_smart_bulbs\src\lib.rs
