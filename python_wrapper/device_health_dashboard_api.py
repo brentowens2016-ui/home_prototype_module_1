@@ -10,6 +10,8 @@ from .device_health import load_health, load_alerts
 
 router = APIRouter()
 
+
+# Expanded health summary with proactive checks
 @router.get("/device-health/summary")
 def device_health_summary():
     health = load_health()
@@ -19,13 +21,18 @@ def device_health_summary():
         last_seen = info.get("last_seen", 0)
         status = info.get("status", "unknown")
         uptime = max(0, now - last_seen) if status == "up" else 0
+        error_rate = info.get("error_rate", 0)
+        proactive_alert = None
+        if status != "up" or error_rate > 0.1:
+            proactive_alert = f"Device {device_id} may need attention: status={status}, error_rate={error_rate}"
         summary.append({
             "device_id": device_id,
             "status": status,
             "last_seen": last_seen,
-            "uptime_seconds": uptime
+            "uptime_seconds": uptime,
+            "error_rate": error_rate,
+            "proactive_alert": proactive_alert
         })
-    # Error rates and anomalies could be expanded here
     return summary
 
 @router.get("/device-health/alerts")

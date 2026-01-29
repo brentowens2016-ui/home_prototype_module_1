@@ -1,3 +1,8 @@
+# Endpoint: Get storage usage for user quota indicator
+@router.get("/backup/usage")
+def get_backup_usage():
+    size = get_backup_dir_size()
+    return {"usage": size}
 """
 Backup API: scheduled backups and admin restore endpoints
 """
@@ -5,20 +10,78 @@ import os
 import json
 import time
 import shutil
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import JSONResponse
+import importlib
 
+
+# Local backup directory
 BACKUP_DIR = os.path.join(os.path.dirname(__file__), "backups")
 CRITICAL_FILES = [
     "users.json", "device_mapping.json", "device_alerts.json", "device_health.json",
     "event_history.json", "admin_audit_log.json", "email_log.json"
 ]
 
+# Supported cloud providers (expand as needed)
+CLOUD_PROVIDERS = ["aws", "gdrive", "azure"]
+
+def get_user_cloud_config(request: Request):
+    # Example: expects cloud config in request headers or user profile
+    # In production, fetch from user DB/profile
+    cloud_type = request.headers.get("X-Cloud-Type")
+    cloud_token = request.headers.get("X-Cloud-Token")
+    cloud_bucket = request.headers.get("X-Cloud-Bucket")
+    if cloud_type and cloud_token and cloud_bucket:
+        return {"type": cloud_type, "token": cloud_token, "bucket": cloud_bucket}
+    return None
+
+def upload_to_cloud(files, cloud_config):
+    # Dynamically import cloud handler (e.g., backup_aws.py, backup_gdrive.py)
+    mod_name = f"python_wrapper.backup_{cloud_config['type']}"
+    try:
+        cloud_mod = importlib.import_module(mod_name)
+        return cloud_mod.upload_files(files, cloud_config)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Cloud upload failed: {str(e)}")
+
+def list_cloud_backups(cloud_config):
+    mod_name = f"python_wrapper.backup_{cloud_config['type']}"
+    try:
+        cloud_mod = importlib.import_module(mod_name)
+        return cloud_mod.list_backups(cloud_config)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Cloud list failed: {str(e)}")
+
+def restore_from_cloud(filename, cloud_config):
+    mod_name = f"python_wrapper.backup_{cloud_config['type']}"
+    try:
+        cloud_mod = importlib.import_module(mod_name)
+        return cloud_mod.restore_backup(filename, cloud_config)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Cloud restore failed: {str(e)}")
+
 router = APIRouter()
+
+
+MAX_STORAGE_BYTES = 512 * 1024 * 1024  # 0.5 GB
 
 def ensure_backup_dir():
     if not os.path.exists(BACKUP_DIR):
         os.makedirs(BACKUP_DIR)
+
+def get_backup_dir_size():
+    total = 0
+    for root, dirs, files in os.walk(BACKUP_DIR):
+        for f in files:
+            fp = os.path.join(root, f)
+            total += os.path.getsize(fp)
+    return total
+
+def wipe_old_backups():
+    files = sorted([os.path.join(BACKUP_DIR, f) for f in os.listdir(BACKUP_DIR)], key=os.path.getmtime)
+    while get_backup_dir_size() > MAX_STORAGE_BYTES and files:
+        os.remove(files[0])
+        files.pop(0)
 
 def backup_all():
     ensure_backup_dir()
@@ -30,6 +93,7 @@ def backup_all():
             dst = os.path.join(BACKUP_DIR, f"{fname}.{ts}.bak")
             shutil.copy2(src, dst)
             backup_files.append(dst)
+    wipe_old_backups()
     return backup_files
 
 def list_backups():
@@ -49,24 +113,43 @@ def restore_backup(filename):
     return True
 
 # Endpoint: trigger backup (admin)
+
+# Endpoint: trigger backup (admin/user)
 @router.post("/backup/run")
-def run_backup():
+async def run_backup(request: Request):
+    cloud_config = get_user_cloud_config(request)
     files = backup_all()
-    return {"status": "ok", "files": files}
+    if cloud_config:
+        upload_result = upload_to_cloud(files, cloud_config)
+        return {"status": "ok", "files": files, "cloud": upload_result}
+    else:
+        return {"status": "ok", "files": files, "cloud": None}
 
 # Endpoint: list backups
+
+# Endpoint: list backups (local or cloud)
 @router.get("/backup/list")
-def get_backup_list():
-    return list_backups()
+async def get_backup_list(request: Request):
+    cloud_config = get_user_cloud_config(request)
+    if cloud_config:
+        return list_cloud_backups(cloud_config)
+    else:
+        return list_backups()
 
 # Endpoint: restore backup (admin)
+
+# Endpoint: restore backup (local or cloud)
 @router.post("/backup/restore")
 async def restore(request: Request):
     data = await request.json()
     filename = data.get("filename")
     if not filename:
         return JSONResponse(status_code=400, content={"error": "Missing filename"})
-    ok = restore_backup(filename)
+    cloud_config = get_user_cloud_config(request)
+    if cloud_config:
+        ok = restore_from_cloud(filename, cloud_config)
+    else:
+        ok = restore_backup(filename)
     if ok:
         return {"status": "restored", "file": filename}
     else:

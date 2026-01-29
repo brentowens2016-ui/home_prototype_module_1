@@ -1,3 +1,59 @@
+// Multi-language support scaffolding
+import { useState } from 'react';
+const LANGUAGES = [
+  { code: 'en', label: 'English' },
+  { code: 'es', label: 'Español' },
+  { code: 'fr', label: 'Français' },
+  { code: 'de', label: 'Deutsch' },
+  { code: 'zh', label: '中文' },
+  // Add more languages as needed
+];
+// StorageUsagePanel: Shows user storage usage and quota
+import { useEffect, useState } from 'react';
+function StorageUsagePanel() {
+  const [usage, setUsage] = useState(0);
+  const [quota, setQuota] = useState(512 * 1024 * 1024); // 0.5 GB default
+  useEffect(() => {
+    fetch('/backup/usage').then(res => res.json()).then(data => setUsage(data.usage || 0));
+  }, []);
+  return (
+    <div style={{ margin: '16px 0', border: '1px solid #aaa', padding: 8 }}>
+      <b>Storage Usage:</b> {((usage / 1024 / 1024).toFixed(1))} MB / {(quota / 1024 / 1024).toFixed(0)} MB
+      <div style={{ background: '#eee', height: 8, width: 200, marginTop: 4 }}>
+        <div style={{ background: usage > quota * 0.9 ? '#e74c3c' : '#4a90e2', height: 8, width: `${Math.min(usage / quota * 200, 200)}px` }} />
+      </div>
+      {usage > quota * 0.9 && <span style={{ color: '#e74c3c', fontSize: 12 }}>Warning: Approaching storage limit!</span>}
+    </div>
+  );
+}
+// SupportCollaborationPanel: Real-time collaboration, remote diagnostics, and support tools
+import { useState } from 'react';
+function SupportCollaborationPanel({ user }) {
+  const [remoteAllowed, setRemoteAllowed] = useState(false);
+  return (
+    <div>
+      <h2>Support & Collaboration</h2>
+      <p>Tech support and admins can access your dashboard (with consent) for real-time troubleshooting, remote diagnostics, and collaborative problem solving.</p>
+      <div style={{ marginBottom: 16 }}>
+        <label>
+          <input type="checkbox" checked={remoteAllowed} onChange={e => setRemoteAllowed(e.target.checked)} />
+          Allow remote access for support and diagnostics
+        </label>
+      </div>
+      <div style={{ marginBottom: 16 }}>
+        <button disabled={!remoteAllowed}>Request Remote Support</button>
+        <button style={{ marginLeft: 8 }} disabled={!remoteAllowed}>Share Dashboard Session</button>
+        <button style={{ marginLeft: 8 }} disabled={!remoteAllowed}>Access Diagnostic Tools</button>
+      </div>
+      <div style={{ color: '#888', fontSize: 14 }}>
+        <b>Security Tip:</b> Remote access and diagnostics require your explicit consent. All sessions are logged for privacy and security.
+      </div>
+      <div style={{ marginTop: 16 }}>
+        <b>Session Info:</b> <span>Location: {user.location || "Unknown"} | User: {user.username}</span>
+      </div>
+    </div>
+  );
+}
 //
 // Smart Home Dashboard UI (React)
 //
@@ -71,6 +127,7 @@ const DASHBOARD_TABS = {
   user: [
     { key: "devices", label: "Devices & Controls" },
     { key: "mapping", label: "Mapping & Automation" },
+    { key: "updates", label: "Updates & Recovery" },
     { key: "notifications", label: "Notification Settings" },
     { key: "privacy", label: "Privacy & Data Usage" },
     { key: "accessibility", label: "Accessibility" },
@@ -80,6 +137,7 @@ const DASHBOARD_TABS = {
   tech: [
     { key: "devices", label: "Devices & Controls" },
     { key: "mapping", label: "Mapping & Automation" },
+    { key: "updates", label: "Updates & Recovery" },
     { key: "notifications", label: "Notification Settings" },
     { key: "privacy", label: "Privacy & Data Usage" },
     { key: "accessibility", label: "Accessibility" },
@@ -93,6 +151,7 @@ const DASHBOARD_TABS = {
     { key: "logs", label: "Logs & Audit" },
     { key: "devices", label: "Devices & Controls" },
     { key: "mapping", label: "Mapping & Automation" },
+    { key: "updates", label: "Updates & Recovery" },
     { key: "notifications", label: "Notification Settings" },
     { key: "privacy", label: "Privacy & Data Usage" },
     { key: "accessibility", label: "Accessibility" },
@@ -101,6 +160,37 @@ const DASHBOARD_TABS = {
     { key: "third_party_devices", label: "Third-Party Devices" }
   ]
 };
+// Updates & Recovery Panel (placeholder)
+function UpdatesRecoveryPanel({ user }) {
+  return (
+    <div>
+      <h2>Updates, Restore & Cloud Storage</h2>
+      <p>Check for agent updates, install new versions, restore/recover system, and configure cloud storage for backups.</p>
+      <div style={{ marginBottom: 16 }}>
+        <button>Check for Updates</button>
+        <button style={{ marginLeft: 8 }}>Install Latest Agent</button>
+      </div>
+      <div style={{ marginBottom: 16 }}>
+        <button>Restore/Recover</button>
+      </div>
+      <div style={{ marginBottom: 16 }}>
+        <label>Cloud Storage Provider:</label>
+        <select>
+          <option value="">Select Provider</option>
+          <option value="aws">AWS S3</option>
+          <option value="gdrive">Google Drive</option>
+          <option value="azure">Azure Blob</option>
+        </select>
+        <input type="text" placeholder="Cloud Token/API Key" style={{ marginLeft: 8 }} />
+        <input type="text" placeholder="Bucket/Folder Name" style={{ marginLeft: 8 }} />
+        <button style={{ marginLeft: 8 }}>Save Cloud Config</button>
+      </div>
+      <div style={{ color: '#888', fontSize: 14 }}>
+        <b>Security Tip:</b> For maximum privacy, configure your own cloud storage. Otherwise, backups will be stored on the system server.
+      </div>
+    </div>
+  );
+}
 
 // Helper: get user role from auth/session (stub for now)
 function getUserRole() {
@@ -228,15 +318,28 @@ export default function Dashboard() {
     return <AuthPanel onAuth={setUser} onShowDownload={() => setShowDownload(true)} />;
   }
 
+  const [agreementAccepted, setAgreementAccepted] = useState(false);
   if (showDownload) {
     return (
       <div style={{ padding: 32 }}>
         <h2>Download Local Agent</h2>
-        <p>Download the latest version of the local agent for your platform:</p>
+        <div style={{ border: '1px solid #aaa', padding: 16, marginBottom: 16 }}>
+          <h3>User Agreement & Privacy Policy</h3>
+          <div style={{ maxHeight: 180, overflowY: 'auto', fontSize: 14, background: '#f9f9f9', padding: 8 }}>
+            <b>Terms of Service:</b> By downloading or installing this agent, you agree to abide by all applicable laws and our user agreement. Subscription fees cover access to the software platform and standard support only. Hardware, installation, interfaces, wiring, electrical or plumbing work, and custom programming for new features or hardware are not included and may require separate agreements or fees. Use of the system is at your own risk. We reserve the right to update these terms at any time.<br /><br />
+            <b>Privacy Policy:</b> This system collects only the data necessary to provide monitoring, automation, and safety features. Data is not sold or shared with third parties except as required by law or to provide core services. You may review, update, or request deletion of your data at any time. Our privacy practices may change to comply with legal requirements or policy updates; you will be notified of any changes.<br /><br />
+            <b>Authorization:</b> Remote access, diagnostics, and support require your explicit consent. All sessions are logged for privacy and security. You may revoke authorization at any time in your dashboard settings.<br /><br />
+            <b>Legal Disclaimer:</b> This system is designed to assist with monitoring and safety, but no system can guarantee detection or prevention of all incidents. We are not liable for any failure to detect, respond to, or prevent bodily harm, injury, or death to users, family members, or others. Users are responsible for maintaining their equipment and ensuring emergency contacts and procedures are up to date. Use of this system constitutes acceptance of these terms.
+          </div>
+          <label style={{ display: 'block', marginTop: 12 }}>
+            <input type="checkbox" checked={agreementAccepted} onChange={e => setAgreementAccepted(e.target.checked)} />
+            I have read and accept the User Agreement, Privacy Policy, and Authorization terms above.
+          </label>
+        </div>
         <ul>
-          <li><a href="/downloads/agent-win.exe">Windows</a></li>
-          <li><a href="/downloads/agent-linux.tar.gz">Linux</a></li>
-          <li><a href="/downloads/agent-mac.dmg">macOS</a></li>
+          <li><a href="/downloads/agent-win.exe" style={{ pointerEvents: agreementAccepted ? 'auto' : 'none', color: agreementAccepted ? '' : '#aaa' }}>Windows</a></li>
+          <li><a href="/downloads/agent-linux.tar.gz" style={{ pointerEvents: agreementAccepted ? 'auto' : 'none', color: agreementAccepted ? '' : '#aaa' }}>Linux</a></li>
+          <li><a href="/downloads/agent-mac.dmg" style={{ pointerEvents: agreementAccepted ? 'auto' : 'none', color: agreementAccepted ? '' : '#aaa' }}>macOS</a></li>
         </ul>
         <button onClick={() => setShowDownload(false)}>Back to Dashboard</button>
       </div>
@@ -255,7 +358,16 @@ export default function Dashboard() {
   return (
     <div>
       <OnboardingModal open={showOnboarding} onClose={handleOnboardingClose} />
-      <h1>Smart Home Dashboard</h1>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <h1>Smart Home Dashboard</h1>
+        <label htmlFor="lang-select" style={{ fontSize: 14 }}>
+          Language:
+          <select id="lang-select" style={{ marginLeft: 8 }}>
+            {LANGUAGES.map(l => <option key={l.code} value={l.code}>{l.label}</option>)}
+          </select>
+        </label>
+      </div>
+      <StorageUsagePanel />
       <div style={{ marginBottom: 16 }}>
         <span>Logged in as: {user.username} ({user.role})</span>
         <button style={{ marginLeft: 16 }} onClick={() => setUser(null)} title="Log out of your account">Log Out</button>
@@ -315,6 +427,11 @@ export default function Dashboard() {
           <AIVoicePanel user={user} helpTooltip="AI voice assistant configuration." />
         </div>
       )}
+      {activeTab === "updates" && (
+        <div role="tabpanel" id="tabpanel-updates" aria-labelledby="tab-updates">
+          <UpdatesRecoveryPanel user={user} />
+        </div>
+      )}
       {activeTab === "notifications" && (
         <div role="tabpanel" id="tabpanel-notifications" aria-labelledby="tab-notifications">
           <h2>Notification Settings</h2>
@@ -344,6 +461,7 @@ export default function Dashboard() {
           <h2>Support & Tickets</h2>
           <EmergencyContactsEditor userRole={user.role} helpTooltip="Manage emergency contacts for alerts." />
           <SupportTickets helpTooltip="Submit and track support requests." />
+          <SupportCollaborationPanel user={user} />
         </div>
       )}
       {activeTab === "impersonate" && (user.role === "tech" || user.role === "admin") && (

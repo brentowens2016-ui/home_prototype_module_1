@@ -1,3 +1,131 @@
+# Voice Assistant Integration Endpoints
+@app.post("/voice-assistant/alexa")
+async def alexa_integration(request: Request):
+    data = await request.json()
+    # Process Alexa command (stub)
+    return {"status": "ok", "received": data}
+
+@app.post("/voice-assistant/google")
+async def google_home_integration(request: Request):
+    data = await request.json()
+    # Process Google Home command (stub)
+    return {"status": "ok", "received": data}
+
+@app.post("/voice-assistant/siri")
+async def siri_integration(request: Request):
+    data = await request.json()
+    # Process Siri command (stub)
+    return {"status": "ok", "received": data}
+
+# Advanced Notification Endpoints
+@app.post("/notify/sms")
+async def send_sms(request: Request):
+    data = await request.json()
+    # Integrate with Twilio or SMS provider (stub)
+    return {"status": "ok", "sent": data}
+
+@app.post("/notify/push")
+async def send_push(request: Request):
+    data = await request.json()
+    # Integrate with Firebase or push provider (stub)
+    return {"status": "ok", "sent": data}
+# IP monitoring and enforcement for site-specific agent usage
+from fastapi import Request
+
+REGISTERED_IPS_PATH = os.path.join(os.path.dirname(__file__), "registered_ips.json")
+IP_HISTORY_PATH = os.path.join(os.path.dirname(__file__), "ip_history.json")
+
+def load_ip_history():
+    if os.path.exists(IP_HISTORY_PATH):
+        with open(IP_HISTORY_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+def save_ip_history(history):
+    with open(IP_HISTORY_PATH, "w", encoding="utf-8") as f:
+        json.dump(history, f, indent=2)
+
+def load_registered_ips():
+    if os.path.exists(REGISTERED_IPS_PATH):
+        with open(REGISTERED_IPS_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+def save_registered_ips(ips):
+    with open(REGISTERED_IPS_PATH, "w", encoding="utf-8") as f:
+        json.dump(ips, f, indent=2)
+
+@app.middleware("http")
+async def ip_enforcement_middleware(request: Request, call_next):
+    client_ip = request.client.host
+    account_id = request.headers.get("X-Account-ID")
+    if account_id:
+        ips = load_registered_ips()
+        history = load_ip_history()
+        allowed_ip = ips.get(account_id)
+        # Log IP history
+        entry = {"ip": client_ip, "timestamp": int(time.time())}
+        if account_id not in history:
+            history[account_id] = []
+        if not history[account_id] or history[account_id][-1]["ip"] != client_ip:
+            history[account_id].append(entry)
+            save_ip_history(history)
+        if allowed_ip and allowed_ip != client_ip:
+            return JSONResponse(status_code=403, content={"error": "IP address does not match registered site. Contact admin/tech support to update location."})
+        if not allowed_ip:
+            ips[account_id] = client_ip
+            save_registered_ips(ips)
+    response = await call_next(request)
+    return response
+
+# Endpoint: Get IP history for compliance review (admin only)
+@app.get("/ip-history/{account_id}")
+def get_ip_history(account_id: str, request: Request):
+    role = request.headers.get("X-Role", "guest")
+    if role != "admin":
+        return JSONResponse(status_code=403, content={"error": "Admin only."})
+    history = load_ip_history()
+    return history.get(account_id, [])
+# Event-driven bulb color assignment for hazard/event escalation
+EVENT_COLOR_MAP = {
+    "notification": (255, 255, 0),   # Yellow
+    "fall": (255, 0, 0),             # Red
+    "callout": (255, 0, 0),          # Red
+    "all_clear": (0, 255, 0),        # Green
+}
+
+user_bulb_override = {}
+
+@app.post("/bulbs/{name}/event-color")
+def set_bulb_event_color(name: str, event: str, override: bool = False):
+    if name not in bulbs:
+        raise HTTPException(status_code=404, detail="Bulb not found")
+    if override:
+        user_bulb_override[name] = event
+        # Use user override color
+        color = EVENT_COLOR_MAP.get(event, (255, 255, 255))
+        bulbs[name].set_color(*color)
+        return get_bulb_state(bulbs[name])
+    # Passive mode: only set color if no override
+    if name in user_bulb_override:
+        # User has overridden, do not change
+        return get_bulb_state(bulbs[name])
+    color = EVENT_COLOR_MAP.get(event, (255, 255, 255))
+    bulbs[name].set_color(*color)
+    return get_bulb_state(bulbs[name])
+# Predictive AI: Automated smart bulb control for occupancy simulation
+from python_wrapper.predictive_ai import get_occupancy_schedule, run_predictive_lighting
+
+# Endpoint: Get predictive lighting schedule
+@app.get("/predictive/lighting-schedule")
+def predictive_lighting_schedule():
+    return get_occupancy_schedule()
+
+# Endpoint: Run predictive lighting automation (simulate occupancy)
+@app.post("/predictive/run-lighting")
+def run_predictive_lighting():
+    result = run_predictive_lighting()
+    return {"status": "ok", "result": result}
 from python_wrapper.backup_api import router as backup_router
 app.include_router(backup_router)
 from python_wrapper.device_health_dashboard_api import router as device_health_dashboard_router

@@ -134,7 +134,9 @@ B. Training the AI
 7. Dashboard & Controls
 - Control devices, view status, and manage automations from the dashboard
 - Access analytics, system health, and event history
+- Monitor Zigbee routers, mesh network status, and device health in the ZigbeeRouters panel
 - Use the mapping and automation editors for advanced configuration
+- Troubleshoot device connectivity and health issues with proactive alerts and diagnostics
 
 8. Automation & Rules
 - Create, edit, and delete automation rules in the dashboard
@@ -149,7 +151,12 @@ B. Training the AI
 10. Troubleshooting & Support
 - Check the dashboard’s diagnostics section for errors
 - Use the /diagnostics API for logs and health checks
-- For support, see the support section in the dashboard or contact the project maintainers
+- View device health and alerts in the Device Health panel
+- For support, use the dashboard’s support section:
+  - Submit support tickets (with escalation for urgent issues)
+  - Access live chat for real-time help (if enabled)
+  - Use remote diagnostics for advanced troubleshooting (with user consent)
+  - Track ticket status and resolution history
 
 11. Recommended Devices
 A. Zigbee
