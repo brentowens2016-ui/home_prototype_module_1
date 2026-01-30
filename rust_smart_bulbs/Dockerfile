@@ -1,6 +1,6 @@
 FROM python:3.11-slim
 WORKDIR /app/python_wrapper
-COPY python_wrapper/requirements.txt .
+COPY requirements.txt .
 COPY . .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
