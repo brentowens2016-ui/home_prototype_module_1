@@ -1,21 +1,7 @@
-// PrivacyDashboardPanel: Visualize data collection, storage, and retention
-function PrivacyDashboardPanel() {
-  const [dataInfo, setDataInfo] = useState({});
-  useEffect(() => {
-    fetch('/privacy/data-info').then(res => res.json()).then(setDataInfo);
-  }, []);
-  return (
-    <div style={{ border: '1px solid #aaa', margin: 16, padding: 16 }}>
-      <h2>Privacy Dashboard</h2>
-      <div><b>Data Collected:</b> {dataInfo.collected ? dataInfo.collected.join(', ') : 'Loading...'}</div>
-      <div><b>Storage Location:</b> {dataInfo.storage || 'Loading...'}</div>
-      <div><b>Retention Policy:</b> {dataInfo.retention || 'Loading...'}</div>
-      <button style={{ marginTop: 12 }}>Manage Data Retention</button>
-    </div>
-  );
-}
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { doubleEncrypt, doubleDecrypt } from "./encryption";
 // Multi-language support scaffolding
-import { useState } from 'react';
 const LANGUAGES = [
   { code: 'en', label: 'English' },
   { code: 'es', label: 'Español' },
@@ -25,7 +11,6 @@ const LANGUAGES = [
   // Add more languages as needed
 ];
 // StorageUsagePanel: Shows user storage usage and quota
-import { useEffect, useState } from 'react';
 function StorageUsagePanel() {
   const [usage, setUsage] = useState(0);
   const [quota, setQuota] = useState(512 * 1024 * 1024); // 0.5 GB default
@@ -43,7 +28,6 @@ function StorageUsagePanel() {
   );
 }
 // SupportCollaborationPanel: Real-time collaboration, remote diagnostics, and support tools
-import { useState } from 'react';
 function SupportCollaborationPanel({ user }) {
   const [remoteAllowed, setRemoteAllowed] = useState(false);
   return (
@@ -67,6 +51,22 @@ function SupportCollaborationPanel({ user }) {
       <div style={{ marginTop: 16 }}>
         <b>Session Info:</b> <span>Location: {user.location || "Unknown"} | User: {user.username}</span>
       </div>
+    </div>
+  );
+}
+// PrivacyDashboardPanel: Visualize data collection, storage, and retention
+function PrivacyDashboardPanel() {
+  const [dataInfo, setDataInfo] = useState({});
+  useEffect(() => {
+    fetch('/privacy/data-info').then(res => res.json()).then(setDataInfo);
+  }, []);
+  return (
+    <div style={{ border: '1px solid #aaa', margin: 16, padding: 16 }}>
+      <h2>Privacy Dashboard</h2>
+      <div><b>Data Collected:</b> {dataInfo.collected ? dataInfo.collected.join(', ') : 'Loading...'}</div>
+      <div><b>Storage Location:</b> {dataInfo.storage || 'Loading...'}</div>
+      <div><b>Retention Policy:</b> {dataInfo.retention || 'Loading...'}</div>
+      <button style={{ marginTop: 12 }}>Manage Data Retention</button>
     </div>
   );
 }
@@ -102,9 +102,7 @@ function SupportCollaborationPanel({ user }) {
 // - Document all UI patterns and API interactions for maintainability.
 //
 // ---
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { doubleEncrypt, doubleDecrypt } from "./encryption";
+
 // Axios double encryption interceptor
 axios.interceptors.request.use(async config => {
   if (config.data) {
@@ -310,69 +308,6 @@ function Watermark() {
 }
 
 // Main Dashboard component (role-based tab filtering, ARIA attributes)
-export default function Dashboard() {
-  const role = getUserRole();
-  const tabs = DASHBOARD_TABS[role] || DASHBOARD_TABS.user;
-  const [activeTab, setActiveTab] = useState(tabs[0].key);
-
-  // Subscription info state
-  const [subscription, setSubscription] = useState(null);
-  useEffect(() => {
-    axios.get("/users/subscription").then(res => setSubscription(res.data)).catch(() => setSubscription(null));
-  }, []);
-
-  // Subscription panel
-  function SubscriptionPanel() {
-    if (!subscription) return <div>Loading subscription info...</div>;
-    return (
-      <div style={{ border: "1px solid #aaa", margin: 16, padding: 16, background: "#f8faff" }}>
-        <h2>Subscription Level</h2>
-        <div><b>Level:</b> {subscription.level}</div>
-        <div><b>Status:</b> {subscription.status}</div>
-        <div><b>Renewal Date:</b> {subscription.renewal_date}</div>
-        <div><b>Features:</b> {Array.isArray(subscription.features) ? subscription.features.join(", ") : subscription.features}</div>
-        <div style={{ marginTop: 8 }}>
-          <button disabled={subscription.status !== "active"}>Manage Subscription</button>
-        </div>
-        <div style={{ marginTop: 8, color: "#888", fontSize: 13 }}>
-          Subscription fees cover access to the software platform and standard support only. Hardware, installation, interfaces, wiring, electrical or plumbing work, and custom programming for new features or hardware are not included and may require separate agreements or fees.
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div role="application" aria-label="Smart Home Dashboard">
-      <nav aria-label="Dashboard Navigation">
-        <ul style={{ display: "flex", gap: 16, listStyle: "none", padding: 0 }}>
-          {tabs.map(tab => (
-            <li key={tab.key}>
-              <button
-                aria-label={tab.label}
-                aria-current={activeTab === tab.key ? "page" : undefined}
-                onClick={() => setActiveTab(tab.key)}
-                style={{ fontWeight: activeTab === tab.key ? "bold" : "normal" }}
-              >
-                {tab.label}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </nav>
-      <main aria-live="polite" tabIndex={-1}>
-        {/* Render tab content based on activeTab and role */}
-        {activeTab === "devices" && <DeviceAlerts />}
-        {activeTab === "mapping" && <MappingEditor />}
-        {activeTab === "support" && <SupportTickets />}
-        {role === "admin" && activeTab === "admin" && <AdminAuditLog />}
-        {role === "admin" && activeTab === "users" && <AdminUserManager />}
-        {role === "admin" && activeTab === "logs" && <EmailLogPanel />}
-        {/* Only show admin panels for admin role */}
-      </main>
-      <Watermark />
-    </div>
-  );
-}
 
 export default function Dashboard() {
   const [bulbs, setBulbs] = useState({});
