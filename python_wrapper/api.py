@@ -349,6 +349,8 @@ from python_wrapper.analytics_api import router as analytics_router
 from python_wrapper.audio_io import AudioIO
 import python_wrapper.device_mapping as device_mapping
 
+from python_wrapper.ota_api import router as ota_router
+
 from python_wrapper.mapping_engine import get_mapping as engine_get_mapping, set_mapping as engine_set_mapping, validate_mapping as engine_validate_mapping
 
 from python_wrapper.device_discovery import discover_wifi_devices

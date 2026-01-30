@@ -26,7 +26,6 @@ const LANGUAGES = [
 ];
 // StorageUsagePanel: Shows user storage usage and quota
 import { useEffect, useState } from 'react';
-    { key: "appointment", label: "Request Appointment/Estimate" },
 function StorageUsagePanel() {
   const [usage, setUsage] = useState(0);
   const [quota, setQuota] = useState(512 * 1024 * 1024); // 0.5 GB default
@@ -38,7 +37,6 @@ function StorageUsagePanel() {
       <b>Storage Usage:</b> {((usage / 1024 / 1024).toFixed(1))} MB / {(quota / 1024 / 1024).toFixed(0)} MB
       <div style={{ background: '#eee', height: 8, width: 200, marginTop: 4 }}>
         <div style={{ background: usage > quota * 0.9 ? '#e74c3c' : '#4a90e2', height: 8, width: `${Math.min(usage / quota * 200, 200)}px` }} />
-    { key: "appointment", label: "Request Appointment/Estimate" },
       </div>
       {usage > quota * 0.9 && <span style={{ color: '#e74c3c', fontSize: 12 }}>Warning: Approaching storage limit!</span>}
     </div>
@@ -188,13 +186,47 @@ const DASHBOARD_TABS = {
 };
 // Updates & Recovery Panel (placeholder)
 function UpdatesRecoveryPanel({ user }) {
+  const [updates, setUpdates] = useState([]);
+  const [status, setStatus] = useState("");
+  const [selectedUpdate, setSelectedUpdate] = useState("");
+
+  const fetchUpdates = async () => {
+    setStatus("");
+    try {
+      const res = await axios.get("/ota/updates", { headers: { "X-Role": user.role } });
+      setUpdates(res.data);
+      setStatus(res.data.length ? "Updates available." : "No updates found.");
+    } catch (err) {
+      setStatus("Error checking for updates.");
+    }
+  };
+
+  const applyUpdate = async () => {
+    if (!selectedUpdate) return;
+    setStatus("Applying update...");
+    try {
+      await axios.post("/ota/apply", { filename: selectedUpdate }, { headers: { "X-Role": user.role } });
+      setStatus("Update applied successfully.");
+    } catch (err) {
+      setStatus("Error applying update.");
+    }
+  };
+
   return (
     <div>
       <h2>Updates, Restore & Cloud Storage</h2>
       <p>Check for agent updates, install new versions, restore/recover system, and configure cloud storage for backups.</p>
       <div style={{ marginBottom: 16 }}>
-        <button>Check for Updates</button>
-        <button style={{ marginLeft: 8 }}>Install Latest Agent</button>
+        <button onClick={fetchUpdates}>Check for Updates</button>
+        {updates.length > 0 && (
+          <>
+            <select value={selectedUpdate} onChange={e => setSelectedUpdate(e.target.value)} style={{ marginLeft: 8 }}>
+              <option value="">Select update</option>
+              {updates.map(u => <option key={u} value={u}>{u}</option>)}
+            </select>
+            <button style={{ marginLeft: 8 }} onClick={applyUpdate} disabled={!selectedUpdate}>Apply Update</button>
+          </>
+        )}
       </div>
       <div style={{ marginBottom: 16 }}>
         <button>Restore/Recover</button>
@@ -214,6 +246,7 @@ function UpdatesRecoveryPanel({ user }) {
       <div style={{ color: '#888', fontSize: 14 }}>
         <b>Security Tip:</b> For maximum privacy, configure your own cloud storage. Otherwise, backups will be stored on the system server.
       </div>
+      {status && <div style={{ marginTop: 8, color: status.startsWith("Error") ? "#d00" : "#090" }}>{status}</div>}
     </div>
   );
 }
