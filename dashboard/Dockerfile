@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
 COPY . .
-RUN chmod +x node_modules/.bin/* && npm run build
+RUN (chmod +x node_modules/.bin/* || true) && npm run build
 
 # Serve with a lightweight static server
 FROM nginx:alpine
