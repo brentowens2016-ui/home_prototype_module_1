@@ -1,3 +1,17 @@
+# --- File Upload Endpoint (for certificate/config uploads) ---
+from fastapi import UploadFile, File
+import shutil
+
+# Directory to store uploaded files (create if needed)
+UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "uploads")
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+@app.post("/upload-file")
+async def upload_file(file: UploadFile = File(...)):
+	file_location = os.path.join(UPLOAD_DIR, file.filename)
+	with open(file_location, "wb") as buffer:
+		shutil.copyfileobj(file.file, buffer)
+	return {"status": "ok", "filename": file.filename, "path": file_location}
 ## Removed python_wrapper imports for full isolation
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse
@@ -227,11 +241,12 @@ app = FastAPI(
 # --- CORS Middleware for local frontend development ---
 app.add_middleware(
 	CORSMiddleware,
-	allow_origins=[
-		"http://localhost:5173", "http://127.0.0.1:5173",
-		"http://localhost:5174", "http://127.0.0.1:5174",
-		"http://localhost:5175", "http://127.0.0.1:5175"
-	],
+	       allow_origins=[
+		       "http://localhost:5173", "http://127.0.0.1:5173",
+		       "http://localhost:5174", "http://127.0.0.1:5174",
+		       "http://localhost:5175", "http://127.0.0.1:5175",
+		       "https://mappedhome.com", "http://mappedhome.com"
+	       ],
 	allow_credentials=True,
 	allow_methods=["*"],
 	allow_headers=["*"]
