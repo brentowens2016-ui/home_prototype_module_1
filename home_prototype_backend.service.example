@@ -1,0 +1,15 @@
+[Unit]
+Description=Home Prototype Module 1 Backend (FastAPI)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/YOURUSER/home_prototype_module_1
+Environment="SECURE_STORAGE_KEY=your_base64_32byte_key_here"
+ExecStart=/home/YOURUSER/home_prototype_module_1/.venv/bin/uvicorn python_wrapper.api:app --host 0.0.0.0 --port 8000 --reload
+Restart=always
+RestartSec=5
+User=YOURUSER
+
+[Install]
+WantedBy=multi-user.target

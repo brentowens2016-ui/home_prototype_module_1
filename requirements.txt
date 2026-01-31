@@ -11,5 +11,5 @@ bleak
 psutil
 jsonschema
 twilio
-speech_recognition
+# speech_recognition (not available for Python 3.12)
 pyttsx3

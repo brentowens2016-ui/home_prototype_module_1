@@ -167,3 +167,68 @@ All device modules must conform to contracts in both Python and Rust. Contracts 
 	- Device contracts ([device_contracts.py](python_wrapper/device_contracts.py), [device_contracts.rs](rust_smart_bulbs/src/device_contracts.rs)) are always kept in sync
 	- All new device types/statuses and AI features are documented for FFI/API consumers
 	- See [README_integration.md](README_integration.md) and [INTEGRATION_STATUS.md](INTEGRATION_STATUS.md) for compliance steps
+
+---
+
+# 🚀 Quick Start: Automated Setup & Recovery
+
+## 1. One-Command Setup (Recommended)
+
+### On Unix/Linux/macOS:
+```sh
+bash setup_all.sh
+```
+
+### On Windows:
+```bat
+setup_all.bat
+```
+
+- Installs all Python, Rust, and Node.js dependencies
+- Builds Rust FFI extension
+- Installs dashboard dependencies
+- Ensures all requirements files are in sync
+
+## 2. Post-Install Check
+
+After setup, verify all dependencies:
+
+### On Unix/Linux/macOS:
+```sh
+bash post_install_check.sh
+```
+
+### On Windows:
+```bat
+post_install_check.bat
+```
+
+- Checks for missing Python, Rust, and Node.js modules
+- Reports any missing or broken dependencies
+
+## 3. Running the System
+
+- **Backend (API):**
+  - Unix: `.venv/bin/uvicorn python_wrapper.api:app --host 0.0.0.0 --port 8000 --reload`
+  - Windows: `.venv\Scripts\uvicorn.exe python_wrapper.api:app --host 0.0.0.0 --port 8000 --reload`
+- **Dashboard (React):**
+  - `cd dashboard && npm run dev`
+
+## 4. Recovery
+
+- If dependencies are lost or overwritten, simply re-run the setup script for your OS.
+- If you encounter missing modules, run the post-install check script and follow its instructions.
+- For encrypted data, ensure your `SECURE_STORAGE_KEY` is set (see `.env.example`).
+
+## 5. Updating Dependencies
+
+- Update all requirements.txt files together to keep environments in sync.
+- Re-run the setup script after any dependency changes.
+
+---
+
+# 🛡️ Best Practices
+- Never edit requirements.txt in only one location—keep all in sync.
+- Always use the setup scripts for new environments or after major changes.
+- Use the post-install check script after any manual changes or troubleshooting.
+- Document any new dependencies or setup steps in this README.

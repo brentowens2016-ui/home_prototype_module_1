@@ -1,2 +1,15 @@
 fastapi
 uvicorn[standard]
+pydantic
+starlette
+cryptography
+sounddevice
+numpy
+kasa
+zeroconf
+bleak
+psutil
+jsonschema
+twilio
+# speech_recognition (not available for Python 3.12)
+pyttsx3

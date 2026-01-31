@@ -1,0 +1,14 @@
+[Unit]
+Description=Home Prototype Module 1 Dashboard (React/Vite)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/YOURUSER/home_prototype_module_1/dashboard
+ExecStart=/usr/bin/npm run dev
+Restart=always
+RestartSec=5
+User=YOURUSER
+
+[Install]
+WantedBy=multi-user.target
