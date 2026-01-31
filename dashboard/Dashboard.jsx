@@ -223,6 +223,8 @@ export default function Dashboard() {
   const [showDownload, setShowDownload] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [activeTab, setActiveTab] = useState(null);
+  // FIX: Move agreementAccepted state to top-level
+  const [agreementAccepted, setAgreementAccepted] = useState(false);
   const fetchBulbs = () => axios.get("/bulbs").then((res) => setBulbs(res.data));
   useEffect(() => { if (user) fetchBulbs(); }, [user]);
   useEffect(() => {
@@ -246,7 +248,6 @@ export default function Dashboard() {
     return <AuthPanel onAuth={setUser} onShowDownload={() => setShowDownload(true)} />;
   }
 
-  const [agreementAccepted, setAgreementAccepted] = useState(false);
   if (showDownload) {
     return (
       <div style={{ padding: 32 }}>

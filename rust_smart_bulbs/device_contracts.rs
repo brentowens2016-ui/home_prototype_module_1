@@ -33,29 +33,27 @@
 //!
 //! # Cross-language contract mapping
 //! --------------------------------
-//! Rust enum variant <-> Python enum value mapping:
+//! Rust enum variant <-> Python enum value mapping (STRICT, NO AMBIGUOUS TYPES):
 //!
 //! DeviceType:
-//!   Rust:         Python Enum:      Python String:
-//!   SmartBulb     SMART_BULB        "smart_bulb"
-//!   SmartSwitch   SMART_SWITCH      "smart_switch"
-//!   Sensor        SENSOR            "sensor"
-//!   Unknown       UNKNOWN           "unknown"
+//!   Rust: SmartBulb         <-> Python: SMART_BULB ("smart_bulb")
+//!   Rust: SmartSwitch       <-> Python: SMART_SWITCH ("smart_switch")
+//!   Rust: Sensor            <-> Python: SENSOR ("sensor")
+//!   Rust: SecurityHardwired <-> Python: SECURITY_HARDWIRED ("security_hardwired")
+//!   Rust: SecurityWiFi      <-> Python: SECURITY_WIFI ("security_wifi")
+//!   Rust: Unknown           <-> Python: UNKNOWN ("unknown")
 //!
 //! DeviceStatus:
-//!   Rust:         Python Enum:      Python String:
-//!   On            ON                "on"
-//!   Off           OFF               "off"
-//!   Unknown       UNKNOWN           "unknown"
+//!   Rust: On      <-> Python: ON ("on")
+//!   Rust: Off     <-> Python: OFF ("off")
+//!   Rust: Unknown <-> Python: UNKNOWN ("unknown")
 //!
-//! When adding new device types/statuses, update both Rust and Python contracts and this mapping table.
-//!
+//! When adding new device types or statuses, update BOTH this file and python_wrapper/device_contracts.py.
+//! Do NOT use catch-all or ambiguous types except 'Unknown'.
 //! Conversion helpers should be implemented in the Python layer for FFI boundary.
-//!
 //! ---
 /// Enumerates all supported device types.
 #[derive(Debug, Clone)] // Ch. 6 Enums
-pub enum DeviceType {
     /// Smart bulb (dimmable, color)
     SmartBulb,
     /// Smart switch (on/off)
@@ -69,15 +67,36 @@ pub enum DeviceType {
     /// Unknown or unsupported device
     Unknown,
 }
+pub enum DeviceType {
+    /// Smart bulb (dimmable, color)
+    SmartBulb,
+    /// Smart switch (on/off)
+    SmartSwitch,
+    /// Sensor (e.g., temperature, motion)
+    Sensor,
+    /// Hardwired security system
+    SecurityHardwired,
+    /// Wi-Fi based security system
+    SecurityWiFi,
+    /// Unknown or unsupported device (only allowed catch-all)
+    Unknown,
+}
 
 /// Enumerates all possible device statuses.
 #[derive(Debug, Clone)] // Ch. 6 Enums
-pub enum DeviceStatus {
     /// Device is on/active
     On,
     /// Device is off/inactive
     Off,
     /// Status unknown
+    Unknown,
+}
+pub enum DeviceStatus {
+    /// Device is on/active
+    On,
+    /// Device is off/inactive
+    Off,
+    /// Status unknown (only allowed catch-all)
     Unknown,
 }
 
@@ -88,10 +107,14 @@ pub enum DeviceStatus {
 /// - `device_type`: DeviceType enum
 /// - `status`: DeviceStatus enum
 #[derive(Debug, Clone)] // Ch. 5 Structs
-pub struct DeviceContract {
     pub name: String,
     pub device_type: DeviceType,
     pub status: DeviceStatus,
+}
+pub struct DeviceContract {
+    pub name: String,
+    pub device_type: DeviceType, // Must match Python contract exactly
+    pub status: DeviceStatus,    // Must match Python contract exactly
 }
 
 impl DeviceContract { // Ch. 5.3 Method Syntax

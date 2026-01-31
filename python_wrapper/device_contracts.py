@@ -43,18 +43,19 @@ This module defines the canonical device types and statuses for all smart home m
 from enum import Enum
 
 class DeviceType(Enum):
-    """
-    Canonical device types for all smart home modules.
-    (See also: rust_smart_bulbs/device_contracts.rs)
-
-    Rust <-> Python mapping:
-        Rust: SmartBulb     <-> Python: SMART_BULB ("smart_bulb")
-        Rust: SmartSwitch   <-> Python: SMART_SWITCH ("smart_switch")
-        Rust: Sensor        <-> Python: SENSOR ("sensor")
-        Rust: SecurityHardwired <-> Python: SECURITY_HARDWIRED ("security_hardwired")
-        Rust: SecurityWiFi <-> Python: SECURITY_WIFI ("security_wifi")
-        Rust: Unknown       <-> Python: UNKNOWN ("unknown")
-    """
+    # Canonical device types for all smart home modules.
+    # (See also: rust_smart_bulbs/device_contracts.rs)
+    #
+    # Rust <-> Python mapping (STRICT, NO AMBIGUOUS TYPES):
+    #   Rust: SmartBulb         <-> Python: SMART_BULB ("smart_bulb")
+    #   Rust: SmartSwitch       <-> Python: SMART_SWITCH ("smart_switch")
+    #   Rust: Sensor            <-> Python: SENSOR ("sensor")
+    #   Rust: SecurityHardwired <-> Python: SECURITY_HARDWIRED ("security_hardwired")
+    #   Rust: SecurityWiFi      <-> Python: SECURITY_WIFI ("security_wifi")
+    #   Rust: Unknown           <-> Python: UNKNOWN ("unknown")
+    #
+    # When adding new device types, update BOTH this file and rust_smart_bulbs/device_contracts.rs.
+    # Do NOT use catch-all or ambiguous types except 'UNKNOWN'.
     SMART_BULB = "smart_bulb"
     SMART_SWITCH = "smart_switch"
     SENSOR = "sensor"
@@ -89,15 +90,16 @@ class DeviceType(Enum):
         return mapping.get(py_enum, "Unknown")
 
 class DeviceStatus(Enum):
-    """
-    Canonical device statuses for all smart home modules.
-    (See also: rust_smart_bulbs/device_contracts.rs)
-
-    Rust <-> Python mapping:
-        Rust: On      <-> Python: ON ("on")
-        Rust: Off     <-> Python: OFF ("off")
-        Rust: Unknown <-> Python: UNKNOWN ("unknown")
-    """
+    # Canonical device statuses for all smart home modules.
+    # (See also: rust_smart_bulbs/device_contracts.rs)
+    #
+    # Rust <-> Python mapping (STRICT, NO AMBIGUOUS STATUSES):
+    #   Rust: On      <-> Python: ON ("on")
+    #   Rust: Off     <-> Python: OFF ("off")
+    #   Rust: Unknown <-> Python: UNKNOWN ("unknown")
+    #
+    # When adding new statuses, update BOTH this file and rust_smart_bulbs/device_contracts.rs.
+    # Do NOT use catch-all or ambiguous statuses except 'UNKNOWN'.
     ON = "on"
     OFF = "off"
     UNKNOWN = "unknown"
@@ -123,13 +125,12 @@ class DeviceStatus(Enum):
         return mapping.get(py_enum, "Unknown")
 
 class DeviceContract:
-    """
-    Python-side representation of a device contract for FFI/API.
-    """
+    # Python-side representation of a device contract for FFI/API.
+    # All fields must be explicit and match Rust struct exactly.
     def __init__(self, name: str, device_type: DeviceType, status: DeviceStatus):
         self.name = name
         self.device_type = device_type
         self.status = status
 
     def __repr__(self):
-           return f"<DeviceContract name={self.name} type={self.device_type.value} status={self.status.value}>"
+        return f"<DeviceContract name={self.name} type={self.device_type.value} status={self.status.value}>"

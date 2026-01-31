@@ -60,9 +60,21 @@ export default function AuthPanel({ onAuth, onShowDownload }) {
 
   const handleLogin = () => {
     setError("");
-    axios.post("/login", { username: form.email, password: form.password })
-      .then(res => { setMessage(""); onAuth(res.data); })
-      .catch(e => setError(e.response?.data?.detail || "Login failed"));
+    console.log("handleLogin called", form);
+    try {
+      axios.post("/login", { username: form.email, password: form.password })
+        .then(res => {
+          console.log("/login response", res);
+          setMessage("");
+          onAuth(res.data);
+        })
+        .catch(e => {
+          console.error("/login error", e, e.response);
+          setError(e.response?.data?.detail || "Login failed");
+        });
+    } catch (err) {
+      console.error("handleLogin exception", err);
+    }
   };
 
   const handleSignup = () => {

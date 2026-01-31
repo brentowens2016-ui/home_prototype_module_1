@@ -1,5 +1,8 @@
+
 from fastapi import FastAPI, Request
 import os
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI(
     title="Home Prototype Module 1 API",
@@ -7,6 +10,19 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
+)
+
+# --- CORS Middleware for local frontend development ---
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173", "http://127.0.0.1:5173",
+        "http://localhost:5174", "http://127.0.0.1:5174",
+        "http://localhost:5175", "http://127.0.0.1:5175"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
 )
 
 # Privacy Dashboard Data Endpoint
@@ -176,6 +192,31 @@ async def send_push(request: Request):
     data = await request.json()
     # Integrate with Firebase or push provider (stub)
     return {"status": "ok", "sent": data}
+
+# --- Simple Login Endpoint for Dashboard Auth ---
+@app.post("/login")
+async def login(request: Request):
+    try:
+        data = await request.json()
+        print("/login received data:", data, flush=True)
+        username = data.get("username")
+        password = data.get("password")
+        # Replace this with real user lookup/authentication
+        # For now, accept a hardcoded user for demo
+        if username == "admin" and password == "admin":
+            return {"username": username, "role": "admin", "token": "fake-jwt-token"}
+        elif username == "user" and password == "user":
+            return {"username": username, "role": "user", "token": "fake-jwt-token"}
+        else:
+            from fastapi import HTTPException
+            print("/login invalid credentials:", username, password, flush=True)
+            raise HTTPException(status_code=401, detail="Invalid username or password")
+    except Exception as e:
+        import traceback
+        print("/login exception:", str(e), flush=True)
+        traceback.print_exc()
+        from fastapi.responses import JSONResponse
+        return JSONResponse(status_code=500, content={"error": str(e)})
 # IP monitoring and enforcement for site-specific agent usage
 from fastapi import Request
 
@@ -359,10 +400,7 @@ from python_wrapper.analytics_api import router as analytics_router
 # --- FastAPI app and endpoints ---
 
 
-from python_wrapper.ota_api import router as ota_router
-
 from python_wrapper.mapping_engine import get_mapping as engine_get_mapping, set_mapping as engine_set_mapping, validate_mapping as engine_validate_mapping
-
 from python_wrapper.device_discovery import discover_wifi_devices
 
 # --- Wi-Fi Device Discovery Endpoint ---
@@ -493,12 +531,10 @@ def list_audio_endpoints():
         return endpoints
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
-# --- FastAPI app and endpoints ---
 from starlette.middleware.base import BaseHTTPMiddleware
 from cryptography.fernet import Fernet
 from Crypto.Cipher import AES
 import base64
-
 
 # --- Double Encryption Middleware ---
 FERNET_KEY = Fernet.generate_key()
@@ -507,25 +543,20 @@ AES_KEY = b'ThisIsASecretKey123'  # 16 bytes for AES-128
 AES_IV = b'ThisIsAnIV456789'      # 16 bytes IV
 
 def double_encrypt(data: bytes) -> bytes:
-    # First layer: Fernet
     encrypted1 = fernet.encrypt(data)
-    # Second layer: AES
     cipher = AES.new(AES_KEY, AES.MODE_CFB, AES_IV)
     encrypted2 = cipher.encrypt(encrypted1)
     return base64.b64encode(encrypted2)
 
 def double_decrypt(data: bytes) -> bytes:
-    # Second layer: AES
     encrypted2 = base64.b64decode(data)
     cipher = AES.new(AES_KEY, AES.MODE_CFB, AES_IV)
     decrypted1 = cipher.decrypt(encrypted2)
-    # First layer: Fernet
     decrypted2 = fernet.decrypt(decrypted1)
     return decrypted2
 
 class DoubleEncryptionMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
-        # Decrypt incoming request body if present
         if request.method in ("POST", "PUT", "PATCH"):
             body = await request.body()
             if body:
@@ -535,7 +566,6 @@ class DoubleEncryptionMiddleware(BaseHTTPMiddleware):
                 except Exception:
                     pass
         response = await call_next(request)
-        # Encrypt outgoing response
         if hasattr(response, "body") and response.body:
             try:
                 encrypted = double_encrypt(response.body)
@@ -562,13 +592,6 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
         return response
 
-app = FastAPI(
-    title="Home Prototype Module 1 API",
-    description="Comprehensive API for smart home, security, automation, and support features.",
-    version="1.0.0",
-    docs_url="/docs",
-    redoc_url="/redoc"
-)
 app.add_middleware(DoubleEncryptionMiddleware)
 app.add_middleware(RateLimitMiddleware)
 @app.get("/email-log")
@@ -637,7 +660,7 @@ class BulbState(BaseModel):
     brightness: int
     color: tuple
 
-def get_bulb_state(bulb: PySmartBulb) -> BulbState:
+def get_bulb_state(bulb: "PySmartBulb") -> "BulbState":
     # This assumes PySmartBulb exposes .is_on, .brightness, .color
     # If not, you may need to add @property methods in Rust
     return BulbState(
