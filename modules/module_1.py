@@ -1,3 +1,12 @@
+# --- Serve favicon.ico for browser requests ---
+from fastapi.responses import FileResponse
+
+@app.get("/favicon.ico")
+def favicon():
+	static_path = pathlib.Path(__file__).parent.parent / "dashboard" / "static" / "favicon.ico"
+	if static_path.exists():
+		return FileResponse(str(static_path))
+	return JSONResponse(status_code=404, content={"error": "favicon.ico not found"})
 # --- File Upload Endpoint (for certificate/config uploads) ---
 from fastapi import UploadFile, File
 import shutil
