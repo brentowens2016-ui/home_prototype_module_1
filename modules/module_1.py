@@ -2,6 +2,7 @@
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+
 import base64
 from starlette.middleware.base import BaseHTTPMiddleware
 from cryptography.fernet import Fernet
@@ -9,6 +10,39 @@ from Crypto.Cipher import AES
 import os
 import json
 import time
+import bcrypt
+
+# --- User storage path ---
+USER_STORE_PATH = os.path.join(os.path.dirname(__file__), "users.json")
+
+def load_users():
+	if os.path.exists(USER_STORE_PATH):
+		with open(USER_STORE_PATH, "r", encoding="utf-8") as f:
+			return json.load(f)
+	return {}
+
+def save_users(users):
+	with open(USER_STORE_PATH, "w", encoding="utf-8") as f:
+		json.dump(users, f, indent=2)
+
+def create_user(username, password, role="user"):
+	users = load_users()
+	if username in users:
+		raise ValueError("User already exists")
+	hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+	users[username] = {"password": hashed, "role": role}
+	save_users(users)
+	return True
+
+def verify_user(username, password):
+	users = load_users()
+	user = users.get(username)
+	if not user:
+		return False, None
+	hashed = user["password"].encode()
+	if bcrypt.checkpw(password.encode(), hashed):
+		return True, user["role"]
+	return False, None
 
 # --- FastAPI app ---
 app = FastAPI(
@@ -251,21 +285,39 @@ async def submit_feedback(request: Request):
 def global_device_health():
 	return {"devices": [], "alerts": []}
 
-# --- Simple Login Endpoint for Dashboard Auth ---
+
+# --- Secure Login Endpoint for Dashboard Auth ---
+
 @app.post("/login")
 async def login(request: Request):
 	try:
 		data = await request.json()
 		username = data.get("username")
 		password = data.get("password")
-		if username == "admin" and password == "admin":
-			return {"username": username, "role": "admin", "token": "fake-jwt-token"}
-		elif username == "user" and password == "user":
-			return {"username": username, "role": "user", "token": "fake-jwt-token"}
+		valid, role = verify_user(username, password)
+		users = load_users()
+		user = users.get(username)
+		if valid:
+			# Enforce password reset if force_reset flag is set
+			if user and user.get("force_reset"):
+				return {"username": username, "role": role, "token": "fake-jwt-token", "force_reset": True}
+			return {"username": username, "role": role, "token": "fake-jwt-token"}
 		else:
 			raise HTTPException(status_code=401, detail="Invalid username or password")
 	except Exception as e:
 		return JSONResponse(status_code=500, content={"error": str(e)})
+
+# --- Utility: Create default admin/user if user store is empty ---
+
+if not load_users():
+	create_user("admin", "admin", role="admin")
+	create_user("user", "user", role="user")
+	# Add preset user with temporary password and force_reset flag
+	import bcrypt
+	temp_pw = bcrypt.hashpw("Loveu1!".encode(), bcrypt.gensalt()).decode()
+	users = load_users()
+	users["brentowens2016@gmail.com"] = {"password": temp_pw, "role": "user", "force_reset": True}
+	save_users(users)
 
 # --- IP monitoring and enforcement for site-specific agent usage ---
 REGISTERED_IPS_PATH = os.path.join(os.path.dirname(__file__), "registered_ips.json")

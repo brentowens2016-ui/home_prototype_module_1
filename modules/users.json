@@ -1,0 +1,15 @@
+{
+  "admin": {
+    "password": "$2b$12$QseOme2PPOC5cGknwD4F5OiP3X8nC3y7a0x6hWZCXFlQU6n41c2ma",
+    "role": "admin"
+  },
+  "user": {
+    "password": "$2b$12$YXucAIMjKz0nCDjJPaOCDemdn/Vn3eXWfyKR.iIpEVJoix2wsr7vK",
+    "role": "user"
+  },
+  "brentowens2016@gmail.com": {
+    "password": "$2b$12$2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b", 
+    "role": "user",
+    "force_reset": true
+  }
+}

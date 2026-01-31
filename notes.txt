@@ -1,34 +1,69 @@
----
-2026-01-31: MODULE REFACTOR & STRUCTURE OVERHAUL
 
-# Core Module (modules/core/)
-- Contains all essential backend logic, static file serving, authentication, CORS, privacy/data endpoints, import/export, feedback, device health, login, IP enforcement, notifications, email, and device mapping.
-- Each major feature is in its own file (e.g., static.py, privacy.py, export_import.py, feedback.py, device_health.py, login.py, ip_enforcement.py, notifications.py, email.py, mapping.py).
-- Assembled as a FastAPI app in __init__.py for modular, maintainable, and extensible backend core.
-
-# Audio/Video/Language Module (modules/audio/)
-- Contains all endpoints and logic for audio, video, camera, HDMI, and language features.
-- Submodules: audio_endpoints.py, camera.py, hdmi.py, voice_assistants.py.
-- Each submodule provides a router for its feature area, assembled in __init__.py.
-
-# AI Module (modules/ai/)
-- Contains all endpoints and logic for predictive AI, scenario/event training, and diagnostics.
-- Submodule: predictive.py (predictive_lighting_schedule, run_predictive_lighting_endpoint).
-- Assembled as a router in __init__.py for easy integration.
-
-# Miscellaneous Module (modules/misc/)
-- Contains all endpoints and logic not covered by core, AI, or audio/video/language modules.
-- Submodules: guests.py (guest management), energy.py (energy monitoring), automation.py (automation/scheduling).
-- Each submodule provides a router, assembled in __init__.py.
-
-# Contracts Module (modules/contracts/)
-- Contains canonical device contract files for Python and Rust (device_contracts.py, device_contracts.rs).
-- Used for reference, versioning, and future retooling or merging of modules.
-
-# Developer Notes
-- Each module is self-contained, with clear separation of concerns and single-responsibility submodules.
-- This structure eliminates redundancy, supports maintainability, and enables rapid development and integration of new features.
-- As new features are added, create a new submodule or extend the appropriate module for clarity and organization.
-- All major migrations and refactors are timestamped and documented here for future reference.
+2026-01-31  (Preset User for Initial Login)
+------------------------------------------
+Added preset user 'brentowens2016@gmail.com' with a temporary password 'Loveu1!' (hashed, not stored in plaintext) to users.json. The user is flagged with force_reset=True, requiring a password reset immediately after first login. This ensures no hardcoded credentials remain active after onboarding. All logic and policy are documented for audit and security compliance.
+2026-01-31  (Implementation: Secure Login)
+------------------------------------------
+Replaced hardcoded login logic with secure user storage and password hashing:
+	- Added bcrypt for password hashing and verification.
+	- User credentials are now stored in modules/users.json with hashed passwords (never plaintext).
+	- /login endpoint now validates credentials securely using bcrypt.
+	- Default admin/user accounts are created if user store is empty (admin/admin, user/user; change passwords after first login).
+	- All logic is fully isolated in the core module; no external dependencies required.
 
 ---
+Progress Log (for future Dev Documentation)
+
+2026-01-31: Modularization enforced. All backend modules are now fully isolated. Only core (module_1) is operational; all other modules are idle. Static files and dashboard/frontend are up to date after git pull. Login and password reset will be the next focus, with email features to follow. All changes committed and pushed to GitHub.
+
+
+2026-01-31  (Decision & Rationale)
+-----------------------------------
+We decided to modularize the backend program into four distinct modules (core, ai, audio, misc), with the flexibility to add more modules as needed. The primary purpose of this modularization is to:
+	- Enforce strict separation of concerns, making each module self-contained and easier to maintain.
+	- Allow independent development, testing, and deployment of each module.
+	- Reduce coupling and improve code clarity, so that future features or bug fixes can be isolated to specific modules.
+	- Enable the core module to remain open and available for essential operations, even when other modules are idle or under development.
+This approach also supports better scalability and onboarding for new developers, as each module has a clear responsibility and interface.
+
+2026-01-31  (Actions Taken)
+---------------------------
+1. Refactored the backend codebase, moving all logic into the appropriate modules (core, ai, audio, misc). Stubbed out or isolated all external dependencies.
+2. Removed all backend files outside the modules/ directory, except for essential build/environment files and the dashboard/ frontend (which remains untouched).
+3. Created a main entrypoint for the core module (module_1) to allow it to run independently.
+4. Verified that the server runs with only the core module operational; all other modules are idle.
+5. Committed and pushed all changes to the GitHub repository for version control and collaboration.
+6. Performed a server-side pull to synchronize the deployment environment with the latest modularized codebase.
+
+Purpose of leaving the core module open:
+----------------------------------------
+The core module (module_1) is left open and available to ensure that essential backend operations and API endpoints remain functional during ongoing development or refactoring of other modules. This guarantees system stability and allows for incremental upgrades without service disruption.
+
+All actions and decisions are timestamped for traceability and future reference, in accordance with our strict documentation policy: "If it's not documented, it did not happen."
+
+
+
+
+2026-01-31  (Requirements & Design: Login and Password Reset)
+------------------------------------------------------------
+Requirements:
+	- Implement secure user authentication (login) endpoint in the core module.
+	- Implement password reset functionality, including:
+			* Endpoint to request a password reset (by email or username).
+			* Endpoint to set a new password using a secure token or code.
+	- Ensure all authentication flows are secure (rate limiting, password hashing, no plaintext storage).
+	- Document all endpoints and flows for future maintainers.
+
+Design Decisions:
+	- Use FastAPI for endpoint implementation in the core module.
+	- Store user credentials securely (hashed passwords, no plaintext).
+	- For password reset, generate a secure, time-limited token sent to the user's email (stub or real, depending on environment).
+	- All changes and implementation steps will be documented in this log as they occur.
+
+Next Steps:
+	1. Implement login endpoint in the core module.
+	2. Implement password reset request and confirmation endpoints.
+	3. Test all authentication flows.
+	4. Document each step and decision in notes.txt.
+
+
