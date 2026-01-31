@@ -8,8 +8,6 @@ import tempfile
 import os
  
 tts_engine = pyttsx3.init()
-def transcribe_audio_file(file_path: str) -> str:
-
 # STT functionality disabled: speech_recognition not available
 def transcribe_audio_file(file_path: str) -> str:
     return "[STT unavailable: speech_recognition not installed]"
