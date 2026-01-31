@@ -1,0 +1,14 @@
+"""
+Module: Guest Access Management (Module 8)
+
+Precise Description:
+This module manages all endpoints and logic for guest access, including adding, removing, and listing guests. It provides:
+- REST endpoints for guest management and access control.
+- Designed for independent extension of guest features, with no direct device or AI logic.
+
+Integration: FastAPI router, REST endpoints, dashboard integration.
+
+Dependencies:
+- FastAPI
+- Standard library: os, json
+"""

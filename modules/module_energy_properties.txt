@@ -1,0 +1,14 @@
+"""
+Module: Energy Monitoring (Module 7)
+
+Precise Description:
+This module provides all endpoints and logic for energy usage monitoring, reporting, and suggestions. It exposes:
+- REST endpoints for retrieving device energy usage and total consumption.
+- Designed for independent extension of energy features, with no direct device or AI logic.
+
+Integration: FastAPI router, REST endpoints, dashboard integration.
+
+Dependencies:
+- FastAPI
+- Standard library: os, json
+"""

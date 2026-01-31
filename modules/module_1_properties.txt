@@ -1,0 +1,25 @@
+"""
+Module: Core Backend and Static Serving (Module 1)
+
+Precise Description:
+This module provides all foundational backend services and static file serving required for the Home Prototype system to function. It is responsible for:
+- Serving the React dashboard and all static frontend assets.
+- Exposing all essential REST API endpoints for authentication, user feedback, privacy/data management, import/export, device health, and network association.
+- Implementing CORS, rate limiting, double encryption, and IP enforcement middleware for security and compliance.
+- Managing core device mapping, admin endpoints, and global system health.
+This module is designed to operate independently, providing the minimum viable backend for the dashboard and other modules to connect and function. It is the only module permitted to serve static frontend files and handle global authentication or network association logic.
+
+Integration: Standalone operation, full backend/frontend connectivity, can be run independently. All other modules depend on this core for base API and static serving.
+
+Dependencies:
+- FastAPI (REST API framework)
+- StaticFiles (for serving frontend assets)
+- CORS, rate limiting, encryption, and IP enforcement middleware
+- Core backend logic (import/export, device health, mapping, admin, etc.)
+- No direct AI, automation, or device-specific logic (these are delegated to other modules)
+
+Instructions:
+- Copy all core endpoints and logic from the main API (api.py) and related static/network files into this module.
+- Ensure all imports are self-contained or relative to this module.
+- Document any required configuration or environment variables.
+"""

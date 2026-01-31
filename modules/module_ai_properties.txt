@@ -1,0 +1,40 @@
+"""
+Module: Predictive AI and Regenerative Learning (Module 2)
+
+Precise Description:
+This module encapsulates all predictive, regenerative, and adaptive AI logic for the Home Prototype system. It provides:
+- REST endpoints for predictive lighting and automation, enabling event-driven and scenario-based control of smart devices.
+- CLI tools for scenario/event input, training, and event chain diagnostics, supporting continuous learning and system adaptation.
+- All utilities for scenario management, event chain analysis, and adaptive automation, ensuring the system can learn from user behavior and environmental data.
+This module is designed for independent development, testing, and extension of all AI-driven features, and is the only module permitted to directly access or modify scenario/event training data.
+
+Integration: FastAPI router, REST endpoints, dashboard integration, standalone CLI tools for training and diagnostics.
+
+AI Module Dependencies (for full self-contained development):
+- predictive_ai.py (core AI logic, event-driven automation)
+- scenario_input.py (scenario/event input, training utilities)
+- event_chain_manager.py (event chain management, diagnostics)
+- event_template.json (AI scenario/event input template)
+- Any additional shared utilities imported by the above (see below)
+
+Dependency Audit (import tree):
+* predictive_ai.py imports:
+    - os, json, time, random, logging (standard library)
+    - event_template.json (data file)
+    - scenario_input.py (for scenario input/training)
+    - event_chain_manager.py (for event chain management)
+    - No other custom modules detected
+* scenario_input.py imports:
+    - os, json, sys, argparse (standard library)
+    - event_template.json (data file)
+    - predictive_ai.py (for AI logic)
+    - No other custom modules detected
+* event_chain_manager.py imports:
+    - os, json, sys, argparse (standard library)
+    - predictive_ai.py (for AI logic)
+    - scenario_input.py (for scenario input)
+    - event_template.json (data file)
+    - No other custom modules detected
+
+All AI logic and dependencies are now referenced here. If you add new AI utilities, update this list and ensure they are included in the module's documentation.
+"""

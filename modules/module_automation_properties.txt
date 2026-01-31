@@ -1,0 +1,16 @@
+"""
+Module: Automation and Scheduling (Module 4)
+
+Precise Description:
+This module provides all endpoints and logic for scheduled automations, flexible routines, and event-driven automation for the Home Prototype system. It exposes:
+- REST endpoints for creating, listing, and managing automation schedules.
+- Utilities for integrating with device and event modules to trigger actions based on time or scenario.
+- Designed for independent development of automation features, with no direct device or AI logic.
+
+Integration: FastAPI router, REST endpoints, dashboard integration.
+
+Dependencies:
+- FastAPI
+- automation_api.py
+- Standard library: os, json
+"""

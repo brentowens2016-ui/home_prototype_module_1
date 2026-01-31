@@ -1,0 +1,14 @@
+"""
+Module: Home Assistant and Appliance Integration (Module 9)
+
+Precise Description:
+This module provides all endpoints and logic for integrating with third-party home assistants and appliances. It exposes:
+- REST endpoints for integration with Alexa, Google Home, Siri, and other appliances.
+- Designed for independent extension of integration features, with no direct device or AI logic.
+
+Integration: FastAPI router, REST endpoints, dashboard integration.
+
+Dependencies:
+- FastAPI
+- Standard library: os, json
+"""

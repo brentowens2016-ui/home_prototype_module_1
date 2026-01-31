@@ -1,0 +1,16 @@
+"""
+Module: Callouts and Emergency (Module 5)
+
+Precise Description:
+This module handles all endpoints and logic for emergency callouts, audio push, and emergency response processing. It provides:
+- REST endpoints for sending emergency audio messages and processing emergency instructions.
+- Integration with the audio system for urgent household notifications.
+- Designed for independent extension of emergency and callout features.
+
+Integration: FastAPI router, REST endpoints, dashboard integration.
+
+Dependencies:
+- FastAPI
+- audio_io.py
+- Standard library: os, json
+"""

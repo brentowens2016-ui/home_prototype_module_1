@@ -1,7 +1,0 @@
->>   "event_type": "sensor_trigger",        
->>   "sensor_type": "contact",
->>   "sensor_id": "front_door_contact",     
->>   "location": "Front Door",
->>   "value": "closed",  # or "broken"        
->>   "label": "Open_Front_Door",
->>   "timestamp": 1769600000

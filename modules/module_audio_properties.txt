@@ -1,0 +1,25 @@
+"""
+Module 3: Audio, Language, and Voice Logic
+
+Description:
+This module contains all backend endpoints, logic, and integrations for audio device management, voice assistant integration, speech I/O, and language features. It is the single source for all audio and language-related features in the smart home backend.
+
+Features:
+- Emergency audio push and response endpoints
+- Voice assistant integrations (Alexa, Google, Siri)
+- Audio device discovery, mapping, and configuration
+- Audio I/O (playback, volume control)
+- Room-to-device audio mapping
+- Audio endpoint listing
+- All FastAPI endpoints for audio/language/voice
+- Integrates with audio_io.py, audio_mapping_api.py, audio_config_api.py, ai_voice_api.py, tts_api.py
+- Designed for modular import into FastAPI app
+
+Dependencies:
+- fastapi, pydantic, typing, os, json
+- python_wrapper.audio_io
+- python_wrapper.audio_mapping_api
+- python_wrapper.audio_config_api
+- python_wrapper.ai_voice_api
+- python_wrapper.tts_api
+"""

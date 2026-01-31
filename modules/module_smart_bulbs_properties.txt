@@ -1,0 +1,16 @@
+"""
+Module: Smart Bulb and Device Control (Module 11)
+
+Precise Description:
+This module provides all endpoints and logic for smart bulb and device control, including color, brightness, and event-driven automation. It exposes:
+- REST endpoints for listing, controlling, and monitoring smart bulbs.
+- Designed for independent extension of device control features, with no direct AI or automation logic.
+
+Integration: FastAPI router, REST endpoints, dashboard integration.
+
+Dependencies:
+- FastAPI
+- rust_smart_bulbs (via FFI)
+- device_contracts.py
+- Standard library: os, json
+"""

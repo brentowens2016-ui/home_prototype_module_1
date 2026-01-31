@@ -1,0 +1,14 @@
+"""
+Module: Camera and Video Integration (Module 6)
+
+Precise Description:
+This module manages all endpoints and logic for IP camera integration, motion detection, and video streaming. It provides:
+- REST endpoints for listing cameras, triggering motion snapshots/clips, and streaming video.
+- Designed for independent extension of camera and video features, with no direct device or AI logic.
+
+Integration: FastAPI router, REST endpoints, dashboard integration.
+
+Dependencies:
+- FastAPI
+- Standard library: os, json
+"""

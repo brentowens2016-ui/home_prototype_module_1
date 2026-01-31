@@ -1,0 +1,19 @@
+Module: Miscellaneous (Module 4)
+
+Description: This module contains all endpoints, logic, and dependencies not covered by the core, AI, or audio/video/language modules. It currently includes:
+
+- Guest Access: Add, remove, and list guests.
+- Energy Monitoring: Retrieve energy usage data.
+- Automation/Scheduling: Add and list automation schedules.
+- Future miscellaneous endpoints as needed.
+
+Dependencies:
+- FastAPI
+- Standard Python libraries
+
+Integration:
+- Import and include the router from this module in the main API to expose these endpoints.
+
+Instructions:
+- Extend this module as new miscellaneous features are added.
+- Keep this properties file updated with all endpoints and logic included in this module.
