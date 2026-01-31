@@ -1,6 +1,13 @@
-# --- Serve favicon.ico for browser requests ---
 from fastapi.responses import FileResponse
+app = FastAPI(
+	title="Home Prototype Module 1 API (Core)",
+	description="Core API for smart home, security, automation, and support features.",
+	version="1.0.0",
+	docs_url="/docs",
+	redoc_url="/redoc"
+)
 
+# --- Serve favicon.ico for browser requests ---
 @app.get("/favicon.ico")
 def favicon():
 	static_path = pathlib.Path(__file__).parent.parent / "dashboard" / "static" / "favicon.ico"
