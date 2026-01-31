@@ -1,9 +1,8 @@
 from fastapi import APIRouter, Request
 import os
 import json
-from . import secure_storage
 from typing import Dict
-USERS_FILE = os.path.join(os.path.dirname(__file__), "users.json.enc")
+USERS_FILE = os.path.join(os.path.dirname(__file__), "users.json")
 router = APIRouter()
 # --- User status color for admin monitoring ---
 from python_wrapper.device_health import get_user_status
@@ -14,12 +13,14 @@ def get_status_color(username: str):
 # --- Remote Support Consent Endpoints ---
 
 def load_users():
-    if os.path.exists(USERS_FILE):
-        return secure_storage.read_and_decrypt_json(USERS_FILE)
-    return []
+    if not os.path.exists(USERS_FILE):
+        return []
+    with open(USERS_FILE, "r", encoding="utf-8") as f:
+        return json.load(f)
 
 def save_users(users):
-    secure_storage.encrypt_json_and_write(USERS_FILE, users)
+    with open(USERS_FILE, "w", encoding="utf-8") as f:
+        json.dump(users, f, indent=2)
 
 @router.get("/users/{username}/allow_remote")
 def get_allow_remote(username: str):
