@@ -1,3 +1,108 @@
+from fastapi import APIRouter, Request
+import os
+import json
+from . import secure_storage
+from typing import Dict
+USERS_FILE = os.path.join(os.path.dirname(__file__), "users.json.enc")
+router = APIRouter()
+# --- User status color for admin monitoring ---
+from python_wrapper.device_health import get_user_status
+@router.get("/users/{username}/status_color")
+def get_status_color(username: str):
+    color = get_user_status(username)
+    return {"status_color": color}
+# --- Remote Support Consent Endpoints ---
+
+def load_users():
+    if os.path.exists(USERS_FILE):
+        return secure_storage.read_and_decrypt_json(USERS_FILE)
+    return []
+
+def save_users(users):
+    secure_storage.encrypt_json_and_write(USERS_FILE, users)
+
+@router.get("/users/{username}/allow_remote")
+def get_allow_remote(username: str):
+    users = load_users()
+    user = next((u for u in users if u.get("username") == username), None)
+    if not user:
+        return JSONResponse(status_code=404, content={"error": "User not found"})
+    return {"allow_remote": user.get("allow_remote", False)}
+
+@router.post("/users/{username}/allow_remote")
+def set_allow_remote(username: str, payload: Dict):
+    users = load_users()
+    user = next((u for u in users if u.get("username") == username), None)
+    if not user:
+        return JSONResponse(status_code=404, content={"error": "User not found"})
+    allow = bool(payload.get("allow_remote", False))
+    user["allow_remote"] = allow
+    save_users(users)
+    return {"status": "ok", "allow_remote": allow}
+# --- Username reminder endpoint ---
+@router.post("/users/remind_username")
+def remind_username(payload: Dict):
+    email = payload.get("email")
+    phone = payload.get("phone")
+    users = load_users()
+    found = None
+    for user in users:
+        if (email and user.get("username", "").lower() == email.lower()) or (phone and user.get("phone", "") == phone):
+            found = user
+            break
+    if not found:
+        return JSONResponse(status_code=404, content={"error": "No user found for provided email or phone."})
+    # Send username reminder via email (stub)
+    send_email_stub(found["username"], "Username Reminder", f"Your username is: {found['username']}")
+    return {"status": "ok"}
+# --- Admin: Issue temp password and force reset ---
+import secrets
+@router.post("/users/force_temp_password")
+def force_temp_password(payload: Dict, request: Request):
+    role = request.headers.get("X-Role", "guest")
+    admin = request.headers.get("X-Username", "admin")
+    if role != "admin":
+        raise HTTPException(status_code=403, detail="Admin only.")
+    username = payload.get("username")
+    if not username:
+        raise HTTPException(status_code=400, detail="Username required.")
+    users = load_users()
+    user = next((u for u in users if u.get("username") == username), None)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+    # Generate temp password
+    temp_password = secrets.token_urlsafe(8)
+    user["password"] = temp_password
+    user["force_password_reset"] = True
+    save_users(users)
+    log_admin_action(admin, "force_temp_password", {"username": username})
+    send_email_stub(username, "Temporary Password Issued", f"Your temporary password is: {temp_password}\nYou will be required to set a new password on next login.")
+    return {"status": "ok", "temp_password": temp_password}
+from fastapi import APIRouter, Request
+import os
+from typing import Dict
+router = APIRouter()
+@router.post("/users/account_setup")
+async def account_setup(request: Request):
+    data = await request.json()
+    email = data.get("email")
+    if not email:
+        return JSONResponse(status_code=400, content={"error": "Email required"})
+    users = load_users()
+    user = next((u for u in users if u.get("username") == email), None)
+    if not user:
+        return JSONResponse(status_code=404, content={"error": "User not found"})
+    # Update user profile fields
+    user["fullname"] = data.get("fullname", user.get("fullname", ""))
+    user["phone"] = data.get("phone", user.get("phone", ""))
+    user["service_location"] = f"{data.get('site_address', '')}, {data.get('site_city', '')}, {data.get('site_state', '')} {data.get('site_zip', '')}"
+    user["billing_location"] = f"{data.get('user_address', '')}, {data.get('user_city', '')}, {data.get('user_state', '')} {data.get('user_zip', '')}"
+    try:
+        user["declared_sqft"] = int(data.get("sqft", user.get("declared_sqft", 0)))
+    except Exception:
+        user["declared_sqft"] = user.get("declared_sqft", 0)
+    save_users(users)
+    return {"status": "ok"}
 # GDPR/CCPA: User data export and deletion endpoints
 import io
 from fastapi.responses import StreamingResponse
@@ -225,6 +330,9 @@ async def login_strong(request: Request):
         code = send_mfa_code(username)
         log_admin_action_granular("2fa_code_sent", username, {"ip": ip})
         return {"status": "2fa_required", "method": "push", "code": code}  # For demo, return code
+    # Enforce password reset if flagged
+    if user.get("force_password_reset"):
+        return {"status": "force_password_reset"}
     log_admin_action_granular("login", username, {"ip": ip})
     return {"status": "ok"}
 
@@ -327,6 +435,7 @@ def reset_password(payload: Dict):
         if user["username"].lower() == email.lower() and user.get("reset_token") == token:
             user["password"] = new_password
             user["reset_token"] = ""
+            user["force_password_reset"] = False
             save_users(users)
             return {"status": "ok"}
     raise HTTPException(status_code=400, detail="Invalid token or user.")

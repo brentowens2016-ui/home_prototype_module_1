@@ -1,4 +1,28 @@
 ---
+OUTSTANDING TASKS (2026-01-30)
+
+Work on Server:
+- Set up SSL (HTTPS) with Certbot/Nginx after DNS resolves
+- Verify and secure SSH configuration
+- Test server accessibility from public internet
+
+CheapNames.com Configuration:
+- Complete DNS setup and verify propagation
+- Add/verify A and CNAME records
+- Configure SSL/HTTPS support
+- Set up domain in PayPal Website Preferences (optional)
+
+VS Code / Application:
+- Test full payment flows for all tiers
+- Test PayPal webhook integration (auto-upgrade user tier)
+- Test signup, login, password reset, and onboarding flows
+- Review and finalize tier descriptions and pricing
+- Finalize and test static landing and marketing pages
+- Review and test backup/restore, device mapping, and automation features
+- Prepare for production push (Git, Docker, deployment)
+
+---
+---
 COMPLETED WORK SUMMARY (2026-01-29)
 - Legal & Privacy Foundation: All privacy, terms, and disclaimers integrated and acceptance dialogs implemented.
 - Audio System Upgrade: Modular audio interface, REST endpoints, and dashboard UI completed.

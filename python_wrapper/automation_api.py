@@ -3,23 +3,22 @@ Automation API: scheduling and conditional automations
 """
 import os
 import json
+from . import secure_storage
 import time
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 
-AUTOMATIONS_PATH = os.path.join(os.path.dirname(__file__), "automations.json")
+AUTOMATIONS_PATH = os.path.join(os.path.dirname(__file__), "automations.json.enc")
 
 router = APIRouter()
 
 def load_automations():
     if os.path.exists(AUTOMATIONS_PATH):
-        with open(AUTOMATIONS_PATH, "r", encoding="utf-8") as f:
-            return json.load(f)
+        return secure_storage.read_and_decrypt_json(AUTOMATIONS_PATH)
     return []
 
 def save_automations(automations):
-    with open(AUTOMATIONS_PATH, "w", encoding="utf-8") as f:
-        json.dump(automations, f, indent=2)
+    secure_storage.encrypt_json_and_write(AUTOMATIONS_PATH, automations)
 
 # List all automations
 @router.get("/automations")
@@ -78,15 +77,14 @@ import json
 from fastapi import APIRouter, HTTPException, Request
 from typing import Dict, List
 
-templates_file = os.path.join(os.path.dirname(__file__), "automation_templates.json")
+templates_file = os.path.join(os.path.dirname(__file__), "automation_templates.json.enc")
 router = APIRouter()
 
 @router.get("/automation/templates")
 def get_templates():
     if not os.path.exists(templates_file):
         return []
-    with open(templates_file, "r", encoding="utf-8") as f:
-        return json.load(f)
+    return secure_storage.read_and_decrypt_json(templates_file)
 
 @router.post("/automation/templates")
 def add_template(payload: Dict, request: Request):
@@ -96,11 +94,9 @@ def add_template(payload: Dict, request: Request):
     if not os.path.exists(templates_file):
         templates = []
     else:
-        with open(templates_file, "r", encoding="utf-8") as f:
-            templates = json.load(f)
+        templates = secure_storage.read_and_decrypt_json(templates_file)
     templates.append(payload)
-    with open(templates_file, "w", encoding="utf-8") as f:
-        json.dump(templates, f, indent=2)
+    secure_storage.encrypt_json_and_write(templates_file, templates)
     return {"status": "ok"}
 
 @router.post("/automation/templates/{idx}/delete")
@@ -110,11 +106,9 @@ def delete_template(idx: int, request: Request):
         raise HTTPException(status_code=403, detail="Admin only.")
     if not os.path.exists(templates_file):
         raise HTTPException(status_code=404, detail="No templates found.")
-    with open(templates_file, "r", encoding="utf-8") as f:
-        templates = json.load(f)
+    templates = secure_storage.read_and_decrypt_json(templates_file)
     if not (0 <= idx < len(templates)):
         raise HTTPException(status_code=404, detail="Template not found.")
     templates.pop(idx)
-    with open(templates_file, "w", encoding="utf-8") as f:
-        json.dump(templates, f, indent=2)
+    secure_storage.encrypt_json_and_write(templates_file, templates)
     return {"status": "ok"}

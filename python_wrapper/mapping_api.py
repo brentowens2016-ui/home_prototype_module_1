@@ -10,12 +10,13 @@ Mapping API logic for device mapping endpoints
 """
 
 import json
+from . import secure_storage
 from fastapi import UploadFile, File
 from fastapi.responses import JSONResponse
 from .mapping_loader import load_and_validate_mapping, validate_mapping_object
 import os
 
-MAPPING_PATH = os.path.join(os.path.dirname(__file__), "device_mapping.json")
+MAPPING_PATH = os.path.join(os.path.dirname(__file__), "device_mapping.json.enc")
 
 # In-memory cache for mapping (optional, for performance)
 current_mapping = None
@@ -27,7 +28,9 @@ def get_mapping():
     global current_mapping
     if current_mapping is None:
         try:
-            current_mapping = load_and_validate_mapping(MAPPING_PATH)
+            # Decrypt and load mapping
+            mapping = secure_storage.read_and_decrypt_json(MAPPING_PATH)
+            current_mapping = load_and_validate_mapping(mapping)
         except Exception:
             current_mapping = []
     return current_mapping
@@ -64,8 +67,8 @@ def set_mapping(mapping):
     # Enforce device count
     if len(mapping) > tier['max_devices']:
         raise Exception(f"Device mapping exceeds allowed devices for your tier ({subscription_tier}: {tier['max_devices']} devices). Please upgrade your plan or remove devices.")
-    with open(MAPPING_PATH, "w", encoding="utf-8") as f:
-        json.dump(mapping, f, indent=2)
+    # Encrypt and save mapping
+    secure_storage.encrypt_json_and_write(MAPPING_PATH, mapping)
     current_mapping = mapping
 
 # Helper for API to check mapping limits and return error string (not exception)

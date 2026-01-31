@@ -1,3 +1,16 @@
+# --- API stubs for FastAPI integration ---
+def get_occupancy_schedule():
+    """Stub: Return a fake predictive lighting schedule."""
+    # In a real implementation, this would use ai_module's learned data
+    return {"schedule": [
+        {"time": "18:00", "action": "turn_on", "device": "Living Room 1"},
+        {"time": "22:00", "action": "turn_off", "device": "Living Room 1"}
+    ]}
+
+def run_predictive_lighting():
+    """Stub: Simulate running predictive lighting automation."""
+    # In a real implementation, this would trigger device actions
+    return "Predictive lighting automation executed (stub)."
 """
 predictive_ai.py: Initial AI module skeleton for Home Prototype Module 1
 

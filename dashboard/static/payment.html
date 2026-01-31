@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment - LifeLink Home</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Payment Information</h1>
+  <p>Select your preferred payment method. All payments are securely processed via PayPal (credit/debit cards accepted).</p>
+  <div class="tiers">
+    <div class="tier">
+      <h2>Life Link Home Basic</h2>
+      <div style="font-size:1.1em;margin-bottom:8px;"><b>$35 setup</b> + <b>$10/mo</b></div>
+      <div style="font-size:0.97em;margin-bottom:12px;">Device monitoring, basic automation, email alerts, privacy controls, basic support, local backup. Devices not included.</div>
+      <div id="paypal-button-container-P-16G075277G691193PNF6MQYQ"></div>
+      <script src="https://www.paypal.com/sdk/js?client-id=ARXeWNjU7wBmtGZigek4Ys0KxtOsgZ9FKW2OGl_mmgVbS8DJPoqzE7fjp2nYGci7UqYzH0_uHGy3G7P_&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
+      <script>
+        paypal.Buttons({
+            style: {
+                shape: 'rect',
+                color: 'gold',
+                layout: 'vertical',
+                label: 'subscribe'
+            },
+            createSubscription: function(data, actions) {
+              return actions.subscription.create({
+                plan_id: 'P-16G075277G691193PNF6MQYQ'
+              });
+            },
+            onApprove: function(data, actions) {
+              alert('Subscription successful! ID: ' + data.subscriptionID);
+            }
+        }).render('#paypal-button-container-P-16G075277G691193PNF6MQYQ');
+      </script>
+    </div>
+    <div class="tier">
+      <h2>Life Link Home Advanced</h2>
+      <div style="font-size:1.1em;margin-bottom:8px;"><b>$65 setup</b> + <b>$25/mo</b></div>
+      <div style="font-size:0.97em;margin-bottom:12px;">All Basic features plus: advanced automation, mobile/SMS alerts, priority support, voice assistant, remote diagnostics, cloud backup.</div>
+      <div id="paypal-button-container-P-2YY22583M9391591SNF6MN5A"></div>
+      <script src="https://www.paypal.com/sdk/js?client-id=ARXeWNjU7wBmtGZigek4Ys0KxtOsgZ9FKW2OGl_mmgVbS8DJPoqzE7fjp2nYGci7UqYzH0_uHGy3G7P_&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
+      <script>
+        paypal.Buttons({
+            style: {
+                shape: 'rect',
+                color: 'gold',
+                layout: 'vertical',
+                label: 'subscribe'
+            },
+            createSubscription: function(data, actions) {
+              return actions.subscription.create({
+                plan_id: 'P-2YY22583M9391591SNF6MN5A'
+              });
+            },
+            onApprove: function(data, actions) {
+              alert('Subscription successful! ID: ' + data.subscriptionID);
+            }
+        }).render('#paypal-button-container-P-2YY22583M9391591SNF6MN5A');
+      </script>
+    </div>
+    <div class="tier">
+      <h2>Life Link Home Unlimited</h2>
+      <div style="font-size:1.1em;margin-bottom:8px;"><b>$125 setup</b> + <b>$60/mo</b></div>
+      <div style="font-size:0.97em;margin-bottom:12px;">All Advanced features plus: unlimited device support, custom integrations, AI voice, guest/energy management, and premium support.</div>
+      <div id="paypal-button-container-P-4LD610876N917872JNF6MUHQ"></div>
+      <script src="https://www.paypal.com/sdk/js?client-id=ARXeWNjU7wBmtGZigek4Ys0KxtOsgZ9FKW2OGl_mmgVbS8DJPoqzE7fjp2nYGci7UqYzH0_uHGy3G7P_&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
+      <script>
+        paypal.Buttons({
+            style: {
+                shape: 'rect',
+                color: 'gold',
+                layout: 'vertical',
+                label: 'subscribe'
+            },
+            createSubscription: function(data, actions) {
+              return actions.subscription.create({
+                plan_id: 'P-4LD610876N917872JNF6MUHQ'
+              });
+            },
+            onApprove: function(data, actions) {
+              alert('Subscription successful! ID: ' + data.subscriptionID);
+            }
+        }).render('#paypal-button-container-P-4LD610876N917872JNF6MUHQ');
+      </script>
+    </div>
+  </div>
+  <p style="margin-top:2em; font-size:0.95em; color:#555;">You can pay with your PayPal account or any major credit/debit card. After payment, you will be redirected to complete your account setup.</p>
+  <div class="dashboard-bg"></div>
+</body>
+<script src="javascript.js"></script>
+</html>

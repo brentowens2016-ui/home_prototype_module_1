@@ -1,13 +1,29 @@
+# User status: green (ok), yellow (potential issue), red (danger)
+def get_user_status(username):
+    # For demo: if any unacknowledged alert for user's devices is 'down' or 'removed', red
+    # If any device is 'down', yellow
+    # Otherwise green
+    alerts = load_alerts()
+    health = load_health()
+    # Assume device_id contains username or is mapped elsewhere; for demo, match by username in device_id
+    user_alerts = [a for a in alerts if username in a.get("device_id", "")]
+    user_health = {k: v for k, v in health.items() if username in k}
+    if any(a["event"] in ("down", "removed") and not a["acknowledged"] for a in user_alerts):
+        return "red"
+    if any(v["status"] == "down" for v in user_health.values()):
+        return "yellow"
+    return "green"
 import time
 import json
 import os
 from threading import Lock
+from . import secure_storage
 
 # Device health and alert state manager
 # This is a simple in-memory + file-backed implementation for demo purposes.
 
-ALERTS_PATH = os.path.join(os.path.dirname(__file__), "device_alerts.json")
-HEALTH_PATH = os.path.join(os.path.dirname(__file__), "device_health.json")
+ALERTS_PATH = os.path.join(os.path.dirname(__file__), "device_alerts.json.enc")
+HEALTH_PATH = os.path.join(os.path.dirname(__file__), "device_health.json.enc")
 
 _alerts_lock = Lock()
 
@@ -16,23 +32,19 @@ _alerts_lock = Lock()
 
 def load_health():
     if os.path.exists(HEALTH_PATH):
-        with open(HEALTH_PATH, "r", encoding="utf-8") as f:
-            return json.load(f)
+        return secure_storage.read_and_decrypt_json(HEALTH_PATH)
     return {}
 
 def save_health(health):
-    with open(HEALTH_PATH, "w", encoding="utf-8") as f:
-        json.dump(health, f, indent=2)
+    secure_storage.encrypt_json_and_write(HEALTH_PATH, health)
 
 def load_alerts():
     if os.path.exists(ALERTS_PATH):
-        with open(ALERTS_PATH, "r", encoding="utf-8") as f:
-            return json.load(f)
+        return secure_storage.read_and_decrypt_json(ALERTS_PATH)
     return []
 
 def save_alerts(alerts):
-    with open(ALERTS_PATH, "w", encoding="utf-8") as f:
-        json.dump(alerts, f, indent=2)
+    secure_storage.encrypt_json_and_write(ALERTS_PATH, alerts)
 
 def update_device_health(device_id, status):
     health = load_health()

@@ -1,3 +1,42 @@
+from fastapi import APIRouter, HTTPException, Request
+router = APIRouter()
+import hmac
+import hashlib
+
+# Map PayPal plan IDs to subscription tiers
+PAYPAL_PLAN_TO_TIER = {
+    'P-16G075277G691193PNF6MQYQ': 'basic',
+    'P-2YY22583M9391591SNF6MN5A': 'advanced',
+    'P-4LD610876N917872JNF6MUHQ': 'unlimited',
+}
+
+@router.post('/webhooks/paypal')
+async def paypal_webhook(request: Request):
+    # For production, validate PayPal signature and event type
+    event = await request.json()
+    event_type = event.get('event_type')
+    resource = event.get('resource', {})
+    # Only handle subscription activation/renewal
+    if event_type in ('BILLING.SUBSCRIPTION.ACTIVATED', 'BILLING.SUBSCRIPTION.UPDATED', 'BILLING.SUBSCRIPTION.RENEWED'):
+        plan_id = resource.get('plan_id')
+        payer = resource.get('subscriber', {}).get('email_address')
+        tier = PAYPAL_PLAN_TO_TIER.get(plan_id)
+        if not (payer and tier):
+            return JSONResponse(status_code=400, content={'error': 'Missing payer or plan_id'})
+        # Update user subscription tier
+        from .users_api import load_users, save_users
+        users = load_users()
+        found = False
+        for user in users:
+            if user.get('username', '').lower() == payer.lower():
+                user['subscription_tier'] = tier
+                found = True
+        if found:
+            save_users(users)
+            return {'status': 'updated', 'user': payer, 'tier': tier}
+        else:
+            return JSONResponse(status_code=404, content={'error': 'User not found'})
+    return {'status': 'ignored'}
 """
 Webhooks API for third-party integrations (e.g., Alexa, Google Home)
 

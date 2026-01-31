@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import SEO from "./SEO";
 import axios from "axios";
 import { doubleEncrypt, doubleDecrypt } from "./encryption";
 // Multi-language support scaffolding
@@ -30,13 +31,29 @@ function StorageUsagePanel() {
 // SupportCollaborationPanel: Real-time collaboration, remote diagnostics, and support tools
 function SupportCollaborationPanel({ user }) {
   const [remoteAllowed, setRemoteAllowed] = useState(false);
+  useEffect(() => {
+    if (user && user.username) {
+      fetch(`/users/${encodeURIComponent(user.username)}/allow_remote`)
+        .then(res => res.json())
+        .then(data => setRemoteAllowed(!!data.allow_remote));
+    }
+  }, [user]);
+  const handleRemoteToggle = async (e) => {
+    const allow = e.target.checked;
+    setRemoteAllowed(allow);
+    await fetch(`/users/${encodeURIComponent(user.username)}/allow_remote`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ allow_remote: allow })
+    });
+  };
   return (
     <div>
       <h2>Support & Collaboration</h2>
       <p>Tech support and admins can access your dashboard (with consent) for real-time troubleshooting, remote diagnostics, and collaborative problem solving.</p>
       <div style={{ marginBottom: 16 }}>
         <label>
-          <input type="checkbox" checked={remoteAllowed} onChange={e => setRemoteAllowed(e.target.checked)} />
+          <input type="checkbox" checked={remoteAllowed} onChange={handleRemoteToggle} />
           Allow remote access for support and diagnostics
         </label>
       </div>
@@ -70,118 +87,6 @@ function PrivacyDashboardPanel() {
     </div>
   );
 }
-//
-// Smart Home Dashboard UI (React)
-//
-// Copyright (c) 2026 Brent [Your Last Name]. All rights reserved.
-// Author/Owner: Brent [Your Last Name]
-// Contributor: GitHub Copilot (AI code assistant)
-//
-// # Learning References
-// - Python for Dummies
-//   - Chapter 16: Web Programming Basics (see REST API concepts)
-//   - Chapter 12: Organizing Code with Modules and Packages (see import structure)
-// - React (see https://react.dev/)
-//   - Main concepts: Components, State, Props, Effects
-//   - See also: Vite docs for build tooling (https://vitejs.dev/)
-//
-// Purpose:
-// - Provides a web interface for controlling and monitoring smart home devices.
-// - Consumes REST API exposed by FastAPI backend (python_wrapper/api.py).
-//
-// Service Type:
-// - Web dashboard (React, Vite)
-// - Consumed by end users in browser
-//
-// Linked Dependencies:
-// - Depends on: REST API (FastAPI), axios (HTTP client)
-// - Used by: index.html, main.jsx
-//
-// Update Guidance:
-// - When adding new device types or controls, update both API endpoints and UI components.
-// - Document all UI patterns and API interactions for maintainability.
-//
-// ---
-
-// Axios double encryption interceptor
-axios.interceptors.request.use(async config => {
-  if (config.data) {
-    config.data = await doubleEncrypt(config.data);
-    config.headers["Content-Type"] = "application/octet-stream";
-  }
-  return config;
-});
-axios.interceptors.response.use(async response => {
-  if (response.headers["content-type"] === "application/octet-stream" && response.data) {
-    response.data = await doubleDecrypt(response.data);
-  }
-  return response;
-});
-
-import MappingEditor from "./MappingEditor";
-import DeviceAlerts from "./DeviceAlerts";
-import SupportTickets from "./SupportTickets";
-import AuthPanel from "./AuthPanel";
-import AIVoicePanel from "./AIVoicePanel";
-import AudioConfigPanel from "./AudioConfigPanel";
-import AdminInvitePanel from "./AdminInvitePanel";
-import AdminUserManager from "./AdminUserManager";
-import AdminAuditLog from "./AdminAuditLog";
-import EmailLogPanel from "./EmailLogPanel";
-import OnboardingModal from "./OnboardingModal";
-import AdminNotifications from "./AdminNotifications";
-import ThirdPartyDevicesPanel from "./ThirdPartyDevicesPanel";
-import AppointmentRequestForm from "./AppointmentRequestForm";
-import MappingEnginePanel from "./MappingEnginePanel";
-
-import NotificationSettingsPanel from "./NotificationSettingsPanel";
-import PrivacySettingsPanel from "./PrivacySettingsPanel";
-import AccessibilitySettingsPanel from "./AccessibilitySettingsPanel";
-import SecuritySettingsPanel from "./SecuritySettingsPanel";
-
-const DASHBOARD_TABS = {
-  user: [
-    { key: "devices", label: "Devices & Controls" },
-    { key: "mapping", label: "Mapping & Automation" },
-    { key: "mapping_engine", label: "Device Mapping Engine" },
-    { key: "updates", label: "Updates & Recovery" },
-    { key: "notifications", label: "Notification Settings" },
-    { key: "privacy", label: "Privacy & Data Usage" },
-    { key: "accessibility", label: "Accessibility" },
-    { key: "security", label: "Security" },
-    { key: "support", label: "Support & Tickets" },
-    { key: "appointment", label: "Request Appointment/Estimate" },
-  ],
-  tech: [
-    { key: "devices", label: "Devices & Controls" },
-    { key: "mapping", label: "Mapping & Automation" },
-    { key: "mapping_engine", label: "Device Mapping Engine" },
-    { key: "updates", label: "Updates & Recovery" },
-    { key: "notifications", label: "Notification Settings" },
-    { key: "privacy", label: "Privacy & Data Usage" },
-    { key: "accessibility", label: "Accessibility" },
-    { key: "security", label: "Security" },
-    { key: "support", label: "Support & Tickets" },
-    { key: "impersonate", label: "Impersonate User" },
-    { key: "appointment", label: "Request Appointment/Estimate" },
-  ],
-  admin: [
-    { key: "admin", label: "Admin Dashboard" },
-    { key: "users", label: "User Management" },
-    { key: "logs", label: "Logs & Audit" },
-    { key: "devices", label: "Devices & Controls" },
-    { key: "mapping", label: "Mapping & Automation" },
-    { key: "mapping_engine", label: "Device Mapping Engine" },
-    { key: "updates", label: "Updates & Recovery" },
-    { key: "notifications", label: "Notification Settings" },
-    { key: "privacy", label: "Privacy & Data Usage" },
-    { key: "accessibility", label: "Accessibility" },
-    { key: "security", label: "Security" },
-    { key: "support", label: "Support & Tickets" },
-    { key: "third_party_devices", label: "Third-Party Devices" },
-    { key: "appointment", label: "Request Appointment/Estimate" },
-  ]
-};
 // Updates & Recovery Panel (placeholder)
 function UpdatesRecoveryPanel({ user }) {
   const [updates, setUpdates] = useState([]);
@@ -287,8 +192,6 @@ function BulbControl({ name, bulb, onChange }) {
   );
 }
 
-
-
 // Watermark component for copyright/ownership assertion
 function Watermark() {
   return (
@@ -310,6 +213,10 @@ function Watermark() {
 // Main Dashboard component (role-based tab filtering, ARIA attributes)
 
 export default function Dashboard() {
+  // SEO meta tags for the dashboard main page
+  const seoTitle = "Smart Home Dashboard | LifeLink Home";
+  const seoDescription = "Monitor, control, and automate your smart home with LifeLink Home. Secure, private, and easy to use.";
+  const seoKeywords = "smart home, automation, security, dashboard, LifeLink Home, IoT, privacy";
   const [bulbs, setBulbs] = useState({});
   const [user, setUser] = useState(null); // { username, role, ... }
   const [showDownload, setShowDownload] = useState(false);
@@ -376,7 +283,9 @@ export default function Dashboard() {
 
   // Tabbed/layered dashboard
   return (
-    <div>
+    <>
+      <SEO title={seoTitle} description={seoDescription} keywords={seoKeywords} />
+      <div>
       <OnboardingModal open={showOnboarding} onClose={handleOnboardingClose} />
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         <h1>Smart Home Dashboard</h1>
@@ -507,7 +416,8 @@ export default function Dashboard() {
           <ThirdPartyDevicesPanel />
         </div>
       )}
-      <Watermark />
-    </div>
+        <Watermark />
+      </div>
+    </>
   );
 }

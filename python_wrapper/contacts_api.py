@@ -1,21 +1,20 @@
 import os
 import json
+from . import secure_storage
 from fastapi import APIRouter, HTTPException
 from typing import List, Dict
 
-CONTACTS_FILE = os.path.join(os.path.dirname(__file__), "emergency_contacts.json")
+CONTACTS_FILE = os.path.join(os.path.dirname(__file__), "emergency_contacts.json.enc")
 router = APIRouter()
 
 def load_contacts():
     try:
-        with open(CONTACTS_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
+        return secure_storage.read_and_decrypt_json(CONTACTS_FILE)
     except Exception:
         return {"emergency_services": {"name": "911", "phone": "911"}, "contacts": []}
 
 def save_contacts(data):
-    with open(CONTACTS_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
+    secure_storage.encrypt_json_and_write(CONTACTS_FILE, data)
 
 @router.get("/contacts")
 def get_contacts():

@@ -9,7 +9,8 @@
     "service_location": "",
     "billing_location": "",
     "declared_sqft": 0,
-    "subscription_tier": "free"
+    "subscription_tier": "free",
+    "allow_remote": false
   },
   {
     "username": "brentowens2016@aol.com",
@@ -22,6 +23,23 @@
     "billing_location": "",
     "reset_token": "",
     "declared_sqft": 0,
-    "subscription_tier": "free"
+    "subscription_tier": "free",
+    "allow_remote": false
   }
+    ,
+    {
+      "username": "brentowens-ui",
+      "password": "",
+      "role": "admin",
+      "access_mode": "free",
+      "emergency_contact": false,
+      "emergency_contacts": [],
+      "service_location": "",
+      "billing_location": "",
+      "email": "brentowens2016@gmail.com",
+      "reset_token": "",
+      "declared_sqft": 0,
+      "subscription_tier": "free",
+      "allow_remote": false
+    }
 ]

@@ -1,3 +1,14 @@
+from fastapi import FastAPI, Request
+import os
+
+app = FastAPI(
+    title="Home Prototype Module 1 API",
+    description="Comprehensive API for smart home, security, automation, and support features.",
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
+
 # Privacy Dashboard Data Endpoint
 @app.get("/privacy/data-info")
 def privacy_data_info():
@@ -346,8 +357,7 @@ from python_wrapper.analytics_api import router as analytics_router
 
 
 # --- FastAPI app and endpoints ---
-from python_wrapper.audio_io import AudioIO
-import python_wrapper.device_mapping as device_mapping
+
 
 from python_wrapper.ota_api import router as ota_router
 

@@ -1,3 +1,30 @@
+# Secure At-Rest File Encryption
+
+Sensitive and proprietary files (e.g., device mapping, logs, contacts, AI state) are always encrypted at rest using AES-256-GCM.
+
+## How it works
+- All sensitive file reads/writes go through `python_wrapper/secure_storage.py`.
+- The encryption key is loaded from the `SECURE_STORAGE_KEY` environment variable (see `.env.example`).
+- Encrypted files have a `.enc` extension and are never stored in plaintext in the repo or on disk.
+
+## Developer/Admin Workflow
+- Set `SECURE_STORAGE_KEY` in your environment (see `.env.example` for generation instructions).
+- The application transparently decrypts/encrypts files as needed—no manual steps required for normal use.
+- To add/edit sensitive files, use the app or scripts that use `secure_storage.py`.
+- Never commit plaintext sensitive files to the repository.
+
+## Key Rotation & Recovery
+- To rotate the key, decrypt all files with the old key, re-encrypt with the new key, and update the environment variable.
+- Keep the key secure and backed up; losing it means losing access to all encrypted data.
+
+## Example
+```python
+from python_wrapper import secure_storage
+data = secure_storage.read_and_decrypt_json('python_wrapper/device_mapping.json.enc')
+secure_storage.encrypt_json_and_write('python_wrapper/device_mapping.json.enc', data)
+```
+
+See `.env.example` for key setup.
 
 
 # Home Prototype Module 1

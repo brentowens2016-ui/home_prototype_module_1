@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Setup - LifeLink Home</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Account Setup</h1>
+  <form id="account-setup-form" autocomplete="off">
+    <fieldset style="margin-bottom:18px;">
+      <legend>User Information</legend>
+      <label>Full Name: <input type="text" name="fullname" required></label><br>
+      <label>Email: <input type="email" name="email" required></label><br>
+      <label>Phone: <input type="tel" name="phone"></label><br>
+      <label>Address: <input type="text" name="user_address" required></label><br>
+      <label>City: <input type="text" name="user_city" required></label><br>
+      <label>State: <input type="text" name="user_state" required></label><br>
+      <label>ZIP: <input type="text" name="user_zip" required></label><br>
+    </fieldset>
+    <fieldset style="margin-bottom:18px;">
+      <legend>Monitored Location</legend>
+      <label><input type="checkbox" id="same-as-user"> Monitored location is the same as user address</label><br>
+      <label>Address: <input type="text" name="site_address" required></label><br>
+      <label>City: <input type="text" name="site_city" required></label><br>
+      <label>State: <input type="text" name="site_state" required></label><br>
+      <label>ZIP: <input type="text" name="site_zip" required></label><br>
+    </fieldset>
+    <fieldset style="margin-bottom:18px;">
+      <legend>Property Details</legend>
+      <label>Declared Square Footage: <input type="number" name="sqft" min="100" max="2400" required> sq ft</label><br>
+    </fieldset>
+    <button type="submit">Submit</button>
+  </form>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const sameBox = document.getElementById('same-as-user');
+      const form = document.getElementById('account-setup-form');
+      if (sameBox && form) {
+        sameBox.addEventListener('change', function() {
+          if (sameBox.checked) {
+            form.site_address.value = form.user_address.value;
+            form.site_city.value = form.user_city.value;
+            form.site_state.value = form.user_state.value;
+            form.site_zip.value = form.user_zip.value;
+          } else {
+            form.site_address.value = '';
+            form.site_city.value = '';
+            form.site_state.value = '';
+            form.site_zip.value = '';
+          }
+        });
+      }
+      // Submit handler
+      if (form) {
+        form.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          const payload = {
+            fullname: form.fullname.value,
+            email: form.email.value,
+            phone: form.phone.value,
+            user_address: form.user_address.value,
+            user_city: form.user_city.value,
+            user_state: form.user_state.value,
+            user_zip: form.user_zip.value,
+            site_address: form.site_address.value,
+            site_city: form.site_city.value,
+            site_state: form.site_state.value,
+            site_zip: form.site_zip.value,
+            sqft: form.sqft.value
+          };
+          const res = await fetch('/users/account_setup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const data = await res.json();
+          if (res.ok) {
+            alert('Account setup complete!');
+            window.location.href = 'dashboard';
+          } else {
+            alert('Setup failed: ' + (data.error || 'Unknown error'));
+          }
+        });
+      }
+    });
+  </script>
+  <div class="dashboard-bg"></div>
+</body>
+</html>

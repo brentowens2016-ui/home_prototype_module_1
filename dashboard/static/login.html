@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - LifeLink Home</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Login to Your Account</h1>
+  <form id="login-form">
+    <label>Email: <input type="email" name="email" required></label><br>
+    <label>Password: <input type="password" name="password" required></label><br>
+    <button type="submit">Log In</button>
+  </form>
+  <p><a href="reset_password.html">Forgot your password?</a></p>
+  <p><a href="#" id="forgot-username-link">Forgot your username?</a></p>
+  <div id="forgot-username-modal" style="display:none;position:fixed;top:20%;left:50%;transform:translate(-50%,0);background:#fff;padding:24px;border:1px solid #ccc;z-index:1000;">
+    <h3>Username Reminder</h3>
+    <form id="remind-username-form">
+      <label>Email: <input type="email" name="email"></label><br>
+      <label>or Phone: <input type="tel" name="phone"></label><br>
+      <button type="submit">Send Username Reminder</button>
+      <button type="button" id="close-username-modal">Cancel</button>
+    </form>
+  </div>
+  <p>Don't have an account? <a href="signup.html">Sign up here</a></p>
+  <div class="dashboard-bg"></div>
+  <script src="javascript.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const link = document.getElementById('forgot-username-link');
+      const modal = document.getElementById('forgot-username-modal');
+      const closeBtn = document.getElementById('close-username-modal');
+      const form = document.getElementById('remind-username-form');
+      if (link && modal && closeBtn && form) {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          modal.style.display = '';
+        });
+        closeBtn.addEventListener('click', function() {
+          modal.style.display = 'none';
+        });
+        form.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          const email = form.email.value;
+          const phone = form.phone.value;
+          const payload = {};
+          if (email) payload.email = email;
+          if (phone) payload.phone = phone;
+          if (!email && !phone) {
+            alert('Please enter your email or phone.');
+            return;
+          }
+          const res = await fetch('/users/remind_username', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const data = await res.json();
+          if (res.ok) {
+            alert('Username reminder sent to your email.');
+            modal.style.display = 'none';
+          } else {
+            alert('Error: ' + (data.error || 'Could not send reminder.'));
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
