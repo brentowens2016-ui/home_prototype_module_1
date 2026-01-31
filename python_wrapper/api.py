@@ -649,7 +649,7 @@ async def upload_device_mapping(request: Request):
         return JSONResponse(status_code=400, content={"error": str(e)})
 
 # Store PySmartBulb objects by name
-bulbs: Dict[str, PySmartBulb] = {
+bulbs = {
     "Living Room 1": PySmartBulb("Living Room 1"),
     "Living Room 2": PySmartBulb("Living Room 2"),
     "Master Bedroom": PySmartBulb("Master Bedroom"),
@@ -660,7 +660,7 @@ class BulbState(BaseModel):
     brightness: int
     color: tuple
 
-def get_bulb_state(bulb: "PySmartBulb") -> "BulbState":
+def get_bulb_state(bulb):
     # This assumes PySmartBulb exposes .is_on, .brightness, .color
     # If not, you may need to add @property methods in Rust
     return BulbState(
