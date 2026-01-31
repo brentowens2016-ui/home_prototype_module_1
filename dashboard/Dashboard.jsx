@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import SEO from "./SEO";
 import axios from "axios";
 import { doubleEncrypt, doubleDecrypt } from "./encryption";
+import AuthPanel from "./AuthPanel";
 // Multi-language support scaffolding
 const LANGUAGES = [
   { code: 'en', label: 'English' },

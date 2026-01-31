@@ -12,15 +12,9 @@ CheapNames.com Configuration:
 - Configure SSL/HTTPS support
 - Set up domain in PayPal Website Preferences (optional)
 
-VS Code / Application:
 - Test full payment flows for all tiers
 - Test PayPal webhook integration (auto-upgrade user tier)
 - Test signup, login, password reset, and onboarding flows
-- Review and finalize tier descriptions and pricing
-- Finalize and test static landing and marketing pages
-- Review and test backup/restore, device mapping, and automation features
-- Prepare for production push (Git, Docker, deployment)
-
 ---
 ---
 COMPLETED WORK SUMMARY (2026-01-29)
@@ -29,48 +23,20 @@ COMPLETED WORK SUMMARY (2026-01-29)
 - Subscription Levels & User Flows: Frontend/backend logic and UI integration done.
 - Appointment/Estimate Request Form: Frontend and backend implemented.
 - Testing & Feedback: Core stack tested in-house, ready for beta.
-- Voice Controls: Modular handler, volume controls, REST endpoints, and dashboard UI done.
 - Mapping Engine: Python engine, REST endpoints, and dashboard UI done.
 
 For full details and next steps, see DEVELOPER_DOCUMENTATION.md.
 
----
-RESIDENTIAL USER & TIER LIMITS POLICY (for future pricing/enforcement)
-
 - Maximum allowed for any individual (non-commercial) subscription: 2400 square feet.
-- User must declare home square footage at setup; this defines device mapping and allowed device counts for their tier.
-- Device and mapping limits for Free/Trial, Basic, and Premium tiers are scaled/enforced based on declared square footage, up to the 2400 sq ft cap.
-- Any user/site above 2400 sq ft must enroll as a Commercial client (custom consultation/pricing).
-
 // Use this section to define pricing, scaling formulas, and enforcement logic for each tier.
 SECURE HDMI HUB/TV INTEGRATION (DISCREET AUDIO/VIDEO ENDPOINTS)
-
-Goal: Use a secure, HDMI-connected hub (hidden near TV/router) to relay voice commands and responses via the TV, enabling two-way AI interactivity with no visible microphones or wiring.
-
-[...existing code...]
-
-- Hub connects to home network (Ethernet or Wi-Fi)
-- Hub runs local software for voice capture, AI relay, and casting/streaming
 - TV acts as discreet room endpoint (no visible mics/wires)
-- [ ] Integrate hub with backend audio mapping and room assignment
 - [ ] Implement secure local processing and encrypted comms
-- [ ] Add support for HDMI-ARC/eARC for audio input (if TV supports)
-- [ ] Add support for Chromecast/DLNA/Miracast for streaming/casting
-- [ ] Document setup and privacy/security features
-
-Suggested Hubs/Peripherals:
-- Raspberry Pi 4/5 with HDMI out, USB mic (hidden), Wi-Fi/Ethernet
-- Intel NUC or similar mini-PC
 - Commercial HDMI streaming/casting boxes (with Linux support)
 - USB/HDMI audio capture dongles (for HDMI-ARC/eARC input)
 - Optional: Far-field microphone array (hidden in TV bezel or entertainment center)
-
 Notes:
 - All hardware should be hidden or integrated for maximum discretion
-- No visible microphones or wires in living space
-- TV appears as a normal device, but is a full AI audio/video endpoint
-==============================================================
-BlueOcean Account url: https://cloud.digitalocean.com/droplets/547886544/graphs?i=d042d0&period=hour
 
 ========================================================================================
 
