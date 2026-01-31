@@ -1,10 +1,23 @@
-from python_wrapper.email_service import send_email
-from python_wrapper.device_health import get_unacknowledged_alerts, acknowledge_alert
-from python_wrapper.mapping_engine import get_mapping as engine_get_mapping, set_mapping as engine_set_mapping, validate_mapping as engine_validate_mapping
+## Removed python_wrapper imports for full isolation
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 import base64
 from starlette.middleware.base import BaseHTTPMiddleware
 from cryptography.fernet import Fernet
 from Crypto.Cipher import AES
+import os
+import json
+import time
+
+# --- FastAPI app ---
+app = FastAPI(
+	title="Home Prototype Module 1 API (Core)",
+	description="Core API for smart home, security, automation, and support features.",
+	version="1.0.0",
+	docs_url="/docs",
+	redoc_url="/redoc"
+)
 # --- Notification Endpoints ---
 @app.post("/notify/sms")
 async def send_sms(request: Request):
@@ -18,56 +31,41 @@ async def send_push(request: Request):
 	# Integrate with Firebase or push provider (stub)
 	return {"status": "ok", "sent": data}
 
-# --- Email Sending Endpoint ---
+# --- Email Sending Endpoint (stub) ---
 @app.post("/send-email")
 async def send_email_endpoint(request: Request):
 	data = await request.json()
-	to = data.get("to")
-	subject = data.get("subject")
-	body = data.get("body")
-	try:
-		send_email(to, subject, body)
-		return {"status": "sent"}
-	except Exception as e:
-		return {"status": "error", "detail": str(e)}
+	# Email sending is stubbed out in isolated mode
+	return {"status": "stub", "detail": "Email sending not implemented in isolated core module."}
 
-# --- Device Health/Alert Endpoints ---
+# --- Device Health/Alert Endpoints (stub) ---
 @app.get("/alerts")
 def get_alerts():
-	return get_unacknowledged_alerts()
+	return {"alerts": [], "status": "stub"}
 
 @app.post("/alerts/ack")
 def ack_alert(device_id: str):
-	acknowledge_alert(device_id)
-	return {"status": "ok"}
+	return {"status": "stub", "detail": "Alert ack not implemented in isolated core module."}
 
-# --- Device Mapping Endpoints ---
+# --- Device Mapping Endpoints (stub) ---
 @app.get("/mapping")
 def get_device_mapping():
-	return engine_get_mapping()
+	return {"mapping": {}, "status": "stub"}
 
 @app.post("/mapping")
 async def upload_device_mapping(request: Request):
-	try:
-		mapping = await request.json()
-		err = engine_validate_mapping(mapping)
-		if err:
-			return JSONResponse(status_code=400, content={"error": err})
-		engine_set_mapping(mapping)
-		return {"status": "ok"}
-	except Exception as e:
-		return JSONResponse(status_code=400, content={"error": str(e)})
+	mapping = await request.json()
+	return {"status": "stub", "detail": "Mapping upload not implemented in isolated core module.", "mapping": mapping}
 
-# --- Wi-Fi Device Discovery Endpoints ---
-from python_wrapper.device_discovery import discover_wifi_devices
+# --- Wi-Fi Device Discovery Endpoints (stub) ---
 @app.get("/discover-wifi")
 def discover_wifi():
-	return discover_wifi_devices()
+	return {"devices": [], "status": "stub"}
 
 @app.post("/connect-wifi-devices")
 async def connect_wifi_devices(request: Request):
 	device_ids = await request.json()
-	return {"status": "connected", "devices": device_ids}
+	return {"status": "stub", "devices": device_ids, "detail": "Wi-Fi connect not implemented in isolated core module."}
 
 # --- Home Assistant/Appliance Integration Endpoint ---
 @app.post("/integration")
