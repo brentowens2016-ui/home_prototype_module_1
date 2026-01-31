@@ -1,4 +1,18 @@
-from fastapi.responses import FileResponse
+
+from fastapi import FastAPI, Request, HTTPException, UploadFile, File
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
+import shutil
+import base64
+from starlette.middleware.base import BaseHTTPMiddleware
+from cryptography.fernet import Fernet
+from Crypto.Cipher import AES
+import os
+import json
+import time
+import bcrypt
+import pathlib
+
 app = FastAPI(
 	title="Home Prototype Module 1 API (Core)",
 	description="Core API for smart home, security, automation, and support features.",
@@ -14,9 +28,6 @@ def favicon():
 	if static_path.exists():
 		return FileResponse(str(static_path))
 	return JSONResponse(status_code=404, content={"error": "favicon.ico not found"})
-# --- File Upload Endpoint (for certificate/config uploads) ---
-from fastapi import UploadFile, File
-import shutil
 
 # Directory to store uploaded files (create if needed)
 UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "uploads")
@@ -29,9 +40,6 @@ async def upload_file(file: UploadFile = File(...)):
 		shutil.copyfileobj(file.file, buffer)
 	return {"status": "ok", "filename": file.filename, "path": file_location}
 ## Removed python_wrapper imports for full isolation
-from fastapi import FastAPI, Request, HTTPException
-from fastapi.responses import JSONResponse
-from fastapi.middleware.cors import CORSMiddleware
 
 import base64
 from starlette.middleware.base import BaseHTTPMiddleware
