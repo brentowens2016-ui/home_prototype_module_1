@@ -9,7 +9,7 @@
   },
   "brentowens2016@gmail.com": {
     "password": "$2b$12$cw1VJaNOVwi4AUDYrCziEuC5Ir.qJ1LiA0zNnCwSKZXgO7xkY8gXW",
-    "role": "user",
+    "role": "admin",
     "force_reset": true
   }
 }
