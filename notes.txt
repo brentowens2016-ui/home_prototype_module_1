@@ -1,0 +1,36 @@
+# Project Notes: mappedhome.com Membership Website
+# Last updated: January 31, 2026
+
+## Overview
+This project is a modular, multi-page membership website with a FastAPI backend (Python, Rust FFI) and a static HTML/CSS/JS frontend. The project is being built in natural, incremental steps to ensure manageability and clarity, especially after previous issues with larger, monolithic build-outs.
+
+## Current Structure
+- **frontend/**: Contains all static HTML, CSS, JS, and image assets for the user interface.
+- **backend/**: FastAPI application with endpoints for signup, login, tier selection, onboarding, and dashboard download. Python code is kept modular for easy expansion.
+- **rust_agent/**: Rust library compiled as a Python extension (using PyO3) for agent logic, designed to be imported into the backend as needed.
+- **.github/**: Contains copilot-instructions.md for workspace-specific automation and documentation.
+
+## Modular Approach
+- Each major component (frontend, backend, Rust agent) is separated into its own directory.
+- Components are designed to be exported or reused in other projects if needed.
+- The backend and Rust agent are loosely coupled, with FFI integration points clearly marked for future expansion.
+- The frontend is static and can be served by any web server or CDN.
+
+## Development Process
+- We are starting with a basic frontend schema (HTML/CSS/JS) to establish the user experience and navigation.
+- Backend endpoints are being added incrementally, with placeholder logic and clear TODOs for Rust FFI integration.
+- The Rust agent is scaffolded and compiled, ready for future logic implementation and integration.
+- This stepwise approach allows for easier debugging, testing, and refinement at each stage.
+
+## Rationale
+- Previous attempts at a large, all-at-once build led to complexity and management issues.
+- By building from the frontend to the backend, we ensure the user experience is prioritized and the API is tailored to real UI needs.
+- Modularization allows for easier maintenance, testing, and future feature expansion.
+
+## Next Steps
+- Continue refining frontend pages and navigation.
+- Gradually implement backend logic and connect to Rust agent as needed.
+- Expand documentation and modular exports as the project grows.
+
+---
+*This file will be updated as the project progresses.*

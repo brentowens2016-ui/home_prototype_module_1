@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MappedHome - Auth</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="auth.js"></script>
+</head>
+<body>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="auth.html">Login/Signup</a>
+        <a href="tier-selection.html">Tiers</a>
+        <a href="onboarding.html">Onboarding</a>
+        <a href="dashboard-download.html">Dashboard</a>
+    </nav>
+    <main>
+        <div class="tabs">
+            <button id="login-tab">Login</button>
+            <button id="signup-tab">Signup</button>
+        </div>
+        <div id="login-form" class="tab-content">
+            <h2>Login</h2>
+            <form>
+                <input type="email" placeholder="Email" required><br>
+                <input type="password" placeholder="Password" required><br>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+        <div id="signup-form" class="tab-content" style="display:none;">
+            <h2>Signup</h2>
+            <form>
+                <input type="email" placeholder="Email" required><br>
+                <input type="password" placeholder="Password" required><br>
+                <button type="submit">Signup</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

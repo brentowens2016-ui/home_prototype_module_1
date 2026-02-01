@@ -1,0 +1,18 @@
+body {
+	font-family: Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	background: #f8f9fa;
+	background-image: url('leather-texture.jpg');
+	background-size: cover;
+	background-repeat: repeat;
+	background-attachment: fixed;
+	background-color: #f5e6d3;
+}
+nav { background: #222; color: #fff; padding: 1em; }
+nav a { color: #fff; margin-right: 1em; text-decoration: none; }
+nav a:hover { text-decoration: underline; }
+main { padding: 2em; }
+.tabs { margin-bottom: 1em; }
+button { padding: 0.5em 1em; margin: 0.5em 0; }
+.tab-content { border: 1px solid #ccc; padding: 1em; background: #fff; }
