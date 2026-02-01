@@ -17,7 +17,7 @@ class DashboardContract {
     }
 }
 
-document.addEventListener('DOMContentLoaded', async function() {
+(async function() {
     // Fetch dashboard contract from backend
     let dashboard;
     try {
@@ -103,4 +103,4 @@ document.addEventListener('DOMContentLoaded', async function() {
         document.querySelectorAll('.dashboard-tab')[idx].classList.toggle('active', e.target.checked);
         renderPanel(idx);
     });
-});
+
