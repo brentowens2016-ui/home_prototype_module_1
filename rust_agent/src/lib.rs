@@ -17,5 +17,6 @@ fn rust_agent(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(agent_logic, m)?)?;
     m.add_function(wrap_pyfunction!(modules::home_assistant::get_home_assistant_devices_py, m)?)?;
     m.add_function(wrap_pyfunction!(modules::home_assistant::control_home_assistant_device_py, m)?)?;
+    m.add_function(wrap_pyfunction!(modules::ai_health::get_ai_health_status, m)?)?;
     Ok(())
 }
