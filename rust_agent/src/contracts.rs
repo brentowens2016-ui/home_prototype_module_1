@@ -8,6 +8,7 @@ pub struct FeatureContract {
     pub tier: String,
     pub enabled: bool,
     pub controls: Vec<Control>,
+    pub ai_roles: Option<Vec<String>>, // ["system_admin", "remote_agent", "user_admin"]
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -21,4 +22,5 @@ pub struct Control {
 pub struct DashboardContract {
     pub user_tier: String,
     pub features: Vec<FeatureContract>,
+    pub ai_role: Option<String>, // "system_admin" | "remote_agent" | "user_admin"
 }
