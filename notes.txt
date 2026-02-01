@@ -1,3 +1,30 @@
+---
+
+## Update: February 1, 2026 (AI Model Requirements & Learning)
+
+- The AI model is global, adaptive, and available to all users, but its capabilities are limited by membership tier.
+- AI must discover and map new devices, learn user routines, and create predictive automations.
+- AI suggestions: The system should proactively suggest routines, device integrations, and optimizations as it learns from user behavior.
+- Training templates: Users will have access to templates (e.g., "Morning Routine", "Away Mode") to help train the AI for their environment.
+- User feedback loop: Users can accept, reject, or modify AI suggestions, further refining the model.
+- Templates and training tools will be included in the local agent for offline personalization.
+- System admins must approve any AI-driven changes that write to the backend/mainframe.
+- AI must always respect tier boundaries and never enable features outside the user’s allowed level.
+- The AI will poll the backend for membership status and updates, supporting continuous improvement and rolling feature releases.
+
+Next: Begin building out the AI model and integrate it into the project architecture.
+---
+
+## Update: February 1, 2026 (Membership Tiers & Access Control)
+
+- Membership is organized into three main tiers: Basic, Advanced, and Unlimited/Pro.
+- Sub-tiers exist under main member accounts: Guests, Emergency Contacts, Services (e.g., caregivers, maintenance), and Family Members.
+- Main tier determines which dashboard features/tabs are available to the user.
+- Sub-tiers inherit access from the main member but may have further restrictions (e.g., guests may only view, emergency contacts may only receive alerts).
+- Tabs and controls in the dashboard are shown, hidden, or locked based on the user’s tier and sub-tier role.
+- This structure supports clear, scalable access control and can be expanded as new features or roles are added.
+
+Next: Map features to tiers/sub-tiers and implement access logic in contracts and UI as features are developed.
 # Project Notes: mappedhome.com Membership Website
 # Last updated: January 31, 2026
 
@@ -28,9 +55,47 @@ This project is a modular, multi-page membership website with a FastAPI backend 
 - Modularization allows for easier maintenance, testing, and future feature expansion.
 
 ## Next Steps
+
+---
+
+## Update: January 31, 2026 (Later Session)
+
+- Initialized a new git repository in the project root and removed a conflicting .git directory in the backend.
+- Staged and committed all project files with a descriptive initial commit message.
+- Added the remote GitHub repository (https://github.com/brentowens2016-ui/home_prototype_module_1.git) as origin.
+- Renamed the default branch to main for GitHub compatibility.
+- Pushed the initial commit to the remote repository.
+- Pulled the latest changes on the server, confirming the project is now up to date and synchronized.
+- Server is on stand-by until further development or deployment is needed.
+
+All work is now versioned and safely stored on GitHub. Ready to resume or expand as needed.
 - Continue refining frontend pages and navigation.
 - Gradually implement backend logic and connect to Rust agent as needed.
 - Expand documentation and modular exports as the project grows.
 
 ---
 *This file will be updated as the project progresses.*
+
+---
+
+## Update: February 1, 2026 (Dashboard & Agent Discussion)
+
+- Dashboard will use a layered, tabbed structure. Tabs correspond to features subscribed by the user; inaccessible tabs are visible but locked to encourage upgrades.
+- Each tab contains modular controls (sidebar for on/off, panel-level toggles) and only displays outputs for active features.
+- The dashboard is the main interface for remote agent access, but members are encouraged to use a downloadable agent running locally.
+- The local agent operates independently, periodically syncing with the server for updates and status. It can automatically log in for "call-out" features (alerts, notifications) without manual user login.
+- Online dashboard access is restricted to authenticated members only; casual visitors cannot access it.
+- The system is designed for flexibility: users can choose "always-on" dashboard access or rely on the local agent, with seamless transitions and clear status indicators.
+
+
+---
+
+## Update: February 1, 2026 (Contract & Dashboard Integration)
+
+- Created cross-platform contract structures for dashboard features in Python (backend/contracts.py), TypeScript (frontend/contracts.ts), and Rust (rust_agent/src/contracts.rs).
+- Integrated contract structure into dashboard.js for consistent data handling and smooth user experience.
+- Updated dashboard to fetch contract data from backend endpoint, supporting future contract updates and feature expansion.
+- Ensured all navigation and styles are consistent across frontend pages.
+- Backend server is running and serving dashboard data for frontend integration.
+
+Next: Continue refining contracts and dashboard logic as features are added or updated.

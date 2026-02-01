@@ -1,0 +1,78 @@
+/* Dashboard styles */
+.dashboard-container {
+    display: flex;
+    min-height: 80vh;
+}
+.dashboard-sidebar {
+    width: 220px;
+    background: #f5e6d3;
+    border-right: 1px solid #d2b48c;
+    padding: 1em;
+}
+.dashboard-sidebar h3 {
+    margin-top: 0;
+}
+.dashboard-sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+.dashboard-sidebar li {
+    margin-bottom: 1em;
+}
+.dashboard-main {
+    flex: 1;
+    padding: 2em;
+    background: rgba(255,255,255,0.8);
+}
+.dashboard-tabs {
+    display: flex;
+    gap: 1em;
+    margin-bottom: 1em;
+}
+.dashboard-tab {
+    padding: 0.5em 1em;
+    background: #e0c9a6;
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+    border: 1px solid #d2b48c;
+    border-bottom: none;
+}
+.dashboard-tab.locked {
+    background: #f8f9fa;
+    color: #aaa;
+    cursor: not-allowed;
+    position: relative;
+}
+.dashboard-tab.locked::after {
+    content: "🔒";
+    margin-left: 0.5em;
+}
+.dashboard-tab.active {
+    background: #fff;
+    font-weight: bold;
+    border-bottom: 2px solid #fff;
+}
+#dashboard-panel {
+    border: 1px solid #d2b48c;
+    border-radius: 0 0 8px 8px;
+    background: #fff;
+    min-height: 300px;
+    padding: 1em;
+}
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1em;
+}
+.panel-toggle {
+    padding: 0.3em 0.8em;
+    background: #e0c9a6;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.panel-toggle.off {
+    background: #eee;
+    color: #aaa;
+}
