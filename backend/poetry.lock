@@ -434,6 +434,33 @@ files = [
 ]
 
 [[package]]
+name = "speechrecognition"
+version = "3.14.5"
+description = "Library for performing speech recognition, with support for several engines and APIs, online and offline."
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "speechrecognition-3.14.5-py3-none-any.whl", hash = "sha256:0c496d74e9f29b1daadb0d96f5660f47563e42bf09316dacdd57094c5095977e"},
+    {file = "speechrecognition-3.14.5.tar.gz", hash = "sha256:2d185192986b9b67a1502825a330e971f59a2cae0262f727a19ad1f6b586d00a"},
+]
+
+[package.dependencies]
+typing-extensions = "*"
+
+[package.extras]
+assemblyai = ["requests"]
+audio = ["PyAudio (>=0.2.11)"]
+dev = ["mypy", "numpy", "pytest", "pytest-randomly", "respx", "types-requests"]
+faster-whisper = ["faster-whisper", "soundfile"]
+google-cloud = ["google-cloud-speech"]
+groq = ["groq", "httpx (<0.28)"]
+openai = ["httpx (<0.28)", "openai"]
+pocketsphinx = ["pocketsphinx"]
+vosk = ["vosk"]
+whisper-local = ["openai-whisper", "soundfile"]
+
+[[package]]
 name = "starlette"
 version = "0.37.2"
 description = "The little ASGI library that shines."
@@ -766,4 +793,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.13"
-content-hash = "b1d864ea1a78082739e1b559d4bf68ed61c581974f2ac9dcce7f7a8f01a8fe13"
+content-hash = "d74384b43c63b8269821e2f17fdbad0e496b2b69a8e5010dc23a11fa3b80ad8b"

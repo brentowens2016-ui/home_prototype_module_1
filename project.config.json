@@ -1,0 +1,19 @@
+{
+  "project": "MappedHome Membership Site",
+  "backend": {
+    "framework": "FastAPI",
+    "contracts": "contracts.py",
+    "ai_roles": ["system_admin", "remote_agent", "user_admin"],
+    "integration": ["rust_agent FFI", "frontend contracts"]
+  },
+  "frontend": {
+    "contracts": "contracts.ts",
+    "ai_integration": "dashboard.js, ai.config.json"
+  },
+  "rust_agent": {
+    "contracts": "contracts.rs",
+    "ffi": true,
+    "ai_logic": true
+  },
+  "sync": true
+}

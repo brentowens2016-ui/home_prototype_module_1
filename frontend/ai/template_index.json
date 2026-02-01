@@ -1,0 +1,18 @@
+{
+  "templates": [
+    "Morning Routine",
+    "Away Mode",
+    "Night Routine",
+    "Guest Welcome",
+    "Vacation Mode",
+    "Energy Saver",
+    "Security Alert",
+    "Maintenance Reminder",
+    "Custom Automation"
+  ],
+  "roles": {
+    "user_admin": ["Morning Routine", "Away Mode", "Night Routine", "Guest Welcome", "Vacation Mode", "Energy Saver", "Maintenance Reminder", "Custom Automation"],
+    "system_admin": ["Morning Routine", "Away Mode", "Night Routine", "Vacation Mode", "Energy Saver", "Security Alert", "Maintenance Reminder"],
+    "remote_agent": ["Security Alert"]
+  }
+}

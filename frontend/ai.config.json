@@ -1,0 +1,18 @@
+{
+  "ai": {
+    "roles": ["system_admin", "remote_agent", "user_admin"],
+    "permissions": {
+      "system_admin": ["approve_backend_changes", "full_ai_control"],
+      "remote_agent": ["suggest_automations", "sync_with_backend"],
+      "user_admin": ["train_ai", "accept_reject_suggestions"]
+    },
+    "tier_awareness": true,
+    "feedback_loop": true,
+    "templates": ["Morning Routine", "Away Mode"],
+    "backend_integration": "FastAPI, Rust FFI"
+  },
+  "dashboard": {
+    "features": ["AI Controls & Settings", "Audio/Video Controls & Settings", "Monitoring Controls & Settings", "Mapping Controls & Settings", "Map Editor"],
+    "contract_sync": true
+  }
+}

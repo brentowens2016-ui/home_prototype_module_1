@@ -1,0 +1,62 @@
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f7f7fa;
+}
+.signup-container {
+  max-width: 480px;
+  margin: 48px auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px #0002;
+  padding: 32px;
+}
+h1 {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.form-group {
+  margin-bottom: 18px;
+}
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+input[type="text"], input[type="email"], input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1em;
+}
+.select-tier {
+  margin-bottom: 18px;
+}
+.store-link {
+  display: block;
+  text-align: center;
+  margin-bottom: 18px;
+  color: #2a7ae2;
+  text-decoration: underline;
+  font-size: 1em;
+}
+.signup-btn {
+  background: #2a7ae2;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 28px;
+  font-size: 1em;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+  transition: background 0.2s;
+}
+.signup-btn:hover {
+  background: #1a5bb8;
+}
+.success-msg {
+  color: #2a7ae2;
+  text-align: center;
+  margin-top: 18px;
+}

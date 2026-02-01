@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emergency Services</title>
+  <link rel="stylesheet" href="emergency.css">
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #fff8f8; margin: 0; }
+    .emergency-container { max-width: 480px; margin: 48px auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 16px #f00a; padding: 32px; }
+    h1 { text-align: center; margin-bottom: 24px; color: #d32f2f; }
+    .form-group { margin-bottom: 18px; }
+    label { display: block; margin-bottom: 6px; font-weight: 500; }
+    input[type="text"] { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 1em; }
+    .panic-btn { background: #d32f2f; color: #fff; border: none; border-radius: 6px; padding: 16px 32px; font-size: 1.2em; cursor: pointer; width: 100%; margin-top: 18px; transition: background 0.2s; }
+    .panic-btn:hover { background: #b71c1c; }
+    .info { text-align: center; margin-top: 18px; color: #444; }
+  </style>
+</head>
+<body>
+  <div class="emergency-container">
+    <h1>Emergency Services</h1>
+    <form id="emergency-form">
+      <div class="form-group">
+        <label for="primary-contact">Emergency Services Number</label>
+        <input type="text" id="primary-contact" name="primary-contact" value="911" required>
+      </div>
+      <div class="form-group">
+        <label for="alt-contact">Alternate Emergency Number</label>
+        <input type="text" id="alt-contact" name="alt-contact" placeholder="Optional">
+      </div>
+      <div class="form-group">
+        <h3>Emergency Contacts (max 7)</h3>
+        <div id="emergency-contacts-list"></div>
+        <button type="button" id="add-emergency-contact-btn">Add Emergency Contact</button>
+      </div>
+      <button type="button" class="panic-btn" id="panic-btn">PANIC: Call Emergency Services</button>
+    </form>
+    <div class="info">Set your emergency escalation policy and contacts here. The panic button will immediately trigger escalation.</div>
+  </div>
+  <script src="emergency.js"></script>
+</body>
+</html>

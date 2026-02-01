@@ -1,0 +1,358 @@
+2026-02-01: All core features, contracts, and modules (Bluetooth, Home Assistant, dashboard controls) are implemented and aligned across backend, Rust agent, and frontend. Build and deployment pipeline is functional. Ready for next feature/module expansion.
+
+Progression List (as of 2026-02-01):
+- Remote agent access (full implementation and UI)
+- Advanced mapping & editor (beyond basic controls)
+- Early access to new features (feature flag system, beta rollout)
+- Dedicated support (admin/support portal, ticketing)
+- Custom dashboard panels (user-configurable widgets)
+- Tiered AI roles (role management UI, backend enforcement)
+- Home Assistant integration (full device sync, advanced controls)
+- PayPal integration (live payment processing, backend verification)
+- Speech-to-text input (full accessibility integration)
+- Advanced device control (Pro/Elite tier features)
+- Priority support (workflow and escalation logic)
+
+Items/Features Yet to Be Implemented (as of 2026-02-01):
+- Advanced mapping & editor (beyond basic controls)
+- Early access to new features (feature flag system, beta rollout)
+- Dedicated support (admin/support portal, ticketing)
+- Custom dashboard panels (user-configurable widgets)
+- Tiered AI roles (role management UI, backend enforcement)
+- Home Assistant integration (full device sync, advanced controls)
+- PayPal integration (live payment processing, backend verification)
+- Speech-to-text input (full accessibility integration)
+- Advanced device control (Pro/Elite tier features)
+- Priority support (workflow and escalation logic)
+
+### Purpose
+- Enable agent machines and local AI to discover and support a wide range of Bluetooth devices on the market.
+- Ensure seamless user experience by automating driver download, deployment, and installation locally (never on the server).
+
+### Features
+- Local AI scans for available Bluetooth devices and identifies device type/model.
+- Automatic search for required drivers (manufacturer or trusted source) for detected Bluetooth devices.
+- Local download and installation of drivers on the user’s machine, with user/admin approval as needed.
+- Modular driver management: supports updates, removals, and reinstallation as devices are added/removed.
+- No driver or device data is sent to the server; all management is local for privacy and security.
+- User/admin can review, approve, or block driver installations.
+
+### Logic
+- Bluetooth discovery and driver management is handled entirely by the local agent and AI module.
+- System is extensible to support new Bluetooth devices as they become available.
+
+---
+---
+
+## Miscellaneous Device Recommendations
+
+- For best results, select devices that are compliant with one or more of the following ecosystems:
+	- Kasa (TP-Link): https://www.tp-link.com/us/smart-home/
+	- Bluetooth: https://www.bluetooth.com/
+	- Zigbee: https://zigbeealliance.org/solution/zigbee/
+	- Home Assistant: https://www.home-assistant.io/integrations/
+- Using devices from these providers ensures maximum compatibility, easy discovery, and seamless integration with the system.
+- Always check for compatibility with your chosen tier and local network setup before purchasing.
+
+---
+---
+
+## Recommended Equipment/Hardware by Tier (User Shopping List)
+
+### Basic Tier
+- 1 central speaker/microphone (Bluetooth, Zigbee, Kasa, or Home Assistant compatible)
+	- Recommended: Conference call speaker/microphone system (Bluetooth compatible) for optimal room coverage and easy discovery by the system
+- 1 camera (local storage, event-driven)
+- Up to 2 pressure/leak sensors
+- 1 bed pad sensor
+- 2 motion detectors
+- 2 door/window sensors
+- 2 smart bulbs
+- 2 smart plugs
+- Zigbee router/coordinator (if not using Kasa or Home Assistant hub)
+
+### Advanced Tier
+- Up to 4 speaker/microphones (Bluetooth, Zigbee, Kasa, or Home Assistant compatible)
+	- Recommended: Conference call speaker/microphone systems (Bluetooth compatible) for multi-room or large area coverage and reliable system discovery
+- Up to 2 cameras (local storage, event-driven/periodic)
+- Up to 6 pressure/leak sensors
+- 2 bed pad sensors
+- 4 motion detectors
+- 4 door/window sensors
+- 4 smart bulbs
+- 4 smart plugs
+- Zigbee router/coordinator (recommended for device balancing)
+- Home Assistant hub (optional, for advanced integrations)
+
+### Pro/Unlimited Tier
+- Unlimited speaker/microphones (Bluetooth, Zigbee, Kasa, or Home Assistant compatible)
+- Up to 4 cameras (local storage, event-driven/periodic/limited continuous)
+- Unlimited pressure/leak sensors
+- Unlimited bed pad sensors
+- Unlimited motion detectors
+- Unlimited door/window sensors
+- Unlimited smart bulbs
+- Unlimited smart plugs
+- Multiple Zigbee routers/coordinators (for large device networks)
+- Home Assistant hub (recommended for advanced automation)
+
+---
+---
+
+## Membership Tier Feature Outline
+
+### Basic Tier
+- Security: Limited device support (pressure/leak sensors, bed pads, motion, door/window, smart bulbs/plugs), local notifications, no professional monitoring, AI for up to 2 individuals, no cloud storage by default.
+- Audio/Video: 1 central speaker/microphone, 1 camera, event-driven only, no live view, video not used for AI escalation, strict privacy, local notification.
+- Health & Wellness: Full access to reminders, check-ins, activity, environmental health, emergency detection, data export, notifications.
+- Device Discovery & Integration: Automatic, with tier enforcement by local AI, modular routines, local learning.
+- Backup & Restore: Local backup/restore only, server as last-resort failsafe.
+
+### Advanced Tier
+- Security: Expanded device support, more escalation contacts, AI for multiple individuals, cloud backup (opt-in), enhanced pattern recognition.
+- Audio/Video: Up to 4 speaker/microphones, 2 cameras, event-driven and periodic, limited live view (local), video used for AI escalation, enhanced AI, remote notification.
+- Health & Wellness: Full access as in Basic.
+- Device Discovery & Integration: As in Basic, with more devices supported per tier.
+- Backup & Restore: Local backup/restore, server as last-resort failsafe.
+
+### Pro/Unlimited Tier
+- Security: Unlimited device support, maximum escalation contacts, advanced AI, cloud backup (opt-in), audit trail, custom event triggers.
+- Audio/Video: Unlimited speaker/microphones, 4 cameras, event-driven/periodic/limited continuous, remote live view (with consent), advanced AI, audit trail, extended escalation.
+- Health & Wellness: Full access as in Basic.
+- Device Discovery & Integration: As in Basic, with unlimited devices supported per tier.
+- Backup & Restore: Local backup/restore, server as last-resort failsafe.
+
+---
+---
+
+## Backup & Restore: Local-First, Server as Failsafe
+
+### Purpose
+- Ensure user data, AI routines, and system state can be reliably backed up and restored, prioritizing local storage and privacy.
+- Minimize server demand and storage by using server-side backup/restore only as a last-resort failsafe.
+
+### Features
+- Local backup and restore: All user data, AI routines, and system state can be backed up and restored directly on the user's machine(s).
+- Server backup/restore: Encrypted backup/restore points are sent to the server only as a failsafe for catastrophic events (e.g., device loss, unrecoverable local failure).
+- User/admin can trigger local or server backup/restore as needed; system defaults to local unless catastrophe detected or user requests server restore.
+- Server never stores raw device data or routines—only encrypted backup/restore points.
+- Backup/restore logic is modular and integrated with all other modules (AI, device discovery, routines, etc.).
+
+### Logic
+- Local backup/restore is always preferred and default.
+- Server backup/restore is opt-in, encrypted, and only used for disaster recovery.
+- Minimizes server storage and bandwidth requirements while maximizing user control and privacy.
+
+---
+---
+
+## Device Discovery & Integration: Global, AI-Enforced
+
+### Purpose
+- Enable seamless device discovery, onboarding, and integration across all modules and tiers.
+- Enforce tier-level access and feature limits via local AI model logic.
+- Ensure all AI learning, routines, and predictive capabilities are modular and site-specific (local to user machine).
+
+### Global Features (All Tiers)
+- Automatic device discovery (Zigbee, Kasa, Bluetooth, Home Assistant, etc.)
+- Device onboarding and assignment to appropriate modules (Security, Audio/Video, Wellness, etc.)
+- Tier-level access and feature enforcement by local AI (e.g., device limits, escalation permissions)
+- Modular AI: Each site/user has a local AI instance; no global/server-side AI for device logic or routines.
+- Routines: Users/admins can teach routines to the AI; predictive routines are built and refined locally.
+- AI monitors device usage, learns patterns, and adapts routines within tier constraints.
+- Only backup/restore points and crisis/escalation event data are sent to the server (never raw device data or routines).
+
+### Logic
+- Device discovery and integration is always available, but tier-level enforcement is handled by the local AI.
+- All AI learning, routines, and predictions are local-first and privacy-preserving.
+- Server interaction is strictly limited to backup/restore and crisis/escalation events.
+
+---
+---
+
+## Health & Wellness Module: Universal Access
+
+### Purpose
+- Provide essential health and wellness monitoring, reminders, and reporting for all users, regardless of membership tier.
+- Ensure core health/safety features are never paywalled or restricted.
+
+### Universal Features (All Tiers)
+- Medication reminders and adherence tracking
+- Daily/weekly/monthly wellness check-ins (mood, pain, sleep, hydration, etc.)
+- Activity and mobility tracking (steps, movement, inactivity alerts)
+- Environmental health monitoring (air quality, temperature, humidity, if sensors available)
+- Emergency health event detection (fall, distress, abnormal inactivity)
+- Health data export (user/admin-controlled, privacy-first)
+- Customizable notifications and escalation (user/admin-defined contacts)
+- Integration with other modules (e.g., Security, Audio/Video) for holistic health context
+
+### Logic
+- All features above are available to every user, regardless of tier.
+- No device or feature limits for core health/wellness functions.
+- Advanced analytics, AI, or integrations may be tiered, but basic health/safety is always included.
+
+---
+---
+
+## Audio/Video Module: Tiered Feature & Device Limits
+
+
+### Purpose
+- Provide health/safety-focused audio and video monitoring, not general surveillance.
+- Enable event-driven audio/video capture, privacy-first design, and clear user/admin controls.
+- Avoid liability as a security/surveillance provider; all features must be opt-in and clearly messaged.
+- Video storage is always local (on user machine/device), never on the server/cloud by default. Video can be used by AI for escalation/event detection, but only in Advanced and Pro/Unlimited tiers (not Basic).
+- Audio must be Bluetooth-capable or compatible with Home Assistant, Zigbee mesh network coordinator/router, or Kasa ecosystem. (Network implementation details to be addressed later.)
+
+### Device/Feature Limits by Tier
+
+
+#### Basic Tier
+- 1 central speaker/microphone device per household (must be Bluetooth, Home Assistant, Zigbee, or Kasa compatible).
+- 1 video device (camera) per household, but video is stored only locally and not used for AI escalation/monitoring.
+- Audio: Event-driven only (e.g., loud noise, fall, distress keyword). No continuous streaming.
+- Video: Event-driven snapshots or 10-second clips, only on critical events (fall, distress, door open at night).
+- No remote live viewing. No cloud storage unless explicitly enabled by user.
+- AI: Pattern recognition for distress sounds/words, fall detection (basic), privacy masking (faces/rooms not monitored).
+- Escalation: Local notification only; user/admin must opt-in for any remote alerting.
+- All recordings auto-delete after 24 hours unless flagged by user/admin.
+
+
+#### Advanced Tier
+- Up to 4 speaker/microphone devices per household (Bluetooth, Home Assistant, Zigbee, or Kasa compatible; required receivers provided if not covered by network).
+- Up to 2 video devices per household; all video stored locally, and video can be used by AI for escalation/event detection.
+- Audio: Event-driven and short periodic sampling (e.g., 10s every 30min, user-configurable).
+- Video: Event-driven clips up to 30 seconds, limited live view (local network only, no cloud by default).
+- AI: Enhanced pattern recognition (distress, inactivity, abnormal sounds), privacy masking, basic multi-person detection, video-based escalation logic enabled.
+- Escalation: Local and remote notifications (user/admin, up to 2 contacts), optional cloud backup (encrypted, opt-in).
+- Recordings auto-delete after 72 hours unless flagged.
+
+
+#### Pro/Unlimited Tier
+- Unlimited speaker/microphone devices per household (Bluetooth, Home Assistant, Zigbee, or Kasa compatible; required receivers provided as needed).
+- Up to 4 video devices per household; all video stored locally, and video can be used by AI for escalation/event detection.
+- Audio: Event-driven, periodic sampling, and limited continuous monitoring (user-configurable, privacy warnings required).
+- Video: Event-driven, periodic, and limited live view (remote allowed, with explicit consent and audit logging).
+- AI: Advanced pattern recognition (multi-person, inactivity, distress, environmental context), privacy masking, custom event triggers, video-based escalation logic enabled.
+- Escalation: Local, remote, and emergency contact notifications (up to 5 contacts), cloud backup (encrypted, opt-in), audit trail for all access/events.
+- Recordings auto-delete after 7 days unless flagged.
+
+### General Rules
+- All audio/video features are opt-in, with clear privacy controls and audit logs.
+- No continuous surveillance; all monitoring is event-driven or user-configurable with strong privacy defaults.
+- All cloud features require explicit user/admin consent.
+- All escalation logic is local-first, with cloud/remote backup only if enabled.
+- Device and feature limits are enforced per household, not per user.
+
+---
+
+## Security Module: Tier-Based Device & Feature Limits
+
+### Basic Tier (Health & Safety Focus)
+- Pressure/Leak Sensors: Up to 30 strip sensors (traffic flow, under mats/carpets, under sinks)
+- Bed Pad Sensors: Up to 2
+- Motion Detectors: Up to 3 (wall-mounted)
+- Door Sensors: Up to 3
+- Window Sensors: Up to 6
+- Smart Bulbs: Up to 6 (alerts, strobing, routine control)
+- Smart Plugs: Up to 6 (peripheral alerts/devices)
+- Zigbee Router Limit: Max 15 sensors per router (auto-balance recommended)
+- AI: Pattern recognition, light control, strobing for alerts, monitoring for up to 2 individuals
+- Call-Out Feature: 1 Emergency Contact (SMS, text, or call), with escalation logic
+- Disclaimer: Not for professional security use. Health & safety monitoring only.
+
+### Advanced Tier (Expanded Health & Safety, More Flexibility)
+- Pressure/Leak Sensors: Up to 60
+- Bed Pad Sensors: Up to 4
+- Motion Detectors: Up to 6
+- Door Sensors: Up to 6
+- Window Sensors: Up to 12
+- Smart Bulbs: Up to 12
+- Smart Plugs: Up to 12
+- More Zigbee routers supported (auto-detect and balance)
+- Call-Out Feature: Up to 3 Emergency Contacts
+- AI: Multi-person tracking, more complex automations
+- Integration: Option to connect to select third-party health/security systems
+
+### Pro/Unlimited Tier (Full Customization, Integration)
+- Unlimited or very high device limits (for large homes, group homes, or facilities)
+- Unlimited Emergency Contacts
+- Full integration with external alarm/security/health monitoring providers
+- Custom automations, advanced AI, and admin tools
+
+### Call-Out & Escalation Logic (All Tiers)
+1. Event Detected: AI notices a potential emergency (fall, no movement, abnormal pattern)
+2. Prompt for Response: AI asks for a response in the home (voice, button, app)
+3. Wait 5 Minutes: If no response, escalate to Emergency Contacts
+4. Wait 10 Minutes: If no contact responds, escalate to Emergency Services
+5. All contacts and escalation logic should be configurable per tier
+
+Notes:
+- Health & safety features are always prominent; security features are secondary and clearly separated.
+- Device management UI and backend logic should enforce these limits per user account.
+- All escalation and call-out data should be local-first, with cloud backup only if user consents.
+
+
+# Feature & Element Reference List
+# (For developer/admin use only, not for production deployment)
+# Last updated: 2026-02-01
+
+## Core Modules/Features (with Roles & Descriptions)
+
+1. Security
+	- Description: Sensors, cameras, alarms, and active response logic for intrusion, breach, and safety events.
+	- Roles: user_admin (view, arm/disarm, receive alerts), system_admin (configure, approve escalations), remote_agent (monitor, trigger response)
+
+2. Environmental Monitoring
+	- Description: Temperature, humidity, air quality, smoke/CO, and leak sensors for safety and comfort.
+	- Roles: user_admin (view, receive alerts), system_admin (configure thresholds, approve emergency actions), remote_agent (monitor, escalate)
+
+3. Energy Management
+	- Description: Smart plugs, lighting, appliance usage, solar/battery integration for optimization and savings.
+	- Roles: user_admin (view, schedule, optimize), system_admin (set policies), remote_agent (suggest automations)
+
+4. Access Control
+	- Description: Smart locks, user codes, guest access, presence detection, and event logging.
+	- Roles: user_admin (manage access, view logs), system_admin (approve access, override), remote_agent (monitor, alert)
+
+5. Audio/Video
+	- Description: Speakers, intercoms, cameras, and media systems for communication and entertainment.
+	- Roles: user_admin (control, schedule), system_admin (configure), remote_agent (trigger announcements)
+
+6. Health & Wellness
+	- Description: Wearables, fall detection, medication reminders, and emergency contacts for user safety.
+	- Roles: user_admin (view, acknowledge alerts), system_admin (configure, approve notifications), remote_agent (monitor, escalate)
+
+7. Automation & Routine
+	- Description: Schedules, scenes, and user-defined automations for daily routines and event-driven actions.
+	- Roles: user_admin (create, edit, enable/disable), system_admin (approve, manage templates), remote_agent (suggest routines)
+
+8. Device Discovery & Integration
+	- Description: Onboarding new devices, compatibility checks, and integration wizards for expanding the smart home.
+	- Roles: user_admin (initiate onboarding), system_admin (approve integrations), remote_agent (assist, suggest)
+
+9. Notification & Escalation
+	- Description: Multi-channel alerts, escalation logic, and event logging for all critical events.
+	- Roles: user_admin (receive, acknowledge), system_admin (configure, escalate), remote_agent (trigger, log)
+
+10. Custom Module Loader
+	- Description: Admin-added modules for future expansion (e.g., pet care, garden automation, etc.).
+	- Roles: system_admin (add, enable/disable), user_admin (use, configure if allowed)
+
+
+
+## AI Templates (see ai/template_library.json for details)
+- Morning Routine
+- Away Mode
+- Night Routine
+- Guest Welcome
+- Vacation Mode
+- Energy Saver
+- Security Alert
+- Maintenance Reminder
+- Custom Automation
+
+
+## Notes
+- Add/remove features as needed during build.
+- Use this file to track, discuss, and limit features for AI, user tiers, or admin roles.

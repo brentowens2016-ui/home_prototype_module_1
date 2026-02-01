@@ -1,3 +1,204 @@
+###########################################################################################################
+# ---------------------------------------------------------------------------------------------------------
+# 2026-02-01: Real-time AI Health/Diagnostic Tool Integrated
+# ---------------------------------------------------------------------------------------------------------
+# - Added ai_health.rs module to Rust agent for real-time AI health/status (CPU, memory, error, timestamp).
+# - Registered FFI in lib.rs and mod.rs; exposed get_ai_health_status to Python/backend.
+# - Updated Cargo.toml with sysinfo and chrono dependencies.
+# - Backend: Added /ai-health endpoint in main.py to call Rust FFI and return JSON status for user/admin.
+# - Frontend: Added global "Show AI Health Status" button and panel in dashboard.js, polling /ai-health.
+# - Tool is globally available, enforced locally, and accessible to service admins for remote diagnostics.
+# - All changes tested and build successful (cargo build --release).
+# ---------------------------------------------------------------------------------------------------------
+# Project Summary and Chronology (as of 2026-02-01)
+#
+# Purpose:
+#   - Build a modular, tiered, contract-driven home automation and health/safety system with robust AI, device discovery, and privacy-first features.
+#   - Ensure all features, logic, and controls are cross-platform (Python, Rust, TypeScript) and contract-aligned.
+#   - Provide a fully interactive dashboard with real-time controls, tier enforcement, and up-sell logic.
+#   - Maintain comprehensive, timestamped documentation and developer references for all work.
+#
+# Major Milestones:
+#   1. Project Scaffolding & Architecture
+#      - FastAPI backend (Python 3.12.10) for modular endpoints, device/AI integration, and contract-driven logic.
+#      - Rust agent (PyO3 FFI) for modular, contract-driven, cross-platform FFI, Home Assistant/Bluetooth support.
+#      - Static frontend (HTML/CSS/JS) for modular dashboard, contract-driven controls, and tier enforcement.
+#      - Cross-platform contracts (Python, TypeScript, Rust) for Control, FeatureContract, BluetoothDeviceMetadata, DashboardContract.
+#      - Version control established with Git/GitHub.
+#   2. Feature & Module Planning
+#      - Tiered features and device limits formalized for Security, Audio/Video, Health & Wellness, Device Discovery, and Backup/Restore.
+#      - All logic and rationale documented in dev_reference/feature_list.txt and notes.txt.
+#      - Developer reference system established for ongoing feature/module tracking.
+#   3. Implementation & Integration
+#      - Bluetooth and Home Assistant modules implemented across backend, Rust agent, and frontend.
+#      - Dashboard renders real-time controls, updates backend, and enforces tier logic.
+#      - All contract structures synchronized and visible across Python, Rust, and TypeScript.
+#   4. Build, Debug, and Deployment Pipeline
+#      - Backend compiled successfully (python -m compileall backend).
+#      - Rust agent build failures resolved by refactoring module imports, fixing Cargo.toml, and adding missing dependencies.
+#      - Rust agent now compiles successfully (cargo build --release).
+#      - All changes committed and pushed to GitHub (2026-02-01).
+#
+# Current State:
+#   - All major technical, architectural, and documentation requirements are met.
+#   - Cross-platform contract alignment is achieved.
+#   - Build process is functional for both backend and Rust agent.
+#   - System is ready for deployment, documentation, and further development.
+#
+# Next Steps:
+#   - Expand features/modules as needed (see dev_reference/feature_list.txt).
+#   - Maintain up-to-date documentation and developer references.
+#   - Continue to enforce privacy, tier logic, and contract-driven architecture in all new work.
+###########################################################################################################
+
+
+## Update: February 1, 2026 (Backup & Restore: Local-First, Server Failsafe)
+
+---
+---
+
+## Update: February 1, 2026 (Device Discovery & Integration, AI Enforcement)
+
+- Added Device Discovery & Integration module to dev_reference/feature_list.txt with global access and AI-enforced tier logic.
+- Device discovery, onboarding, and integration are always available, but tier-level access and feature limits are enforced by a local, modular AI instance (site-specific, not server/global).
+- Routines and predictive capabilities are taught and refined locally; only backup/restore points and crisis/escalation event data are sent to the server.
+- Rationale: Maximizes privacy, ensures compliance, and enables adaptive, user-specific automation while respecting tier boundaries.
+- Scope: Guides future implementation of device onboarding, AI logic, and privacy controls; not yet implemented in code.
+- Timestamp: 2026-02-01
+
+---
+---
+
+## Update: February 1, 2026 (Health & Wellness Module Universal Access)
+
+- Added Health & Wellness module to dev_reference/feature_list.txt with universal access across all tiers.
+- Core features (reminders, check-ins, activity, environmental health, emergency detection, data export, notifications) are always available to every user.
+- No device or feature limits for basic health/wellness functions; advanced analytics/integrations may be tiered in the future.
+- Rationale: Health and safety are never paywalled; ensures compliance with ethical and accessibility standards.
+- Scope: Guides future implementation and UI/UX; not yet implemented in code.
+- Timestamp: 2026-02-01
+
+---
+---
+
+## Update: February 1, 2026 (Audio/Video Module Logic Refinement)
+
+- Refined Audio/Video module in dev_reference/feature_list.txt:
+	- Video is always stored locally (user device), never on server/cloud by default. AI escalation/event detection using video is only available in Advanced and Pro/Unlimited tiers.
+	- Audio devices must be Bluetooth, Home Assistant, Zigbee, or Kasa compatible. Network implementation to be addressed later.
+	- Basic: 1 central speaker/microphone, 1 camera (video not used for AI escalation).
+	- Advanced: Up to 4 speaker/microphones, 2 cameras, AI escalation using video enabled.
+	- Pro/Unlimited: Unlimited speaker/microphones, 4 cameras, AI escalation using video enabled.
+	- Required receivers provided if not covered by Home Assistant, Zigbee, or Kasa network.
+- Rationale: To maximize privacy, ensure local control, and align with Zigbee/Kasa ecosystem. Addresses previous project issues with audio device compatibility and privacy.
+- Scope: Guides future implementation of device/network logic and AI escalation. Not yet implemented in code.
+- Timestamp: 2026-02-01
+
+---
+---
+
+## Update: February 1, 2026 (Audio/Video Module Tier Limits & Escalation Logic)
+
+- Added detailed, tiered feature and device limits for the Audio/Video module in dev_reference/feature_list.txt:
+	- Basic: 2 audio sensors, 1 camera, event-driven only, no live view, strict privacy, local notification.
+	- Advanced: 4 audio, 2 video, event-driven and periodic, limited live view (local), enhanced AI, remote notification.
+	- Pro/Unlimited: 8 audio, 4 video, event-driven/periodic/limited continuous, remote live view (with consent), advanced AI, audit trail, extended escalation.
+- All features are privacy-first, opt-in, and designed for health/safety (not surveillance/security).
+- Escalation logic is local-first, with remote/cloud only if enabled by user/admin.
+- Device/feature limits are enforced per household.
+- Rationale: To provide value for at-risk/disabled users while minimizing liability and maximizing privacy.
+- Scope: Guides future UI, backend, and AI development; not yet implemented in code.
+- Timestamp: 2026-02-01
+
+---
+---
+
+## Update: February 1, 2026 (Security Module Tier Limits & Escalation Logic)
+
+- Expanded and formalized the Security module in dev_reference/feature_list.txt to reflect:
+	- Separate device limits for pressure/leak sensors, bed pads, motion detectors, door/window sensors, smart bulbs, and smart plugs for each tier.
+	- Zigbee router device balancing and limits.
+	- Clear distinction between health & safety monitoring (primary) and security (secondary, with disclaimers for basic tier).
+	- AI pattern recognition, strobing, and escalation logic for up to 2 individuals in basic tier, with expanded capabilities in higher tiers.
+	- Call-Out Feature: tier-based number of emergency contacts, with escalation to emergency services if no response.
+	- All escalation/call-out logic is local-first, with cloud backup only if user consents.
+- Reason: To align the product with its core purpose (health/safety for disabled/at-risk individuals), avoid liability as a security provider, and provide clear, tiered value.
+- Scope: These limits and logic will guide future UI, backend, and AI development, and are not yet implemented in code.
+- Logic: Device management and escalation will be enforced per user/tier, with clear messaging and user/admin controls.
+- Timestamp: 2026-02-01
+
+---
+---
+
+## Update: February 1, 2026 (Developer Feature Reference List)
+
+- Created dev_reference/feature_list.txt for developer/admin use during the build process.
+- Purpose: To provide a readily accessible, up-to-date list of all modules, features, and AI templates for reference, discussion, and limitation configuration.
+- This file is not intended for production deployment and should be excluded from user-facing builds.
+- Reason: To help manage memory/context limitations and provide a single source of truth for what has been built, what is missing, and what can be limited or discussed.
+- Scope: File is open and editable during development, and can be expanded as new features or elements are added.
+- Logic: Use this file to track, discuss, and limit features for AI, user tiers, or admin roles.
+- Timestamp: 2026-02-01
+
+---
+---
+
+## Update: February 1, 2026 (Module Architecture Documentation)
+
+- Documented the creation of 10 modular components for AI-driven house monitoring and response:
+	1. Security (sensors, cameras, alarms)
+	2. Environmental Monitoring (temp, humidity, air quality, smoke/CO, leaks)
+	3. Energy Management (smart plugs, lighting, appliances, solar)
+	4. Access Control (locks, user codes, guest access)
+	5. Audio/Video (speakers, intercoms, media)
+	6. Health & Wellness (wearables, fall detection, medication reminders)
+	7. Automation & Routine (schedules, scenes, automations)
+	8. Device Discovery & Integration (onboarding, compatibility)
+	9. Notification & Escalation (alerts, escalation, logs)
+	10. Custom Module Loader (admin-added modules)
+- Each module is scaffolded in frontend (UI/logic), backend (API/logic), and Rust agent (FFI/logic) directories.
+- All modules are designed for contract-driven integration, dynamic loading, and tier/role-based access.
+- Timestamp: 2026-02-01
+- Reason: To provide a scalable, maintainable, and extensible foundation for AI and user/admin interaction with all smart home domains.
+- Scope: Supports future feature build-out, rapid deployment, and clear separation of concerns for maintainability.
+- Logic: Modules are discoverable, can be loaded per user/installation, and are ready for contract and feature integration.
+
+---
+---
+
+## Update: February 1, 2026 (AI Module Scaffolding for Full House Monitoring)
+
+- Scaffolded 10 core modules (security, environment, energy, access, audiovideo, wellness, automation, discovery, notification, custom) across frontend, backend, and Rust agent.
+- Each module has a placeholder file for UI, backend logic, and agent FFI, ready for active deployment and integration.
+- Reason: To enable modular, extensible, and contract-driven AI interaction with all major smart home domains.
+- Scope: Structure supports future expansion, dynamic loading, and role/tier-based access for all modules.
+- Logic: Modules are discoverable, can be loaded per user/installation, and are ready for contract and feature integration.
+
+---
+---
+
+## Update: February 1, 2026 (Global AI Template Presentation)
+
+- Added a FastAPI endpoint (/ai-templates) to serve the AI template library globally to user/admins.
+- Updated dashboard.js to provide a global button for fetching and presenting templates in a modal.
+- Reason: To empower users/admins to easily access and use best-practice automations and training routines.
+- Scope: Feature is available globally from the dashboard, extensible for future UI/UX improvements.
+- Logic: Backend serves templates as JSON, frontend fetches and displays them on demand.
+
+---
+---
+
+## Update: February 1, 2026 (Extensive AI Template Library)
+
+- Created an extensive template library for user/admin AI training in frontend/ai/template_library.json.
+- Added template_index.json for quick lookup and role-based filtering of templates.
+- Templates cover common routines (morning, away, night, guest, vacation, energy saver, security, maintenance, custom automation).
+- Each template is structured for easy AI ingestion and user/admin customization.
+- Reason: To accelerate AI learning, provide best-practice automations, and empower users/admins to personalize their environment.
+- Scope: Library is extensible, role-aware, and ready for integration with dashboard and backend logic.
+- Logic: Templates are JSON-based, mapped to roles, and referenced in config for contract-driven AI training and suggestions.
+
+---
 ---
 
 ## Update: February 1, 2026 (AI Model Requirements & Learning)
@@ -78,14 +279,26 @@ All work is now versioned and safely stored on GitHub. Ready to resume or expand
 
 ---
 
-## Update: February 1, 2026 (Dashboard & Agent Discussion)
+## Update: February 1, 2026 (AI Integration, Contract Sync, Config, and Dashboard Logic)
 
-- Dashboard will use a layered, tabbed structure. Tabs correspond to features subscribed by the user; inaccessible tabs are visible but locked to encourage upgrades.
-- Each tab contains modular controls (sidebar for on/off, panel-level toggles) and only displays outputs for active features.
-- The dashboard is the main interface for remote agent access, but members are encouraged to use a downloadable agent running locally.
-- The local agent operates independently, periodically syncing with the server for updates and status. It can automatically log in for "call-out" features (alerts, notifications) without manual user login.
-- Online dashboard access is restricted to authenticated members only; casual visitors cannot access it.
-- The system is designed for flexibility: users can choose "always-on" dashboard access or rely on the local agent, with seamless transitions and clear status indicators.
+	- Fetch and use AI role from backend contract.
+	- Restrict AI controls and settings by user role (system_admin, remote_agent, user_admin).
+	- Annotated and timestamped all improvements for traceability.
+
+
+---
+2026-02-01: Accessibility Expansion
+----------------------------------
+Planned and documented accessibility features for mobile and disabled person support:
+	- Mobile device support: Responsive dashboard, touch controls, mobile browser compatibility
+	- Disabled person access:
+			- Screen reader compatibility (ARIA labels, semantic HTML)
+			- Adjustable contrast and color themes
+			- Hearing impaired support: visual alerts, captions, text-based notifications
+			- Hearing impaired input: speech-to-text, text command interface
+Implementation will include frontend UI updates, ARIA/semantic markup, theme toggles, and backend endpoints for text-based interaction and notifications.
+
+## Update: February 1, 2026 (Dashboard & Agent Discussion)
 
 
 ---

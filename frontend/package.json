@@ -1,0 +1,13 @@
+{
+  "name": "mappedhome-frontend",
+  "version": "0.1.0",
+  "description": "Frontend for MappedHome membership site with AI integration.",
+  "main": "dashboard.js",
+  "scripts": {},
+  "dependencies": {},
+  "ai": {
+    "roles": ["system_admin", "remote_agent", "user_admin"],
+    "model": "contract-driven, adaptive, tier-aware",
+    "integration": "dashboard.js, contracts.ts, backend FastAPI, rust_agent FFI"
+  }
+}

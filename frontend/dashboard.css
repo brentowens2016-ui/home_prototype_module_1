@@ -1,3 +1,27 @@
+/* Custom Panels */
+#custom-panels {
+    background: #f9f9f9;
+    border: 1px solid #e0c9a6;
+    border-radius: 8px;
+    padding: 1em;
+    margin-bottom: 2em;
+}
+.custom-panel-widget {
+    background: #fffbe6;
+    border: 1px solid #d2b48c;
+    border-radius: 6px;
+    margin-bottom: 1em;
+    padding: 1em;
+    box-shadow: 0 2px 8px #0002;
+}
+.custom-panel-widget button {
+    margin-top: 0.5em;
+    background: #e0c9a6;
+    border: none;
+    border-radius: 4px;
+    padding: 0.3em 0.8em;
+    cursor: pointer;
+}
 /* Dashboard styles */
 .dashboard-container {
     display: flex;

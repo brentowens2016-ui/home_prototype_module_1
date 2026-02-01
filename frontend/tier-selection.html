@@ -17,10 +17,18 @@
     </nav>
     <main>
         <h2>Select Your Membership Tier</h2>
+        <section>
+            <h3>Tier Features</h3>
+            <ul>
+                <li><b>Basic:</b> Access to dashboard, basic device control, AI health diagnostics (view only), Bluetooth device discovery, standard support.</li>
+                <li><b>Pro:</b> All Basic features, advanced device control, AI health diagnostics (full), Home Assistant integration, custom dashboard panels, priority support.</li>
+                <li><b>Elite:</b> All Pro features, remote agent access, tiered AI roles, advanced mapping & editor, early access to new features, dedicated support, <span style="color:#2a7ae2;font-weight:bold;">Advanced device control (Elite tier only): Unlimited device management, custom automations, audit trail, external integrations, advanced AI routines</span>.</li>
+            </ul>
+        </section>
         <form>
             <label><input type="radio" name="tier" value="basic"> Basic</label><br>
-            <label><input type="radio" name="tier" value="premium"> Premium</label><br>
             <label><input type="radio" name="tier" value="pro"> Pro</label><br>
+            <label><input type="radio" name="tier" value="elite"> Elite</label><br>
             <button type="submit">Continue</button>
         </form>
     </main>

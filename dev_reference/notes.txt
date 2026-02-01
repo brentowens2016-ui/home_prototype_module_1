@@ -1,0 +1,13 @@
+
+2026-02-01: Major progress documented:
+- AI health/diagnostic tool fully integrated (Rust agent, backend, frontend).
+- Text-to-speech and speech-to-text features implemented, available to all tiers, with multi-language and device-aware support.
+- AI model now actively listens for prompts and emergency triggers, responds to real device events, and supports audible learning of routines via voice command.
+- Emergency Services tab added to dashboard, globally accessible, with editable escalation contacts and panic button for immediate emergency escalation (default 911, user-editable).
+- Voice recognition module created for user/family voice learning and input refinement.
+- All AI writings/routines are saved locally, not on the server, except for backup/restore.
+- Feature notification flags added to dashboard: all users notified of new features, upgrade prompt shown if feature is outside current tier.
+- Dashboard navigation updated to include Emergency Services tab and relevant features.
+- Backend endpoints for emergency escalation and contact updates implemented.
+- Escalation policy is user-configurable via dashboard tab.
+- Documentation and codebase heavily updated for accessibility, compliance, and extensibility.

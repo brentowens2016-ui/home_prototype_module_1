@@ -1,0 +1,85 @@
+[
+  {
+    "name": "Morning Routine",
+    "description": "Automate lights, thermostat, and coffee maker for a typical morning.",
+    "steps": [
+      {"device": "lights", "action": "on", "time": "06:30"},
+      {"device": "thermostat", "action": "set", "value": 70, "time": "06:30"},
+      {"device": "coffee_maker", "action": "brew", "time": "06:35"}
+    ],
+    "role": ["user_admin", "system_admin"]
+  },
+  {
+    "name": "Away Mode",
+    "description": "Set security, adjust HVAC, and turn off unnecessary devices when leaving home.",
+    "steps": [
+      {"device": "security_system", "action": "arm", "mode": "away"},
+      {"device": "lights", "action": "off"},
+      {"device": "thermostat", "action": "set", "value": 62}
+    ],
+    "role": ["user_admin", "system_admin"]
+  },
+  {
+    "name": "Night Routine",
+    "description": "Prepare the home for sleep: lock doors, dim lights, set alarm.",
+    "steps": [
+      {"device": "door_locks", "action": "lock"},
+      {"device": "lights", "action": "dim", "value": 20},
+      {"device": "security_system", "action": "arm", "mode": "stay"}
+    ],
+    "role": ["user_admin", "system_admin"]
+  },
+  {
+    "name": "Guest Welcome",
+    "description": "Prepare home for guest arrival: lights, music, and temperature.",
+    "steps": [
+      {"device": "lights", "action": "on", "area": "entryway"},
+      {"device": "music_system", "action": "play", "playlist": "welcome"},
+      {"device": "thermostat", "action": "set", "value": 72}
+    ],
+    "role": ["user_admin"]
+  },
+  {
+    "name": "Vacation Mode",
+    "description": "Simulate occupancy and secure home for extended absence.",
+    "steps": [
+      {"device": "lights", "action": "randomize", "interval": "evening"},
+      {"device": "security_system", "action": "arm", "mode": "away"},
+      {"device": "thermostat", "action": "set", "value": 60}
+    ],
+    "role": ["user_admin", "system_admin"]
+  },
+  {
+    "name": "Energy Saver",
+    "description": "Reduce energy usage during peak hours.",
+    "steps": [
+      {"device": "hvac", "action": "set", "value": 78, "time": "14:00-18:00"},
+      {"device": "lights", "action": "off", "area": "unused"}
+    ],
+    "role": ["user_admin", "system_admin"]
+  },
+  {
+    "name": "Security Alert",
+    "description": "Respond to security breach: notify admin, lock doors, turn on all lights.",
+    "steps": [
+      {"device": "admin", "action": "notify", "event": "security_breach"},
+      {"device": "door_locks", "action": "lock"},
+      {"device": "lights", "action": "on", "area": "all"}
+    ],
+    "role": ["system_admin", "remote_agent"]
+  },
+  {
+    "name": "Maintenance Reminder",
+    "description": "Remind user/admin of scheduled maintenance tasks.",
+    "steps": [
+      {"device": "admin", "action": "notify", "event": "maintenance_due"}
+    ],
+    "role": ["system_admin", "user_admin"]
+  },
+  {
+    "name": "Custom Automation",
+    "description": "Template for user-defined automations.",
+    "steps": [],
+    "role": ["user_admin"]
+  }
+]

@@ -18,4 +18,20 @@ pub struct BluetoothDeviceMetadata {
     pub last_seen: Option<String>,
 }
 // Rust struct for dashboard contract (agent FFI)
+#[derive(Serialize, Deserialize, Debug)]
+pub struct FeatureContract {
+    pub name: String,
+    pub tier: String,
+    pub enabled: bool,
+    pub controls: Option<Vec<Control>>,
+    pub ai_roles: Option<Vec<String>>,
+    pub bluetooth_devices: Option<Vec<BluetoothDeviceMetadata>>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct DashboardContract {
+    pub user_tier: String,
+    pub features: Vec<FeatureContract>,
+    pub ai_role: String,
+}
 

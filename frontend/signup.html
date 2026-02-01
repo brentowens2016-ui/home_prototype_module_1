@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - Membership</title>
+  <link rel="stylesheet" href="signup.css">
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f7f7fa; margin: 0; }
+    .signup-container { max-width: 480px; margin: 48px auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 16px #0002; padding: 32px; }
+    h1 { text-align: center; margin-bottom: 24px; }
+    .form-group { margin-bottom: 18px; }
+    label { display: block; margin-bottom: 6px; font-weight: 500; }
+    input[type="text"], input[type="email"], input[type="password"] { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 1em; }
+    .select-tier { margin-bottom: 18px; }
+    .store-link { display: block; text-align: center; margin-bottom: 18px; color: #2a7ae2; text-decoration: underline; font-size: 1em; }
+    .signup-btn { background: #2a7ae2; color: #fff; border: none; border-radius: 6px; padding: 12px 28px; font-size: 1em; cursor: pointer; width: 100%; margin-top: 10px; transition: background 0.2s; }
+    .signup-btn:hover { background: #1a5bb8; }
+    .success-msg { color: #2a7ae2; text-align: center; margin-top: 18px; }
+  </style>
+</head>
+<body>
+  <div class="signup-container">
+    <h1>Sign Up</h1>
+    <a href="store.html" class="store-link">View Membership Tiers</a>
+    <form id="signup-form">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <div class="form-group select-tier">
+        <label for="tier">Select Membership Tier</label>
+        <select id="tier" name="tier" required></select>
+      </div>
+      <button type="submit" class="signup-btn">Continue to Checkout</button>
+    </form>
+    <div id="signup-success" class="success-msg" style="display:none;"></div>
+  </div>
+  <script src="signup.js"></script>
+</body>
+</html>
