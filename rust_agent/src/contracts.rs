@@ -1,26 +1,21 @@
-// Rust struct for dashboard contract (agent FFI)
-use pyo3::prelude::*;
 use serde::{Serialize, Deserialize};
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct FeatureContract {
-    pub name: String,
-    pub tier: String,
-    pub enabled: bool,
-    pub controls: Vec<Control>,
-    pub ai_roles: Option<Vec<String>>, // ["system_admin", "remote_agent", "user_admin"]
-}
-
+use serde_json;
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Control {
     pub control_type: String,
     pub label: String,
-    // Add more fields as needed
+    pub value: Option<serde_json::Value>,
+    pub min: Option<i32>,
+    pub max: Option<i32>,
 }
-
 #[derive(Serialize, Deserialize, Debug)]
-pub struct DashboardContract {
-    pub user_tier: String,
-    pub features: Vec<FeatureContract>,
-    pub ai_role: Option<String>, // "system_admin" | "remote_agent" | "user_admin"
+pub struct BluetoothDeviceMetadata {
+    pub name: String,
+    pub address: String,
+    pub device_type: String,
+    pub driver_installed: bool,
+    pub driver_version: Option<String>,
+    pub last_seen: Option<String>,
 }
+// Rust struct for dashboard contract (agent FFI)
+
