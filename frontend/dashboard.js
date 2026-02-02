@@ -20,10 +20,13 @@ function renderDisabilityPanel() {
             btn.onclick = () => {
                 btn.disabled = true;
                 btn.textContent = 'Listening...';
-                mod.startVoiceRecognition(async (transcript) => {
-                    resultDiv.textContent = 'Recognized: ' + transcript;
+                mod.startVoiceRecognition(async (transcript, { keywords, routine }) => {
+                    let msg = 'Recognized: ' + transcript;
+                    if (keywords && keywords.length) msg += '\nKeywords: ' + keywords.join(', ');
+                    if (routine) msg += `\nMatched Routine: ${routine.name}`;
+                    resultDiv.textContent = msg;
                     btn.textContent = 'Processing...';
-                    const resp = await mod.sendVoiceCommandToAI(transcript);
+                    const resp = await mod.sendVoiceCommandToAI(transcript, routine ? routine.name : undefined);
                     if (resp && resp.status === 'ok') {
                         resultDiv.textContent = 'AI Routine: ' + (resp.message || 'Action performed.');
                     } else {

@@ -11,9 +11,12 @@ export function startVoiceRecognition(onResult) {
     recognition.lang = 'en-US';
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
-    recognition.onresult = function(event) {
-        const transcript = event.results[0][0].transcript;
-        if (onResult) onResult(transcript);
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript;
+            // Keyword and routine matching
+            const keywords = matchKeywords(transcript);
+            const routine = getBestRoutineMatch(transcript, templateLibrary);
+            if (onResult) onResult(transcript, { keywords, routine });
     };
     recognition.onerror = function(event) {
         alert('Voice recognition error: ' + event.error);
@@ -25,6 +28,7 @@ export function sendVoiceCommandToAI(command) {
     return fetch('/api/ai/voice-command', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ command })
+        body: JSON.stringify({ command, routine: routineName })
     }).then(resp => resp.json());
+}
 }

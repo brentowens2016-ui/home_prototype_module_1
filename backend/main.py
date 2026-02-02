@@ -1,25 +1,45 @@
+import re
+TEMPLATE_LIBRARY_PATH = os.path.join(os.path.dirname(__file__), '..', 'frontend', 'ai', 'template_library.json')
+
+def load_routines():
+    with open(TEMPLATE_LIBRARY_PATH, encoding='utf-8') as f:
+        return json.load(f)
+
 @app.post("/api/ai/voice-command")
 async def ai_voice_command(request: Request):
     data = await request.json()
     command = data.get("command", "").lower()
-    # Example: map voice commands to accessibility controls
-    # In production, use NLP/AI for more robust intent recognition
+    routine_name = data.get("routine")
     result = {"status": "ok", "message": None}
+    # Fast path: if routine name is provided, execute it
+    if routine_name:
+        routines = load_routines()
+        routine = next((r for r in routines if r["name"].lower() == routine_name.lower()), None)
+        if routine:
+            result["message"] = f"Routine '{routine['name']}' executed: {routine['description']}"
+            return JSONResponse(result)
+    # Otherwise, keyword/intent matching
     if "contrast" in command:
-        # Simulate toggling high contrast
-        result["message"] = "High contrast mode toggled."  # In real use, update user prefs
+        result["message"] = "High contrast mode toggled."
     elif "focus" in command:
         result["message"] = "Focus outlines toggled."
-    elif "live region" in command or "screen reader" in command:
+    elif re.search(r"live region|screen reader", command):
         result["message"] = "ARIA live region toggled."
     elif "skip" in command:
         result["message"] = "Skip to content link toggled."
     elif "visual alert" in command:
         result["message"] = "Visual alerts toggled."
     else:
-        # Simulate AI routine
-        result["message"] = f"AI routine executed for: {command}"
+        # Try to match a routine by keywords
+        routines = load_routines()
+        for r in routines:
+            if r["name"].lower() in command:
+                result["message"] = f"Routine '{r['name']}' executed: {r['description']}"
+                break
+        if not result["message"]:
+            result["message"] = f"AI routine executed for: {command}"
     return JSONResponse(result)
+
 user_accessibility_prefs = {
     # Example: user_id: {contrast: True, focus: True, live: True, skip: True, visual: False}
     'default': {
@@ -165,8 +185,6 @@ import importlib.util
 import sys
 import os
 import json
-import gzip
-import base64
 from .contracts import MappingInfo
 
 app = FastAPI()
