@@ -1,3 +1,25 @@
+@app.post("/api/ai/voice-command")
+async def ai_voice_command(request: Request):
+    data = await request.json()
+    command = data.get("command", "").lower()
+    # Example: map voice commands to accessibility controls
+    # In production, use NLP/AI for more robust intent recognition
+    result = {"status": "ok", "message": None}
+    if "contrast" in command:
+        # Simulate toggling high contrast
+        result["message"] = "High contrast mode toggled."  # In real use, update user prefs
+    elif "focus" in command:
+        result["message"] = "Focus outlines toggled."
+    elif "live region" in command or "screen reader" in command:
+        result["message"] = "ARIA live region toggled."
+    elif "skip" in command:
+        result["message"] = "Skip to content link toggled."
+    elif "visual alert" in command:
+        result["message"] = "Visual alerts toggled."
+    else:
+        # Simulate AI routine
+        result["message"] = f"AI routine executed for: {command}"
+    return JSONResponse(result)
 user_accessibility_prefs = {
     # Example: user_id: {contrast: True, focus: True, live: True, skip: True, visual: False}
     'default': {

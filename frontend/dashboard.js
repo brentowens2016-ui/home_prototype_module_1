@@ -9,8 +9,31 @@ function renderDisabilityPanel() {
             <label><input type="checkbox" id="toggle-live-region" checked> Enable ARIA Live Region (Screen Reader Feedback)</label><br>
             <label><input type="checkbox" id="toggle-skip-link" checked> Show Skip to Content Link</label><br>
             <label><input type="checkbox" id="toggle-visual-alerts"> Visual Alerts (for hearing impaired)</label><br>
+            <button id="start-voice-recognition" style="margin-top:1em;font-size:1.1em;background:#0ff;color:#000;">🎤 Voice Control: Start Listening</button>
+            <div id="voice-result" style="margin-top:0.7em;color:#0ff;font-size:1.1em;"></div>
             <div style="margin-top:1em; font-size:1.1em; color:#0078d4;">All settings here are user-selectable and can be changed at any time.</div>
         </div>`;
+        // Voice recognition integration
+        import('./modules/voice_recognition.js').then(mod => {
+            const btn = panel.querySelector('#start-voice-recognition');
+            const resultDiv = panel.querySelector('#voice-result');
+            btn.onclick = () => {
+                btn.disabled = true;
+                btn.textContent = 'Listening...';
+                mod.startVoiceRecognition(async (transcript) => {
+                    resultDiv.textContent = 'Recognized: ' + transcript;
+                    btn.textContent = 'Processing...';
+                    const resp = await mod.sendVoiceCommandToAI(transcript);
+                    if (resp && resp.status === 'ok') {
+                        resultDiv.textContent = 'AI Routine: ' + (resp.message || 'Action performed.');
+                    } else {
+                        resultDiv.textContent = 'AI Error: ' + (resp && resp.error ? resp.error : 'Unknown error');
+                    }
+                    btn.disabled = false;
+                    btn.textContent = '🎤 Voice Control: Start Listening';
+                });
+            };
+        });
     // Load user accessibility preferences from backend
     fetch('/api/user/accessibility').then(async resp => {
         let prefs = {
