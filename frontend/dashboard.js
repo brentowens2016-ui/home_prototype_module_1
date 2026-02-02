@@ -3,6 +3,7 @@ function renderDisabilityPanel() {
     const panel = document.getElementById('dashboard-panel');
     panel.innerHTML = `<div class="panel-header disability-header"><h2>Disability Enhancements</h2></div>
         <div class="disability-controls">
+            <div id="disability-status" style="margin-bottom:1em;color:#0ff;font-weight:bold;">Loading your accessibility preferences...</div>
             <label><input type="checkbox" id="toggle-contrast" checked> High Contrast Mode (Recommended for visually impaired)</label><br>
             <label><input type="checkbox" id="toggle-focus-outline" checked> Enhanced Focus Outlines</label><br>
             <label><input type="checkbox" id="toggle-live-region" checked> Enable ARIA Live Region (Screen Reader Feedback)</label><br>
@@ -10,23 +11,73 @@ function renderDisabilityPanel() {
             <label><input type="checkbox" id="toggle-visual-alerts"> Visual Alerts (for hearing impaired)</label><br>
             <div style="margin-top:1em; font-size:1.1em; color:#0078d4;">All settings here are user-selectable and can be changed at any time.</div>
         </div>`;
-    // Default: visually impaired enhancements ON
-    document.body.classList.add('high-contrast');
+    // Load user accessibility preferences from backend
+    fetch('/api/user/accessibility').then(async resp => {
+        let prefs = {
+            contrast: true,
+            focus: true,
+            live: true,
+            skip: true,
+            visual: false
+        };
+        if (resp.ok) {
+            const data = await resp.json();
+            prefs = Object.assign(prefs, data);
+        }
+        // Set UI state
+        panel.querySelector('#toggle-contrast').checked = prefs.contrast;
+        panel.querySelector('#toggle-focus-outline').checked = prefs.focus;
+        panel.querySelector('#toggle-live-region').checked = prefs.live;
+        panel.querySelector('#toggle-skip-link').checked = prefs.skip;
+        panel.querySelector('#toggle-visual-alerts').checked = prefs.visual;
+        document.body.classList.toggle('high-contrast', prefs.contrast);
+        document.body.classList.toggle('focus-outline', prefs.focus);
+        document.getElementById('aria-status').style.display = prefs.live ? '' : 'none';
+        document.querySelector('.skip-to-content').style.display = prefs.skip ? '' : 'none';
+        window.visualAlertsEnabled = prefs.visual;
+        panel.querySelector('#disability-status').textContent = 'Preferences loaded.';
+    });
+    // Save handler
+    function savePrefs() {
+        const prefs = {
+            contrast: panel.querySelector('#toggle-contrast').checked,
+            focus: panel.querySelector('#toggle-focus-outline').checked,
+            live: panel.querySelector('#toggle-live-region').checked,
+            skip: panel.querySelector('#toggle-skip-link').checked,
+            visual: panel.querySelector('#toggle-visual-alerts').checked
+        };
+        fetch('/api/user/accessibility', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(prefs)
+        }).then(resp => {
+            if (resp.ok) {
+                panel.querySelector('#disability-status').textContent = 'Preferences saved.';
+            } else {
+                panel.querySelector('#disability-status').textContent = 'Error saving preferences.';
+            }
+        });
+    }
     // Handlers
     panel.querySelector('#toggle-contrast').onchange = e => {
         document.body.classList.toggle('high-contrast', e.target.checked);
+        savePrefs();
     };
     panel.querySelector('#toggle-focus-outline').onchange = e => {
         document.body.classList.toggle('focus-outline', e.target.checked);
+        savePrefs();
     };
     panel.querySelector('#toggle-live-region').onchange = e => {
         document.getElementById('aria-status').style.display = e.target.checked ? '' : 'none';
+        savePrefs();
     };
     panel.querySelector('#toggle-skip-link').onchange = e => {
         document.querySelector('.skip-to-content').style.display = e.target.checked ? '' : 'none';
+        savePrefs();
     };
     panel.querySelector('#toggle-visual-alerts').onchange = e => {
         window.visualAlertsEnabled = e.target.checked;
+        savePrefs();
     };
 }
 

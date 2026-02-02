@@ -1,3 +1,30 @@
+user_accessibility_prefs = {
+    # Example: user_id: {contrast: True, focus: True, live: True, skip: True, visual: False}
+    'default': {
+        'contrast': True,
+        'focus': True,
+        'live': True,
+        'skip': True,
+        'visual': False
+    }
+}
+
+def get_current_user_id(request: Request):
+    # Placeholder: Replace with real user/session logic
+    return 'default'
+
+@app.get("/api/user/accessibility")
+async def get_accessibility(request: Request):
+    user_id = get_current_user_id(request)
+    prefs = user_accessibility_prefs.get(user_id, user_accessibility_prefs['default'])
+    return JSONResponse(prefs)
+
+@app.post("/api/user/accessibility")
+async def set_accessibility(request: Request):
+    user_id = get_current_user_id(request)
+    data = await request.json()
+    user_accessibility_prefs[user_id] = data
+    return JSONResponse({"status": "ok", "prefs": data})
 import base64
 from cryptography.fernet import Fernet
 import logging
