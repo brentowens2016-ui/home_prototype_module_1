@@ -32,6 +32,94 @@
             </div>
             <div id="dashboard-panel">
                 <!-- Active panel content will be rendered here -->
+                <section id="mapping-editor-panel">
+                                                                                <div id="elite-mapping-tools" style="margin:12px 0;">
+                                                                                    <b>Elite Features:</b>
+                                                                                    <button id="audit-trail-btn">Show Audit Trail</button>
+                                                                                    <button id="version-history-btn">Version History</button>
+                                                                                    <button id="add-annotation-btn">Add Annotation</button>
+                                                                                    <button id="custom-icon-btn">Custom Icons</button>
+                                                                                    <button id="analytics-btn">Show Analytics</button>
+                                                                                    <span id="elite-feature-warning" style="color:#b00;display:none;margin-left:12px;">(Upgrade to Elite to use these features)</span>
+                                                                                </div>
+                                                            <div id="advanced-mapping-tools" style="margin:12px 0;">
+                                                                <b>Advanced/Elite Features:</b>
+                                                                <label style="margin-left:12px;">Upload Floor Plan: <input type="file" id="floorplan-upload" accept="image/*"></label>
+                                                                <button id="device-group-btn">Group Devices</button>
+                                                                <button id="show-status-overlay-btn">Show Live Status Overlay</button>
+                                                                <span id="advanced-feature-warning" style="color:#b00;display:none;margin-left:12px;">(Upgrade to Advanced/Elite to use these features)</span>
+                                                            </div>
+                                        <div id="floor-controls" style="margin:12px 0;">
+                                            <b>Floor:</b>
+                                            <select id="floor-selector">
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                            </select>
+                                            <button id="add-floor-btn">Add Floor</button>
+                                            <button id="remove-floor-btn">Remove Floor</button>
+                                        </div>
+                                        <div id="wall-tools" style="margin:12px 0;">
+                                            <b>Wall Drawing:</b>
+                                            <button id="wall-draw-btn">Draw Wall</button>
+                                            <button id="wall-erase-btn">Erase Wall</button>
+                                            <span style="margin-left:12px;">(Click to add/remove wall segments)</span>
+                                        </div>
+                    <h2>Mapping Editor</h2>
+                    <div id="mapping-info-fields">
+                        <label>Square Footage:
+                            <input type="number" id="squareFootage" readonly>
+                        </label><br>
+                        <label>Commercial Square Footage (Admin Only):
+                            <input type="number" id="commercialSquareFootage" readonly>
+                        </label><br>
+                        <label>Site Address:
+                            <input type="text" id="siteAddress" readonly>
+                        </label><br>
+                        <label>City:
+                            <input type="text" id="siteCity" readonly>
+                        </label><br>
+                        <label>State:
+                            <input type="text" id="siteState" readonly>
+                        </label><br>
+                        <label>Zip Code:
+                            <input type="text" id="siteZip" readonly>
+                        </label><br>
+                        <div id="adminEditBtnContainer"></div>
+                    </div>
+                    <div class="membership-notice" style="margin-top:16px;color:#b00;font-weight:bold;">
+                        <p>Note: Multiple locations are not supported. Each installation must be independent. Contact support for enterprise/multi-site options.</p>
+                    </div>
+                    <div id="mapping-controls" style="margin:16px 0;">
+                        <button id="zoom-in-btn">Zoom In</button>
+                        <button id="zoom-out-btn">Zoom Out</button>
+                        <button id="reset-pan-btn">Reset View</button>
+                        <span style="margin-left:16px;">Drag rooms/devices from the palette below onto the map.</span>
+                    </div>
+                    <div id="mapping-canvas-container" style="border:1px solid #888;min-height:480px;min-width:720px;position:relative;background:#f8f8f8;overflow:hidden;">
+                        <canvas id="mapping-canvas" width="1200" height="800" style="background:#fff;display:block;margin:0 auto;"></canvas>
+                    </div>
+                    <div id="room-palette" style="margin:16px 0;">
+                        <b>Room Palette:</b>
+                        <button class="room-palette-btn" data-room="bedroom">Bedroom</button>
+                        <button class="room-palette-btn" data-room="bathroom">Bathroom</button>
+                        <button class="room-palette-btn" data-room="kitchen">Kitchen</button>
+                        <button class="room-palette-btn" data-room="living">Living Room</button>
+                        <button class="room-palette-btn" data-room="dining">Dining Room</button>
+                        <button class="room-palette-btn" data-room="closet">Closet</button>
+                        <button class="room-palette-btn" data-room="pantry">Pantry</button>
+                        <button class="room-palette-btn" data-room="balcony">Balcony/Patio</button>
+                        <button class="room-palette-btn" data-room="service">Service Room</button>
+                    </div>
+                    <div id="device-palette" style="margin:16px 0;">
+                        <b>Device Palette:</b>
+                        <button class="device-palette-btn" data-device="sensor">Sensor</button>
+                        <button class="device-palette-btn" data-device="strip">Strip</button>
+                        <button class="device-palette-btn" data-device="camera">Camera</button>
+                        <button class="device-palette-btn" data-device="speaker">Speaker</button>
+                        <!-- Add more device types as needed -->
+                    </div>
+                </section>
             </div>
         </section>
     </main>

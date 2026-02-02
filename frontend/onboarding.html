@@ -32,6 +32,25 @@
             <label>How did you hear about us?
                 <input type="text" name="referral">
             </label><br>
+            <h3>Site Mapping Information</h3>
+            <label>Square Footage (Residential):
+                <input type="number" name="square_footage" min="100" max="100000" required>
+            </label><br>
+            <label>Square Footage (Commercial/Admin Only):
+                <input type="number" name="commercial_square_footage" min="100" max="1000000">
+            </label><br>
+            <label>Site Address:
+                <input type="text" name="site_address" required>
+            </label><br>
+            <label>City:
+                <input type="text" name="site_city" required>
+            </label><br>
+            <label>State:
+                <input type="text" name="site_state" required>
+            </label><br>
+            <label>Zip Code:
+                <input type="text" name="site_zip" required>
+            </label><br>
             <button type="submit">Submit</button>
         </form>
     </main>

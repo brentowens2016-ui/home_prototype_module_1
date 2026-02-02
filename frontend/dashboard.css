@@ -1,3 +1,43 @@
+/* Annotation Modal (Elite) */
+.annotation-modal {
+    position: fixed;
+    top: 10%;
+    left: 10%;
+    width: 60vw;
+    height: 60vh;
+    background: #fff;
+    border: 2px solid #888;
+    z-index: 2000;
+    overflow: auto;
+    padding: 16px;
+    border-radius: 10px;
+    box-shadow: 0 4px 24px #0003;
+}
+#annotation-list {
+    margin-bottom: 1em;
+    padding-left: 0;
+}
+.annotation-modal li {
+    margin-bottom: 0.5em;
+    list-style: none;
+    background: #f5e6d3;
+    border-radius: 4px;
+    padding: 0.5em 0.8em;
+    border: 1px solid #e0c9a6;
+}
+#annotation-form label {
+    display: block;
+    margin-bottom: 0.5em;
+}
+#annotation-form input, #annotation-form select {
+    margin-right: 0.5em;
+    padding: 0.2em 0.5em;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+}
+#annotation-form button {
+    margin-right: 0.5em;
+}
 /* Custom Panels */
 #custom-panels {
     background: #f9f9f9;

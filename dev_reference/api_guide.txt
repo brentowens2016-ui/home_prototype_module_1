@@ -1,0 +1,75 @@
+# API Guide: mappedhome.com
+
+## Overview
+This guide documents all major API endpoints, request/response formats, and usage examples for the mappedhome.com platform. It covers authentication, mapping, device control, logging, emergency protocols, and accessibility features.
+
+## Authentication
+- `/signup` (POST): Register a new user
+- `/login` (POST): Authenticate user and receive session token
+- `/tier/select` (POST): Set membership tier
+
+## Mapping & Annotation
+- `/mapping/save` (POST): Save mapping and annotation data
+- `/mapping/load` (GET): Load mapping and annotation data (gzip+base64)
+
+## Device Control
+- `/device-control/devices` (GET): List managed devices
+- `/device-control/action` (POST): Control device (requires API key)
+
+## Logging
+- `/logs/server` (GET): Get server logs (gzip+base64)
+- `/logs/agent` (GET): Get agent logs
+- `/logs/event` (POST): Log a custom event
+- `/logs/emergency` (POST): Log an emergency event
+
+## Emergency Protocols
+- `/emergency/escalate` (POST): Trigger emergency escalation
+- `/emergency/contacts` (GET/POST): Get or update escalation contacts
+
+## Accessibility
+- All endpoints and UI features are designed for ADA compliance, including text-to-speech, speech-to-text, visual alerts, and keyboard navigation.
+
+## Example Request
+```json
+POST /logs/event
+{
+  "event_type": "device_trigger",
+  "details": "Motion detected in Room 2"
+}
+```
+
+## Response
+```json
+{
+  "status": "ok"
+}
+```
+
+---
+For more details, see the user guide and developer documentation.
+
+# Live Video/Audio Remote Monitoring
+
+## Overview
+- Remote agents can view live video and audio feeds from local devices during active support sessions.
+- No video or audio recordings are stored on the backend server; all recordings remain on local devices.
+- Streams are view-only and cannot be downloaded or archived from the server.
+- All remote monitoring endpoints require authentication and role-based access.
+- Privacy and security are enforced for all sessions.
+
+## Endpoints
+- `/stream/video` (GET): View live video feed from local agent device.
+- `/stream/audio` (GET): Listen to live audio feed from local agent device.
+
+## Usage
+- Access live feeds from the dashboard by clicking the "Live Video/Audio Feed" button.
+- Only authorized remote agents can view live streams.
+- Privacy notice is displayed before accessing any live feed.
+
+## Security
+- All traffic is encrypted and proxied through secure channels.
+- No direct device access is exposed to the public internet.
+- All remote support actions are logged for audit and compliance.
+
+---
+For more details, see the user guide and security documentation.

@@ -15,14 +15,14 @@ Progression List (as of 2026-02-01):
 
 Items/Features Yet to Be Implemented (as of 2026-02-01):
 - Advanced mapping & editor (beyond basic controls)
-- Early access to new features (feature flag system, beta rollout)
+
 - Dedicated support (admin/support portal, ticketing)
-- Custom dashboard panels (user-configurable widgets)
-- Tiered AI roles (role management UI, backend enforcement)
-- Home Assistant integration (full device sync, advanced controls)
+
+
+
 - PayPal integration (live payment processing, backend verification)
-- Speech-to-text input (full accessibility integration)
-- Advanced device control (Pro/Elite tier features)
+
+
 - Priority support (workflow and escalation logic)
 
 ### Purpose
@@ -356,3 +356,98 @@ Notes:
 ## Notes
 - Add/remove features as needed during build.
 - Use this file to track, discuss, and limit features for AI, user tiers, or admin roles.
+
+
+
+Absolutely! Here’s a focused sounding board for “Advanced mapping & editor (beyond basic controls)”—with your current architecture and feature list in mind:
+
+1. What “Advanced” Should Mean Here
+
+Not just static site info, but interactive mapping: drag/drop devices, zone drawing, live device status overlays.
+Editable floor plans (upload, draw, or auto-generate from device placement).
+Device grouping (zones/rooms), custom labels, and visual tier enforcement (e.g., “add more devices” disabled if tier limit reached).
+Real-time feedback: device online/offline, battery, last event, etc.
+2. User Roles & Permissions
+
+System admin: Full edit (add/remove devices, zones, upload floor plan, set allowed IPs, etc.).
+User admin: View, maybe limited edit (move devices, rename zones).
+Remote agent/guest: View only, possibly with annotation/comment ability.
+3. UI/UX Considerations
+
+Canvas-based editor (SVG, HTML5 Canvas, or a JS library like Konva.js or Fabric.js).
+Device palette: drag new devices onto the map, auto-assigns to nearest zone.
+Context menus: right-click to edit device, zone, or remove.
+Undo/redo, save draft, and publish changes (with backend sync).
+4. Backend/Contract Implications
+
+MappingInfo model expands: zones, device positions, floor plan image, device metadata.
+Endpoints for: get/save map, add/remove/move device, upload floor plan, manage zones.
+Versioning: keep map history for rollback/audit.
+5. Tier Enforcement
+
+Device/zone limits enforced visually and in backend.
+“Upgrade to add more” prompts if tier exceeded.
+6. Accessibility
+
+Keyboard navigation, screen reader support for map elements.
+High-contrast mode, large labels, and tooltips.
+7. Future-Proofing
+
+Support for multi-floor/complex sites (even if not enabled for most users).
+Hooks for automation: e.g., “if device in zone X triggers, do Y.”
+Questions to Consider:
+
+Do you want to support floor plan uploads, or only manual drawing?
+Should device placement be “live” (reflecting real device status/position) or just a planning tool?
+How much should regular users be able to edit, versus just view?
+Is audit/history of map changes important for compliance/support?
+Let me know which directions resonate, or if you want a concrete technical plan for any of these!
+
+What am I forgetting here
+
+Used 1 reference
+Here are some advanced features and best practices you might consider for your “Monster” system:
+
+User Management & Permissions
+
+Granular roles (admin, editor, viewer, guest)
+Audit logs for user actions
+Real-Time Collaboration
+
+Live multi-user editing (WebSocket integration)
+Conflict resolution and merge strategies
+Advanced Visualization
+
+3D mapping or AR/VR support
+Customizable themes and layouts
+Extensibility
+
+Plugin/module system for third-party integrations
+API endpoints for external tools
+Performance & Scalability
+
+Caching, lazy loading, and pagination for large maps
+Distributed backend or microservices
+Security
+
+Data encryption (at rest and in transit)
+Rate limiting, input validation, and threat detection
+Testing & Monitoring
+
+Automated tests (unit, integration, end-to-end)
+Health checks, error tracking, and analytics dashboards
+Documentation & Onboarding
+
+Interactive tutorials and tooltips
+Comprehensive API and user guides
+Backup & Recovery
+
+Scheduled backups, version rollback, disaster recovery
+Accessibility
+
+WCAG compliance, keyboard navigation, screen reader support
+If you want to add any of the
+
+
+
+453>

@@ -19,8 +19,9 @@ def listen_for_prompt():
     # Save learned routine to AI datasets/files
     def save_learned_routine(routine_text):
         # Save routine locally only (not on server)
-        local_path = 'local_ai_routines.txt'
-        with open(local_path, 'a', encoding='utf-8') as f:
+        import gzip
+        local_path = 'local_ai_routines.txt.gz'
+        with gzip.open(local_path, 'at', encoding='utf-8') as f:
             f.write(routine_text + '\n')
         print(f"[AI] Routine locally saved: {routine_text}")
     while True:

@@ -1,0 +1,43 @@
+# User Guide: mappedhome.com
+
+## Getting Started
+- Sign up and select your membership tier.
+- Log in to access the dashboard and features.
+
+## Dashboard Overview
+- Mapping Editor: Create, edit, and annotate rooms and devices.
+- Device Control: Manage smart devices, view status, and trigger actions.
+- Emergency Services: Edit escalation contacts, trigger panic button, and view emergency logs.
+- Health & Wellness: Access reminders, check-ins, and activity tracking.
+- Log Access: View system, agent, and event logs.
+- 3D Mapping/AR/VR: Visualize your environment in 3D and enter VR mode.
+
+## Accessibility Features
+- Visual alerts and captions for hearing-impaired users.
+- Text-to-speech and speech-to-text for visually/mobility-impaired users.
+- High-contrast and responsive UI for low-vision users.
+- Keyboard navigation and screen-reader support for all controls.
+
+## Tutorials & Tooltips
+- Hover over any button or feature for a tooltip describing its function.
+- Interactive tutorials guide you through mapping, device control, emergency setup, and accessibility options.
+- Emergency protocols and escalation are explained step-by-step in the dashboard.
+
+## Backup & Restore
+- All mapping and annotation data is stored locally and can be backed up or restored from the dashboard.
+- Emergency and event logs are compressed and stored for compliance and review.
+
+## Support
+- Submit tickets via the dashboard for help or feature requests.
+- Access AI-powered suggestions and troubleshooting.
+
+## Live Video/Audio Remote Monitoring
+- You can view live video and audio feeds from your local devices during remote support sessions.
+- No video or audio recordings are stored on the backend server; all recordings remain on your local devices.
+- Streams are view-only and cannot be downloaded or archived from the server.
+- To access live feeds, click the "Live Video/Audio Feed" button in the dashboard.
+- Only authorized remote agents can view your live streams, and a privacy notice is always displayed.
+- All remote monitoring actions are logged for your security and compliance.
+
+---
+For advanced usage and security details, see the API guide and security documentation.
