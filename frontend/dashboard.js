@@ -1,3 +1,35 @@
+// --- Disability Enhancements Panel ---
+function renderDisabilityPanel() {
+    const panel = document.getElementById('dashboard-panel');
+    panel.innerHTML = `<div class="panel-header disability-header"><h2>Disability Enhancements</h2></div>
+        <div class="disability-controls">
+            <label><input type="checkbox" id="toggle-contrast" checked> High Contrast Mode (Recommended for visually impaired)</label><br>
+            <label><input type="checkbox" id="toggle-focus-outline" checked> Enhanced Focus Outlines</label><br>
+            <label><input type="checkbox" id="toggle-live-region" checked> Enable ARIA Live Region (Screen Reader Feedback)</label><br>
+            <label><input type="checkbox" id="toggle-skip-link" checked> Show Skip to Content Link</label><br>
+            <label><input type="checkbox" id="toggle-visual-alerts"> Visual Alerts (for hearing impaired)</label><br>
+            <div style="margin-top:1em; font-size:1.1em; color:#0078d4;">All settings here are user-selectable and can be changed at any time.</div>
+        </div>`;
+    // Default: visually impaired enhancements ON
+    document.body.classList.add('high-contrast');
+    // Handlers
+    panel.querySelector('#toggle-contrast').onchange = e => {
+        document.body.classList.toggle('high-contrast', e.target.checked);
+    };
+    panel.querySelector('#toggle-focus-outline').onchange = e => {
+        document.body.classList.toggle('focus-outline', e.target.checked);
+    };
+    panel.querySelector('#toggle-live-region').onchange = e => {
+        document.getElementById('aria-status').style.display = e.target.checked ? '' : 'none';
+    };
+    panel.querySelector('#toggle-skip-link').onchange = e => {
+        document.querySelector('.skip-to-content').style.display = e.target.checked ? '' : 'none';
+    };
+    panel.querySelector('#toggle-visual-alerts').onchange = e => {
+        window.visualAlertsEnabled = e.target.checked;
+    };
+}
+
 // --- Accessibility: Skip to Content Link ---
 if (!document.querySelector('.skip-to-content')) {
     const skipLink = document.createElement('a');
@@ -1822,106 +1854,49 @@ class DashboardContract {
         tab.dataset.idx = idx;
         tabsDiv.appendChild(tab);
     });
+    // Disability Enhancements tab
+    const disabilityTab = document.createElement('div');
+    disabilityTab.className = 'dashboard-tab disability-tab';
+    disabilityTab.textContent = 'Disability Enhancements';
+    tabsDiv.appendChild(disabilityTab);
 
     // Panel rendering
     const panel = document.getElementById('dashboard-panel');
     function renderPanel(idx) {
         const feature = dashboard.features[idx];
         panel.innerHTML = '';
-        if (feature.tier !== dashboard.user_tier) {
-            handleTierRestriction(
-                feature.name,
-                feature.tier,
-                () => { panel.innerHTML = `<div class="panel-header"><h2>${feature.name}</h2></div><p>This feature is locked. Action aborted.</p>`; },
-                () => { panel.innerHTML = `<div class="panel-header"><h2>${feature.name}</h2></div><p>Redirecting to upgrade page...</p>`; window.location.href = '/upgrade'; }
-            );
-            return;
+        function renderPanel(idx) {
+            // If last tab, show Disability Enhancements
+            if (typeof idx === 'undefined' || idx === 'disability') {
+                renderDisabilityPanel();
+                return;
+            }
+            const feature = dashboard.features[idx];
+            panel.innerHTML = '';
+            if (feature.tier !== dashboard.user_tier) {
+                handleTierRestriction(
+                    feature.name,
+                    feature.tier,
+                    () => { panel.innerHTML = `<div class="panel-header"><h2>${feature.name}</h2></div><p>This feature is locked. Action aborted.</p>`; },
+                    () => { panel.innerHTML = `<div class="panel-header"><h2>${feature.name}</h2></div><p>Redirecting to upgrade page...</p>`; window.location.href = '/upgrade'; }
+                );
+                return;
+            }
+            // ...existing code...
         }
-        // AI role-based UI separation
-        let aiRoleInfo = '';
-        let aiNameInputHtml = '';
-        let roleDropdownHtml = '';
-        if (feature.name === 'AI Controls & Settings') {
-                    // Advanced Device Control panel UI (Elite tier only)
-                    if (feature.name === 'Advanced Device Control' && dashboard.user_tier === 'elite') {
-                        panel.innerHTML += `<div class="adc-panel">
-                            <h3>Advanced Device Control (Elite Tier)</h3>
-                            <button id="adc-manage-devices">Manage Devices</button>
-                            <button id="adc-create-automation">Create Automation</button>
-                            <button id="adc-view-audit">View Audit Trail</button>
-                            <button id="adc-integrate-provider">Integrate External Provider</button>
-                            <button id="adc-ai-routine">Run Advanced AI Routine</button>
-                            <div id="adc-output" style="margin-top:1em;"></div>
-                        </div>`;
-                        // Button handlers
-                        const outputDiv = panel.querySelector('#adc-output');
-                        panel.querySelector('#adc-manage-devices').onclick = async function() {
-                            const res = await fetch('/device-control/devices');
-                            const data = await res.json();
-                            if (data.status === 'ok') {
-                                outputDiv.innerHTML = `<b>Managed Devices:</b><pre>${JSON.stringify(data.devices, null, 2)}</pre>`;
-                            } else {
-                                outputDiv.innerHTML = `<span style='color:red;'>${data.error}</span>`;
-                            }
-                        };
-                        panel.querySelector('#adc-create-automation').onclick = async function() {
-                            const name = prompt('Automation Name:');
-                            if (!name) return;
-                            const trigger = prompt('Trigger (e.g., time, event):');
-                            if (!trigger) return;
-                            const action = prompt('Action (e.g., turn on device):');
-                            if (!action) return;
-                            const res = await fetch('/device-control/automation', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ name, trigger, action })
-                            });
-                            const data = await res.json();
-                            if (data.status === 'ok') {
-                                outputDiv.innerHTML = `<b>Automation Created:</b><pre>${JSON.stringify(data.automation, null, 2)}</pre>`;
-                            } else {
-                                outputDiv.innerHTML = `<span style='color:red;'>${data.error}</span>`;
-                            }
-                        };
-                        panel.querySelector('#adc-view-audit').onclick = async function() {
-                            const res = await fetch('/device-control/audit-trail');
-                            const data = await res.json();
-                            if (data.status === 'ok') {
-                                outputDiv.innerHTML = `<b>Audit Trail:</b><pre>${JSON.stringify(data.audit, null, 2)}</pre>`;
-                            } else {
-                                outputDiv.innerHTML = `<span style='color:red;'>${data.error}</span>`;
-                            }
-                        };
-                        panel.querySelector('#adc-integrate-provider').onclick = async function() {
-                            const provider = prompt('Provider Name:');
-                            if (!provider) return;
-                            const res = await fetch('/device-control/integrate-provider', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ provider })
-                            });
-                            const data = await res.json();
-                            if (data.status === 'ok') {
-                                outputDiv.innerHTML = `<b>External Provider Integrated:</b><pre>${JSON.stringify(data.provider, null, 2)}</pre>`;
-                            } else {
-                                outputDiv.innerHTML = `<span style='color:red;'>${data.error}</span>`;
-                            }
-                        };
-                        panel.querySelector('#adc-ai-routine').onclick = async function() {
-                            const routine = prompt('Routine Name:');
-                            if (!routine) return;
-                            const res = await fetch('/device-control/ai-routine', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ routine })
-                            });
-                            const data = await res.json();
-                            if (data.status === 'ok') {
-                                outputDiv.innerHTML = `<b>AI Routine Executed:</b><pre>${JSON.stringify(data.details, null, 2)}</pre>`;
-                            } else {
-                                outputDiv.innerHTML = `<span style='color:red;'>${data.error}</span>`;
-                            }
-                        };
+
+        // Tab click handlers
+        tabsDiv.querySelectorAll('.dashboard-tab').forEach((tab, idx) => {
+            tab.onclick = () => {
+                tabsDiv.querySelectorAll('.dashboard-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                if (tab.classList.contains('disability-tab')) {
+                    renderPanel('disability');
+                } else {
+                    renderPanel(idx);
+                }
+            };
+        });
                     }
             // Emergency Protocol Routine UI
             panel.innerHTML += `<div style="margin:1em 0;"><button id="ai-emergency-btn">Trigger Emergency Protocol (Voice)</button></div>`;

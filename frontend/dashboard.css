@@ -1,3 +1,23 @@
+/* Disability Enhancements Panel Styles */
+.disability-header, .disability-controls {
+    background: #000 !important;
+    color: #fff !important;
+    border-radius: 8px;
+    padding: 1em;
+    font-size: 1.2em;
+}
+.disability-controls label {
+    display: block;
+    margin-bottom: 0.7em;
+    font-size: 1.1em;
+    color: #0ff !important;
+}
+.disability-tab {
+    background: #222 !important;
+    color: #0ff !important;
+    font-weight: bold;
+    border: 2px solid #0ff !important;
+}
 /* Annotation Modal (Elite) */
 .annotation-modal {
     position: fixed;
