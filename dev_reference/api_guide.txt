@@ -45,6 +45,13 @@ POST /logs/event
 }
 ```
 
+## Legal Disclaimers & Terms of Service
+- All API and integration features are provided as-is, with no guarantee of health, safety, or security outcomes.
+- The system is not a substitute for professional medical or security services.
+- No liability is accepted for failures, losses, or damages related to third-party devices, hubs, integrations, or services.
+- Users must review and accept the Terms of Service and all disclaimers before onboarding, signup, or download.
+- For full legal details, see the Terms of Service and Disclaimers documentation provided during onboarding and in the dashboard.
+
 ---
 For more details, see the user guide and developer documentation.
 

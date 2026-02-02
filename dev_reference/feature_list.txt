@@ -1,284 +1,103 @@
 2026-02-01: All core features, contracts, and modules (Bluetooth, Home Assistant, dashboard controls) are implemented and aligned across backend, Rust agent, and frontend. Build and deployment pipeline is functional. Ready for next feature/module expansion.
 
 Progression List (as of 2026-02-01):
-- Remote agent access (full implementation and UI)
-- Advanced mapping & editor (beyond basic controls)
-- Early access to new features (feature flag system, beta rollout)
-- Dedicated support (admin/support portal, ticketing)
-- Custom dashboard panels (user-configurable widgets)
-- Tiered AI roles (role management UI, backend enforcement)
-- Home Assistant integration (full device sync, advanced controls)
-- PayPal integration (live payment processing, backend verification)
-- Speech-to-text input (full accessibility integration)
-- Advanced device control (Pro/Elite tier features)
-- Priority support (workflow and escalation logic)
 
 Items/Features Yet to Be Implemented (as of 2026-02-01):
-- Advanced mapping & editor (beyond basic controls)
-
-- Dedicated support (admin/support portal, ticketing)
 
 
 
-- PayPal integration (live payment processing, backend verification)
 
 
-- Priority support (workflow and escalation logic)
+
 
 ### Purpose
-- Enable agent machines and local AI to discover and support a wide range of Bluetooth devices on the market.
-- Ensure seamless user experience by automating driver download, deployment, and installation locally (never on the server).
 
 ### Features
-- Local AI scans for available Bluetooth devices and identifies device type/model.
-- Automatic search for required drivers (manufacturer or trusted source) for detected Bluetooth devices.
-- Local download and installation of drivers on the user’s machine, with user/admin approval as needed.
-- Modular driver management: supports updates, removals, and reinstallation as devices are added/removed.
-- No driver or device data is sent to the server; all management is local for privacy and security.
-- User/admin can review, approve, or block driver installations.
 
 ### Logic
-- Bluetooth discovery and driver management is handled entirely by the local agent and AI module.
-- System is extensible to support new Bluetooth devices as they become available.
 
----
----
 
 ## Miscellaneous Device Recommendations
 
-- For best results, select devices that are compliant with one or more of the following ecosystems:
 	- Kasa (TP-Link): https://www.tp-link.com/us/smart-home/
 	- Bluetooth: https://www.bluetooth.com/
 	- Zigbee: https://zigbeealliance.org/solution/zigbee/
 	- Home Assistant: https://www.home-assistant.io/integrations/
-- Using devices from these providers ensures maximum compatibility, easy discovery, and seamless integration with the system.
-- Always check for compatibility with your chosen tier and local network setup before purchasing.
 
----
----
 
 ## Recommended Equipment/Hardware by Tier (User Shopping List)
 
-### Basic Tier
-- 1 central speaker/microphone (Bluetooth, Zigbee, Kasa, or Home Assistant compatible)
 	- Recommended: Conference call speaker/microphone system (Bluetooth compatible) for optimal room coverage and easy discovery by the system
-- 1 camera (local storage, event-driven)
-- Up to 2 pressure/leak sensors
-- 1 bed pad sensor
-- 2 motion detectors
-- 2 door/window sensors
-- 2 smart bulbs
-- 2 smart plugs
-- Zigbee router/coordinator (if not using Kasa or Home Assistant hub)
 
 ### Advanced Tier
-- Up to 4 speaker/microphones (Bluetooth, Zigbee, Kasa, or Home Assistant compatible)
 	- Recommended: Conference call speaker/microphone systems (Bluetooth compatible) for multi-room or large area coverage and reliable system discovery
-- Up to 2 cameras (local storage, event-driven/periodic)
-- Up to 6 pressure/leak sensors
-- 2 bed pad sensors
-- 4 motion detectors
-- 4 door/window sensors
-- 4 smart bulbs
-- 4 smart plugs
-- Zigbee router/coordinator (recommended for device balancing)
-- Home Assistant hub (optional, for advanced integrations)
 
 ### Pro/Unlimited Tier
-- Unlimited speaker/microphones (Bluetooth, Zigbee, Kasa, or Home Assistant compatible)
-- Up to 4 cameras (local storage, event-driven/periodic/limited continuous)
-- Unlimited pressure/leak sensors
-- Unlimited bed pad sensors
-- Unlimited motion detectors
-- Unlimited door/window sensors
-- Unlimited smart bulbs
-- Unlimited smart plugs
-- Multiple Zigbee routers/coordinators (for large device networks)
-- Home Assistant hub (recommended for advanced automation)
 
----
----
 
 ## Membership Tier Feature Outline
 
+
 ### Basic Tier
-- Security: Limited device support (pressure/leak sensors, bed pads, motion, door/window, smart bulbs/plugs), local notifications, no professional monitoring, AI for up to 2 individuals, no cloud storage by default.
-- Audio/Video: 1 central speaker/microphone, 1 camera, event-driven only, no live view, video not used for AI escalation, strict privacy, local notification.
-- Health & Wellness: Full access to reminders, check-ins, activity, environmental health, emergency detection, data export, notifications.
-- Device Discovery & Integration: Automatic, with tier enforcement by local AI, modular routines, local learning.
-- Backup & Restore: Local backup/restore only, server as last-resort failsafe.
 
 ### Advanced Tier
-- Security: Expanded device support, more escalation contacts, AI for multiple individuals, cloud backup (opt-in), enhanced pattern recognition.
-- Audio/Video: Up to 4 speaker/microphones, 2 cameras, event-driven and periodic, limited live view (local), video used for AI escalation, enhanced AI, remote notification.
-- Health & Wellness: Full access as in Basic.
-- Device Discovery & Integration: As in Basic, with more devices supported per tier.
-- Backup & Restore: Local backup/restore, server as last-resort failsafe.
 
 ### Pro/Unlimited Tier
-- Security: Unlimited device support, maximum escalation contacts, advanced AI, cloud backup (opt-in), audit trail, custom event triggers.
-- Audio/Video: Unlimited speaker/microphones, 4 cameras, event-driven/periodic/limited continuous, remote live view (with consent), advanced AI, audit trail, extended escalation.
-- Health & Wellness: Full access as in Basic.
-- Device Discovery & Integration: As in Basic, with unlimited devices supported per tier.
-- Backup & Restore: Local backup/restore, server as last-resort failsafe.
 
----
----
 
 ## Backup & Restore: Local-First, Server as Failsafe
 
 ### Purpose
-- Ensure user data, AI routines, and system state can be reliably backed up and restored, prioritizing local storage and privacy.
-- Minimize server demand and storage by using server-side backup/restore only as a last-resort failsafe.
 
 ### Features
-- Local backup and restore: All user data, AI routines, and system state can be backed up and restored directly on the user's machine(s).
-- Server backup/restore: Encrypted backup/restore points are sent to the server only as a failsafe for catastrophic events (e.g., device loss, unrecoverable local failure).
-- User/admin can trigger local or server backup/restore as needed; system defaults to local unless catastrophe detected or user requests server restore.
-- Server never stores raw device data or routines—only encrypted backup/restore points.
-- Backup/restore logic is modular and integrated with all other modules (AI, device discovery, routines, etc.).
 
 ### Logic
-- Local backup/restore is always preferred and default.
-- Server backup/restore is opt-in, encrypted, and only used for disaster recovery.
-- Minimizes server storage and bandwidth requirements while maximizing user control and privacy.
 
----
----
 
 ## Device Discovery & Integration: Global, AI-Enforced
 
 ### Purpose
-- Enable seamless device discovery, onboarding, and integration across all modules and tiers.
-- Enforce tier-level access and feature limits via local AI model logic.
-- Ensure all AI learning, routines, and predictive capabilities are modular and site-specific (local to user machine).
 
 ### Global Features (All Tiers)
-- Automatic device discovery (Zigbee, Kasa, Bluetooth, Home Assistant, etc.)
-- Device onboarding and assignment to appropriate modules (Security, Audio/Video, Wellness, etc.)
-- Tier-level access and feature enforcement by local AI (e.g., device limits, escalation permissions)
-- Modular AI: Each site/user has a local AI instance; no global/server-side AI for device logic or routines.
-- Routines: Users/admins can teach routines to the AI; predictive routines are built and refined locally.
-- AI monitors device usage, learns patterns, and adapts routines within tier constraints.
-- Only backup/restore points and crisis/escalation event data are sent to the server (never raw device data or routines).
 
 ### Logic
-- Device discovery and integration is always available, but tier-level enforcement is handled by the local AI.
-- All AI learning, routines, and predictions are local-first and privacy-preserving.
-- Server interaction is strictly limited to backup/restore and crisis/escalation events.
 
----
----
 
 ## Health & Wellness Module: Universal Access
 
 ### Purpose
-- Provide essential health and wellness monitoring, reminders, and reporting for all users, regardless of membership tier.
-- Ensure core health/safety features are never paywalled or restricted.
 
 ### Universal Features (All Tiers)
-- Medication reminders and adherence tracking
-- Daily/weekly/monthly wellness check-ins (mood, pain, sleep, hydration, etc.)
-- Activity and mobility tracking (steps, movement, inactivity alerts)
-- Environmental health monitoring (air quality, temperature, humidity, if sensors available)
-- Emergency health event detection (fall, distress, abnormal inactivity)
-- Health data export (user/admin-controlled, privacy-first)
-- Customizable notifications and escalation (user/admin-defined contacts)
-- Integration with other modules (e.g., Security, Audio/Video) for holistic health context
 
 ### Logic
-- All features above are available to every user, regardless of tier.
-- No device or feature limits for core health/wellness functions.
-- Advanced analytics, AI, or integrations may be tiered, but basic health/safety is always included.
 
----
----
 
 ## Audio/Video Module: Tiered Feature & Device Limits
 
 
 ### Purpose
-- Provide health/safety-focused audio and video monitoring, not general surveillance.
-- Enable event-driven audio/video capture, privacy-first design, and clear user/admin controls.
-- Avoid liability as a security/surveillance provider; all features must be opt-in and clearly messaged.
-- Video storage is always local (on user machine/device), never on the server/cloud by default. Video can be used by AI for escalation/event detection, but only in Advanced and Pro/Unlimited tiers (not Basic).
-- Audio must be Bluetooth-capable or compatible with Home Assistant, Zigbee mesh network coordinator/router, or Kasa ecosystem. (Network implementation details to be addressed later.)
 
 ### Device/Feature Limits by Tier
 
 
 #### Basic Tier
-- 1 central speaker/microphone device per household (must be Bluetooth, Home Assistant, Zigbee, or Kasa compatible).
-- 1 video device (camera) per household, but video is stored only locally and not used for AI escalation/monitoring.
-- Audio: Event-driven only (e.g., loud noise, fall, distress keyword). No continuous streaming.
-- Video: Event-driven snapshots or 10-second clips, only on critical events (fall, distress, door open at night).
-- No remote live viewing. No cloud storage unless explicitly enabled by user.
-- AI: Pattern recognition for distress sounds/words, fall detection (basic), privacy masking (faces/rooms not monitored).
-- Escalation: Local notification only; user/admin must opt-in for any remote alerting.
-- All recordings auto-delete after 24 hours unless flagged by user/admin.
 
 
 #### Advanced Tier
-- Up to 4 speaker/microphone devices per household (Bluetooth, Home Assistant, Zigbee, or Kasa compatible; required receivers provided if not covered by network).
-- Up to 2 video devices per household; all video stored locally, and video can be used by AI for escalation/event detection.
-- Audio: Event-driven and short periodic sampling (e.g., 10s every 30min, user-configurable).
-- Video: Event-driven clips up to 30 seconds, limited live view (local network only, no cloud by default).
-- AI: Enhanced pattern recognition (distress, inactivity, abnormal sounds), privacy masking, basic multi-person detection, video-based escalation logic enabled.
-- Escalation: Local and remote notifications (user/admin, up to 2 contacts), optional cloud backup (encrypted, opt-in).
-- Recordings auto-delete after 72 hours unless flagged.
 
 
 #### Pro/Unlimited Tier
-- Unlimited speaker/microphone devices per household (Bluetooth, Home Assistant, Zigbee, or Kasa compatible; required receivers provided as needed).
-- Up to 4 video devices per household; all video stored locally, and video can be used by AI for escalation/event detection.
-- Audio: Event-driven, periodic sampling, and limited continuous monitoring (user-configurable, privacy warnings required).
-- Video: Event-driven, periodic, and limited live view (remote allowed, with explicit consent and audit logging).
-- AI: Advanced pattern recognition (multi-person, inactivity, distress, environmental context), privacy masking, custom event triggers, video-based escalation logic enabled.
-- Escalation: Local, remote, and emergency contact notifications (up to 5 contacts), cloud backup (encrypted, opt-in), audit trail for all access/events.
-- Recordings auto-delete after 7 days unless flagged.
 
 ### General Rules
-- All audio/video features are opt-in, with clear privacy controls and audit logs.
-- No continuous surveillance; all monitoring is event-driven or user-configurable with strong privacy defaults.
-- All cloud features require explicit user/admin consent.
-- All escalation logic is local-first, with cloud/remote backup only if enabled.
-- Device and feature limits are enforced per household, not per user.
 
----
 
 ## Security Module: Tier-Based Device & Feature Limits
 
 ### Basic Tier (Health & Safety Focus)
-- Pressure/Leak Sensors: Up to 30 strip sensors (traffic flow, under mats/carpets, under sinks)
-- Bed Pad Sensors: Up to 2
-- Motion Detectors: Up to 3 (wall-mounted)
-- Door Sensors: Up to 3
-- Window Sensors: Up to 6
-- Smart Bulbs: Up to 6 (alerts, strobing, routine control)
-- Smart Plugs: Up to 6 (peripheral alerts/devices)
-- Zigbee Router Limit: Max 15 sensors per router (auto-balance recommended)
-- AI: Pattern recognition, light control, strobing for alerts, monitoring for up to 2 individuals
-- Call-Out Feature: 1 Emergency Contact (SMS, text, or call), with escalation logic
-- Disclaimer: Not for professional security use. Health & safety monitoring only.
 
 ### Advanced Tier (Expanded Health & Safety, More Flexibility)
-- Pressure/Leak Sensors: Up to 60
-- Bed Pad Sensors: Up to 4
-- Motion Detectors: Up to 6
-- Door Sensors: Up to 6
-- Window Sensors: Up to 12
-- Smart Bulbs: Up to 12
-- Smart Plugs: Up to 12
-- More Zigbee routers supported (auto-detect and balance)
-- Call-Out Feature: Up to 3 Emergency Contacts
-- AI: Multi-person tracking, more complex automations
-- Integration: Option to connect to select third-party health/security systems
 
 ### Pro/Unlimited Tier (Full Customization, Integration)
-- Unlimited or very high device limits (for large homes, group homes, or facilities)
-- Unlimited Emergency Contacts
-- Full integration with external alarm/security/health monitoring providers
-- Custom automations, advanced AI, and admin tools
 
 ### Call-Out & Escalation Logic (All Tiers)
 1. Event Detected: AI notices a potential emergency (fall, no movement, abnormal pattern)
@@ -288,9 +107,6 @@ Items/Features Yet to Be Implemented (as of 2026-02-01):
 5. All contacts and escalation logic should be configurable per tier
 
 Notes:
-- Health & safety features are always prominent; security features are secondary and clearly separated.
-- Device management UI and backend logic should enforce these limits per user account.
-- All escalation and call-out data should be local-first, with cloud backup only if user consents.
 
 
 # Feature & Element Reference List
@@ -342,20 +158,30 @@ Notes:
 
 
 ## AI Templates (see ai/template_library.json for details)
-- Morning Routine
-- Away Mode
-- Night Routine
-- Guest Welcome
-- Vacation Mode
-- Energy Saver
-- Security Alert
-- Maintenance Reminder
-- Custom Automation
 
 
 ## Notes
-- Add/remove features as needed during build.
-- Use this file to track, discuss, and limit features for AI, user tiers, or admin roles.
+
+## Password Policy
+
+- All temporary passwords (for all users, roles, groups, sub-groups, and admins, across all membership tiers) must be reset by the user upon first successful login.
+- System will enforce a password reset workflow immediately after initial access with a temporary password.
+- Applies to:
+	- Admins
+	- Admin roles
+	- Groups
+	- Sub-groups
+	- Standard users
+- This policy ensures account security and compliance for all access levels.
+
+**Note:** All support staff, in all roles (including Admin), can establish temporary passwords for users to gain full access to their respective accounts, but only after verifying account status and existence in the system.
+
+**Two-Factor Verification for Temporary Passwords:**
+- If a request for a temporary password is made, two-factor verification is required before issuance.
+	- SMS/Text: A randomly generated six-digit code will be sent to the registered phone number. The user must enter this code to verify.
+	- Email: A verification link will be sent to the registered email address. The user must click the link to verify.
+- Both SMS/Text and Email verification must be completed before a temporary password can be issued.
+- This policy applies system-wide and will be integrated into all user, admin, and support workflows.
 
 
 
@@ -450,4 +276,243 @@ If you want to add any of the
 
 
 
-453>
+
+Used 1 reference
+Fetched 5 resources
+There is little direct content from the legal sources fetched, but here’s a summary of key liability exposures for home automation, remote monitoring, and AI-driven smart home systems based on legal best practices and industry knowledge:
+
+1. Privacy & Data Security
+
+Collecting, storing, or transmitting user data (especially video/audio) exposes you to privacy law risks (GDPR, CCPA, state/federal wiretap laws).
+Breaches or unauthorized access can result in liability for damages, regulatory fines, and lawsuits.
+Best practice: Encrypt all sensitive data, provide clear privacy policies, and allow users to control their data.
+2. Surveillance & Consent
+
+Recording or monitoring users (especially in private spaces) without explicit, informed consent can lead to civil and criminal liability.
+Remote support and live feeds must be opt-in, with audit trails and user/admin controls.
+3. Accessibility
+
+Failure to provide accessible interfaces (ADA, WCAG compliance) can result in discrimination claims or regulatory action.
+All features should be usable by people with disabilities.
+4. Emergency Response
+
+Marketing or implying your system provides life/safety monitoring (e.g., fall detection, emergency escalation) may create a duty of care.
+Failure to perform as advertised (missed alerts, system downtime) can result in negligence claims.
+5. Product Liability
+
+Defects in hardware/software that cause property damage, injury, or loss may expose you to strict liability or negligence claims.
+Regular updates, clear disclaimers, and robust QA/testing are essential.
+6. Third-Party Integrations
+
+Liability can extend to failures in third-party devices/services you integrate with (e.g., Home Assistant, Zigbee, Kasa).
+Contracts and user agreements should clarify limits of responsibility.
+7. User Agreements & Disclaimers
+
+Well-drafted terms of service, privacy policies, and disclaimers are critical to limit liability.
+Users should acknowledge risks, limits of monitoring, and their own responsibilities.
+8. Security Vulnerabilities
+
+Unpatched vulnerabilities can be exploited, leading to data loss, privacy breaches, or physical harm.
+Ongoing security audits 453>..
+
+
+
+================================================================
+WORK TO DATE/NEEED WORK/PENDING ACTIONS/FEATURES LIST/RECENT PROGRESS, AS OF 
+02/02/2026
+===============================================================
+
+User: Multi-page membership website with FastAPI backend (Python, Rust FFI) and static HTML/CSS/JS frontend. Pages: index.html (landing), auth.html (signup/login tabs), tier-selection.html (store), onboarding.html (questionnaire), dashboard-download.html (download/welcome). Backend: FastAPI with endpoints for signup, login, tier selection, onboarding, dashboard download. Rust FFI for agent logic. Navigation links between all pages. Expandable, modular structure for future features.
+
+GitHub Copilot: Generating plan to create a new workspace
+
+Getting setup information
+
+Created [](file:///c%3A/Users/brent/Desktop/Supplimental/Core%20Website_mappedhome.com/.github)
+
+Created [](file:///c%3A/Users/brent/Desktop/Supplimental/Core%20Website_mappedhome.com/.github/copilot-instructions.md)
+
+Created [](file:///c%3A/Users/brent/Desktop/Supplimental/Core%20Website_mappedhome.com/README.md)
+
+Created [](file:///c%3A/Users/brent/Desktop/Supplimental/Core%20Website_mappedhome.com/backend)
+
+Created [](file:///c%3A/Users/brent/Desktop/Supplimental/Core%20Website_mappedhome.com/frontend)
+
+Created [](file:///c%3A/Users/brent/Desktop/Supplimental/Core%20Website_mappedhome.com/rust_agent)
+
+Created [](file:///c%3A/Users/brent/Desktop/Supplimental/Core%20Website_mappedhome.com/backend/main.py)
+
+Created [](file:///c%3A/Users/brent/Desktop/Supplimental/Core%20Website_mappedhome.com/backend/pyproject.toml)
+
+Created [](file:///c%3A/Users/brent/Desktop/Supplimental/Core%20Website_mappedhome.com/frontend/index.html)
+
+Created [](file:///c%3A/Users/brent/Desktop/Supplimental/Core%20Website_mappedhome.com/frontend/auth.html)
+
+Created [](file:///c%3A/Users/brent/Desktop/Supplimental/Core%20Website_mappedhome.com/frontend/tier-selection.html)
+
+Created [](file:///c%3A/Users/brent/Desktop/Supplimental/Core%20Website_mappedhome.com/frontend/onboarding.html)
+
+Created [](file:///c%3A/Users/brent/Desktop/Supplimental/Core%20Website_mappedhome.com/frontend/dashboard-download.html)
+
+Created [](file:///c%3A/Users/brent/Desktop/Supplimental/Core%20Website_mappedhome.com/frontend/style.css)
+
+Created [](file:///c%3A/Users/brent/Desktop/Supplimental/Core%20Website_mappedhome.com/frontend/auth.js)
+
+Created [](file:///c%3A/Users/brent/Desktop/Supplimental/Core%20Website_mappedhome.com/rust_agent/Cargo.toml)
+
+Created [](file:///c%3A/Users/brent/Desktop/Supplimental/Core%20Website_mappedhome.com/rust_agent/src/lib.rs)
+
+Created 9 todos
+
+Configuring a Python Environment
+Completed with input: {
+  "resourcePath": "c:\\Users\\brent\\Desktop\\Supplimental\\Core Website_mappedhome.com\\backend"
+}
+
+Creating a Virtual Environment
+Completed with input: {
+  "resourcePath": "c:\\Users\\brent\\Desktop\\Supplimental\\Core Website_mappedhome.com\\backend"
+}
+
+Installing packages fastapi, pydantic, uvicorn[standard] in Python 3.12.10 (.venv)
+Completed with input: {
+  "packageList": [
+    "fastapi",
+    "uvicorn[standard]",
+    "pydantic"
+  ],
+  "resourcePath": "c:\\Users\\brent\\Desktop\\Supplimental\\Core Website_mappedhome.com\\backend"
+}
+
+Ran terminal command: cargo build
+
+Ran terminal command: cargo build
+
+Ran terminal command: cd rust_agent; cargo build
+
+Ran terminal command: cd ../backend; uvicorn main:app --reload
+
+Ran terminal command: cd backend; ..\.venv\Scripts\python.exe -m uvicorn main:app --reload
+
+Starting: *Launch project (prompt for debug mode)* (8/9)
+
+The project is scaffolded and running:
+- Backend: FastAPI server is running (Python, Rust FFI ready)
+- Frontend: Static HTML/CSS/JS pages created with navigation
+- Rust agent: Compiled and ready for FFI integration
+- Documentation: README and copilot-instructions.md are present
+
+Would you like to launch the project in debug mode or need further customization?
+
+Made changes.
+
+User: Great Job! thank you, I was losing my mind.. lol
+
+GitHub Copilot: You're welcome! If you need more features, debugging, or future expansions, just let me know—I'm here to help.
+
+User: I'm thinking we will need and images.jpeg file in here for stock images
+
+GitHub Copilot: Created [](file:///c%3A/Users/brent/Desktop/Supplimental/Core%20Website_mappedhome.com/frontend/images.jpeg)
+
+A placeholder images.jpeg file has been added to the frontend directory. Replace it with your actual stock images as needed. If you want to add or organize more images, let me know!
+
+Made changes.
+
+User: Globally, I want a light leather tan backgound on all of the pages, for now if possible textured
+
+GitHub Copilot: Created [](file:///c%3A/Users/brent/Desktop/Supplimental/Core%20Website_mappedhome.com/frontend/leather-texture.jpg)
+
+Using "Apply Patch"
+
+
+```
+
+```
+A seamless light leather tan texture background has been added to all pages. The style is now globally applied—refresh your browser to see the effect. If you want a different texture or further adjustments, just let me know!
+
+Made changes.
+
+User: now, how should I section this out and what content do you suggest here (don't do anything, just comment)
+
+GitHub Copilot: For a modern landing page, consider these sections:
+
+1. **Hero Section**: Eye-catching headline, subheading, and a call-to-action (CTA) button (e.g., “Get Started” or “Join Now”). Add a relevant image or illustration.
+
+2. **Features/Benefits**: Briefly highlight 3–4 key features or benefits of your membership/service, each with an icon or small image.
+
+3. **How It Works**: Simple 3-step process (e.g., Sign Up → Choose Tier → Get Started).
+
+4. **Testimonials**: Short quotes from users or placeholders for future testimonials.
+
+5. **Call to Action**: Another CTA, such as “Sign Up Free” or “See Membership Tiers.”
+
+6. **Footer**: Contact info, social links, copyright, and navigation.
+
+You can use semantic HTML5 elements like `<section>`, `<header>`, `<main>`, and `<footer>` for structure. Each section should be visually distinct, with clear headings and concise content.
+
+User: what do you think
+
+GitHub Copilot: Your approach is solid! Using clear sections (hero, features, how it works, testimonials, CTA, footer) will make the landing page engaging and easy to navigate. This structure is proven to convert visitors and guide them through your value proposition. With your leather background and navigation, it will look professional and inviting. If you want to refine content or add interactive elements, just ask!
+
+User: okay, so do me a favor here
+
+GitHub Copilot: Of course! Please let me know what specific favor or change you’d like me to make to your landing page or project, and I’ll take care of it.
+
+User: create a notes.txt file, document everyting we have done, including seperation of the modules and exporting them out of the project for later implimentation.  document that we are using existing work in modularly, but building the project in natural steps, to refine and be more managable.  also document that we are starting out with the basics front end schema and working from the front to the back end, as we are building out this project, due to previous issues with a larger build out. 
+
+GitHub Copilot: Created [](file:///c%3A/Users/brent/Desktop/Supplimental/Core%20Website_mappedhome.com/notes.txt)
+
+A notes.txt file has been created, documenting the modular structure, development approach, and rationale for building the project step by step from frontend to backend. This will help guide future work and clarify the project's evolution. If you need more details or updates, just let me know!
+
+Made changes.
+
+User: also timestamp it for me too
+
+GitHub Copilot: Using "Apply Patch"
+
+Here’s a summary of your current project status based on notes.txt and feature_list.txt:
+
+Recent Progress (notes.txt)
+
+AI health/diagnostic tool fully integrated (Rust, backend, frontend).
+Text-to-speech and speech-to-text features implemented for all tiers.
+AI model supports real device events, emergency triggers, and audible learning.
+Emergency Services tab added with editable escalation contacts and panic button.
+Voice recognition for user/family input refinement.
+All AI routines are local (except backup/restore).
+Feature notification flags and tier-based upgrade prompts in dashboard.
+Backend endpoints for emergency escalation and contact updates.
+Accessibility: visual alerts, captions, TTS/STT, keyboard navigation, high-contrast UI, ARIA roles.
+Modular backend (cache_utils.py, usb_api.py, ticket_api.py, logs_api.py, external_api.py).
+Compression (gzip) for disk/database writes; frontend decompresses.
+3D mapping/AR/VR entry point and UI.
+Security: live video/audio feeds only during remote support, no server recording, strong authentication, all actions logged.
+System optimized for performance, storage, extensibility.
+No errors in backend, frontend, or Rust agent; all endpoints and contracts present and callable.
+Pending: continue accessibility audit, further contract validation, deeper Rust/Python integration tests, monitor idle dependencies, document new feature requests/issues.
+Feature List (feature_list.txt)
+
+All core features, contracts, and modules (Bluetooth, Home Assistant, dashboard controls) are implemented and aligned.
+Progression: remote agent access, advanced mapping/editor, feature flag system, support portal/ticketing, custom dashboard panels, tiered AI roles, Home Assistant integration, PayPal, speech-to-text, advanced device control, priority support.
+Items yet to be implemented: advanced mapping/editor, dedicated support portal/ticketing, PayPal integration, priority support.
+Device recommendations and tier-based hardware lists.
+Detailed tier feature outlines (Basic, Advanced, Pro/Unlimited).
+Backup/restore: local-first, server as failsafe.
+Device discovery/integration: global, AI-enforced, privacy-first.
+Health & wellness: universal access, not paywalled.
+Audio/video: privacy-first, opt-in, tiered limits, no default cloud storage.
+Security: tier-based device/feature limits, escalation logic.
+Core modules/roles: security, environmental, energy, access, audio/video, health, automation, device onboarding, notification/escalation, custom modules.
+AI templates and routines.
+Advanced mapping/editor: interactive, drag/drop, zone drawing, live status, versioning, tier enforcement, accessibility, future-proofing.
+Best practices: user management, audit logs, real-time collaboration, advanced visualization, extensibility, security, testing, documentation, accessibility.
+Liability exposures (recently added): privacy/data security, surveillance/consent, accessibility, emergency response, product liability, third-party integrations, user agreements/disclaimers, security vulnerabilities.
+Pending/Next Actions
+
+Continue accessibility audit and expand compliance features.
+Further contract validation and live endpoint result checks (if requested).
+Deeper Rust/Python integration tests (if requested).
+Monitor idle dependencies for future device installs.
+Document any new feature requests or compliance issues.
+You are in a strong position: the system is modular, compliant, and extensible, with most core features implemented and documented. Remaining work is focused on advanced mapping/editor, support portal, payment integration, and ongoing compliance/security/documentation. Let me know if you want to focus on any specific area next!
+

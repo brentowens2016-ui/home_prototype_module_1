@@ -39,5 +39,13 @@
 - Only authorized remote agents can view your live streams, and a privacy notice is always displayed.
 - All remote monitoring actions are logged for your security and compliance.
 
+## Legal Disclaimers & Terms of Service
+- This system is NOT a medical device or professional security service. It is intended for general home monitoring and automation only.
+- No liability is accepted for health outcomes, emergency response, or security incidents. Users are responsible for their own safety and compliance with local laws.
+- The system does not guarantee detection, notification, or prevention of any emergency, medical, or security event.
+- No responsibility is accepted for losses, damages, or malfunctions of any third-party devices, hubs, integrations, or connected services.
+- By using this system, you acknowledge and accept all disclaimers and the full Terms of Service, which must be reviewed and accepted during onboarding and before download.
+- For full details, see the Terms of Service and Disclaimers page during onboarding and in the dashboard.
+
 ---
 For advanced usage and security details, see the API guide and security documentation.

@@ -1,3 +1,36 @@
+import base64
+from cryptography.fernet import Fernet
+import logging
+
+# --- Encryption Utilities ---
+class KeyManager:
+    # In production, use a secure key vault/service
+    _master_key = Fernet.generate_key()
+    @staticmethod
+    def get_key():
+        return KeyManager._master_key
+
+def encrypt_field(value: str) -> str:
+    if not value:
+        return value
+    f = Fernet(KeyManager.get_key())
+    return f.encrypt(value.encode()).decode()
+
+def decrypt_field(value: str) -> str:
+    if not value:
+        return value
+    f = Fernet(KeyManager.get_key())
+    return f.decrypt(value.encode()).decode()
+
+# --- Audit Logging ---
+audit_logger = logging.getLogger('audit')
+audit_logger.setLevel(logging.INFO)
+fh = logging.FileHandler('audit.log')
+fh.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
+audit_logger.addHandler(fh)
+
+def log_audit(user_id, action, field=None):
+    audit_logger.info(f"user={user_id} action={action} field={field}")
 from fastapi import FastAPI, Response, Request, Depends, HTTPException
 from fastapi.responses import StreamingResponse, JSONResponse
 from typing import List
@@ -320,34 +353,59 @@ class Ticket(BaseModel):
 
 tickets = {}
 
+
+# --- Secure Ticket Creation with Field-Level Encryption and Audit Logging ---
 @app.post("/tickets/create")
 async def create_ticket(request: Request):
     data = await request.json()
     ticket_id = str(uuid.uuid4())
+    enc_user_id = encrypt_field(data.get("user_id", ""))
+    enc_subject = encrypt_field(data.get("subject", ""))
+    enc_description = encrypt_field(data.get("description", ""))
     ticket = Ticket(
         id=ticket_id,
-        user_id=data.get("user_id", ""),
-        subject=data.get("subject", ""),
-        description=data.get("description", ""),
+        user_id=enc_user_id,
+        subject=enc_subject,
+        description=enc_description,
         priority=data.get("priority", "normal"),
         created_at=data.get("created_at", ""),
         updated_at=data.get("created_at", ""),
         messages=[]
     )
     tickets[ticket_id] = ticket
+    log_audit(data.get("user_id", ""), "create_ticket", field="user_id,subject,description")
     return {"status": "ok", "ticket": ticket.dict()}
 
+
+# --- Secure Ticket Listing with Decryption and Audit Logging ---
 @app.get("/tickets/list")
 async def list_tickets():
-    return {"tickets": [t.dict() for t in tickets.values()]}
+    result = []
+    for t in tickets.values():
+        ticket_dict = t.dict()
+        ticket_dict["user_id"] = decrypt_field(ticket_dict["user_id"])
+        ticket_dict["subject"] = decrypt_field(ticket_dict["subject"])
+        ticket_dict["description"] = decrypt_field(ticket_dict["description"])
+        result.append(ticket_dict)
+        log_audit(ticket_dict["user_id"], "list_ticket", field="user_id,subject,description")
+    return {"tickets": result}
 
+
+# --- Secure Ticket Retrieval with Decryption and Audit Logging ---
 @app.get("/tickets/{ticket_id}")
 async def get_ticket(ticket_id: str):
     ticket = tickets.get(ticket_id)
     if not ticket:
         return JSONResponse(status_code=404, content={"error": "Ticket not found."})
-    return {"ticket": ticket.dict()}
+    ticket_dict = ticket.dict()
+    ticket_dict["user_id"] = decrypt_field(ticket_dict["user_id"])
+    ticket_dict["subject"] = decrypt_field(ticket_dict["subject"])
+    ticket_dict["description"] = decrypt_field(ticket_dict["description"])
+    log_audit(ticket_dict["user_id"], "get_ticket", field="user_id,subject,description")
+    return {"ticket": ticket_dict}
 
+
+# --- Secure Ticket Update with Field-Level Encryption and Audit Logging ---
 @app.post("/tickets/update/{ticket_id}")
 async def update_ticket(ticket_id: str, request: Request):
     data = await request.json()
@@ -356,8 +414,16 @@ async def update_ticket(ticket_id: str, request: Request):
         return JSONResponse(status_code=404, content={"error": "Ticket not found."})
     for field in ["status", "priority", "assigned_to", "description", "updated_at"]:
         if field in data:
-            setattr(ticket, field, data[field])
-    return {"status": "ok", "ticket": ticket.dict()}
+            if field == "description":
+                setattr(ticket, field, encrypt_field(data[field]))
+            else:
+                setattr(ticket, field, data[field])
+    log_audit(decrypt_field(ticket.user_id), "update_ticket", field="description")
+    ticket_dict = ticket.dict()
+    ticket_dict["user_id"] = decrypt_field(ticket_dict["user_id"])
+    ticket_dict["subject"] = decrypt_field(ticket_dict["subject"])
+    ticket_dict["description"] = decrypt_field(ticket_dict["description"])
+    return {"status": "ok", "ticket": ticket_dict}
 
 @app.post("/tickets/message/{ticket_id}")
 async def add_ticket_message(ticket_id: str, request: Request):
@@ -627,6 +693,95 @@ def list_bluetooth_devices():
     ]
     return JSONResponse([d.dict() for d in devices])
 # ...existing code...
+import random
+import string
+
+# --- Two-Factor Temp Password Workflow ---
+temp_password_requests = {}
+
+def generate_six_digit_code():
+    return ''.join(random.choices(string.digits, k=6))
+
+def generate_temp_password(length=16):
+    return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+
+# Endpoint: Automated temp password issuance if support unavailable
+@app.post("/auth/auto-issue-temp-password")
+async def auto_issue_temp_password(request: Request):
+    data = await request.json()
+    user_id = data.get("user_id")
+    email = data.get("email")
+    # TODO: Check if support is unavailable (e.g., service load, holiday)
+    # For now, always allow for demonstration
+    if not user_id or not email:
+        return JSONResponse(status_code=400, content={"error": "Missing user_id or email."})
+    temp_pw = generate_temp_password(16)
+    # TODO: Store temp password in user account (force reset on login)
+    # TODO: Integrate with real email provider
+    print(f"[DEBUG] Auto-issued temp password for {user_id}: {temp_pw} (sent to {email})")
+    # Simulate sending email
+    send_support_email("Your Temporary Password", f"Your temporary password is: {temp_pw}\nPlease reset it after login.")
+    return {"status": "ok", "message": "Temporary password sent to your registered email.", "temp_password": temp_pw}
+
+# Endpoint: Request temp password (initiates 2FA)
+@app.post("/auth/request-temp-password")
+async def request_temp_password(request: Request):
+    data = await request.json()
+    user_id = data.get("user_id")
+    email = data.get("email")
+    phone = data.get("phone")
+    # TODO: Verify user/account exists and is eligible
+    if not user_id or not email or not phone:
+        return JSONResponse(status_code=400, content={"error": "Missing user_id, email, or phone."})
+    sms_code = generate_six_digit_code()
+    temp_password_requests[user_id] = {
+        "email": email,
+        "phone": phone,
+        "sms_code": sms_code,
+        "sms_verified": False,
+        "email_verified": False,
+        "temp_password": None
+    }
+    # TODO: Send SMS code to phone (integrate with SMS provider)
+    print(f"[DEBUG] SMS code for {user_id}: {sms_code}")
+    # TODO: Send email with verification link (integrate with email provider)
+    print(f"[DEBUG] Email verification link for {user_id}: /auth/verify-email/{user_id}")
+    return {"status": "pending", "message": "Verification codes sent."}
+
+# Endpoint: Verify SMS code
+@app.post("/auth/verify-sms")
+async def verify_sms(request: Request):
+    data = await request.json()
+    user_id = data.get("user_id")
+    code = data.get("code")
+    req = temp_password_requests.get(user_id)
+    if not req or req["sms_code"] != code:
+        return JSONResponse(status_code=400, content={"error": "Invalid code or request."})
+    req["sms_verified"] = True
+    return {"status": "ok", "message": "SMS verified."}
+
+# Endpoint: Verify email (simulated by GET for link click)
+@app.get("/auth/verify-email/{user_id}")
+async def verify_email(user_id: str):
+    req = temp_password_requests.get(user_id)
+    if not req:
+        return JSONResponse(status_code=400, content={"error": "Invalid request."})
+    req["email_verified"] = True
+    return {"status": "ok", "message": "Email verified. You may now complete temp password request."}
+
+# Endpoint: Issue temp password if both verifications complete
+@app.post("/auth/issue-temp-password")
+async def issue_temp_password(request: Request):
+    data = await request.json()
+    user_id = data.get("user_id")
+    req = temp_password_requests.get(user_id)
+    if not req or not req["sms_verified"] or not req["email_verified"]:
+        return JSONResponse(status_code=400, content={"error": "Both verifications required."})
+    temp_pw = generate_temp_password()
+    req["temp_password"] = temp_pw
+    # TODO: Store temp password in user account (force reset on login)
+    print(f"[DEBUG] Issued temp password for {user_id}: {temp_pw}")
+    return {"status": "ok", "temp_password": temp_pw}
 
 # Accessibility: text notifications and speech-to-text input
 @app.post("/accessibility/notify")

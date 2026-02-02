@@ -100,8 +100,36 @@ tutorialBar.innerHTML = `
     <button onclick="launchTutorial('mapping')">Mapping Tutorial</button>
     <button onclick="launchTutorial('device')">Device Control Tutorial</button>
     <button onclick="launchTutorial('emergency')">Emergency Protocol Tutorial</button>
+    <button id="setup-tutorial-btn" style="background:#0078d4;color:#fff;font-weight:bold;font-size:1.1em;margin-left:24px;">Set_up Tutorial</button>
 `;
 document.body.appendChild(tutorialBar);
+
+// Set_up Tutorial logic
+document.getElementById('setup-tutorial-btn').onclick = function() {
+    // Open the setup tutorial in a modal (iframe) for accessibility
+    let modal = document.createElement('div');
+    modal.className = 'setup-tutorial-modal';
+    modal.style.position = 'fixed';
+    modal.style.top = '5%';
+    modal.style.left = '50%';
+    modal.style.transform = 'translateX(-50%)';
+    modal.style.width = '70vw';
+    modal.style.height = '80vh';
+    modal.style.background = '#fff';
+    modal.style.border = '2px solid #0078d4';
+    modal.style.zIndex = '10050';
+    modal.style.overflow = 'auto';
+    modal.style.padding = '0';
+    modal.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;background:#0078d4;color:#fff;padding:12px 24px;">
+            <h2 style="margin:0;font-size:1.3em;">Set_up Tutorial</h2>
+            <button style="background:#fff;color:#0078d4;font-weight:bold;font-size:1.1em;border:none;padding:4px 16px;cursor:pointer;" onclick="this.closest('.setup-tutorial-modal').remove()">Close</button>
+        </div>
+        <iframe src="dashboard-setup-tutorial.html" style="width:100%;height:calc(100% - 56px);border:none;"></iframe>
+    `;
+    document.body.appendChild(modal);
+    trapFocus('.setup-tutorial-modal');
+};
 // --- Accessibility Enhancements ---
 function setAriaAndAccessibility(element, role, label) {
     if (role) element.setAttribute('role', role);
@@ -394,12 +422,12 @@ window.logFrontendEmergency = logFrontendEmergency;
                                                         }
                                                         div.innerHTML = html;
                                                         // Example: decompress mapping data from /mapping/load
-                                                        const res = await fetch('/mapping/load');
-                                                        const data = await res.json();
-                                                        let mapping = data.mapping;
-                                                        if (data.compression === 'gzip+base64') {
+                                                        const mappingRes = await fetch('/mapping/load');
+                                                        const mappingData = await mappingRes.json();
+                                                        let mapping = mappingData.mapping;
+                                                        if (mappingData.compression === 'gzip+base64') {
                                                             try {
-                                                                mapping = JSON.parse(decompressGzipBase64(data.mapping));
+                                                                mapping = JSON.parse(decompressGzipBase64(mappingData.mapping));
                                                             } catch (e) {
                                                                 mapping = {};
                                                             }
@@ -1156,7 +1184,7 @@ window.logFrontendEmergency = logFrontendEmergency;
                     ctx.restore();
                 });
                 ctx.restore();
-            }
+
 
             if (mappingCanvas) {
                         // Wall drawing/erasing
@@ -1276,35 +1304,45 @@ window.logFrontendEmergency = logFrontendEmergency;
             }
 
             // Room palette drag/drop
-            document.querySelectorAll('.room-palette-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
+            document.querySelectorAll('.room-palette-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
                     // Add a new room at default position/size
                     const type = btn.dataset.room;
                     const colorMap = {bedroom:'#cce6ff',bathroom:'#e6ccff',kitchen:'#ffe6cc',living:'#ccffe6',dining:'#fffacc',closet:'#e6e6e6',pantry:'#f5e6cc',balcony:'#ccf5ff',service:'#ffd6cc'};
                     rooms.push({
-                        x: 100+Math.random()*200, y: 100+Math.random()*200, w: 120, h: 90,
-                        label: type.charAt(0).toUpperCase()+type.slice(1), color: colorMap[type]||'#cce6ff', type
+                        x: 100+Math.random()*200,
+                        y: 100+Math.random()*200,
+                        w: 120,
+                        h: 90,
+                        label: type.charAt(0).toUpperCase()+type.slice(1),
+                        color: colorMap[type]||'#cce6ff',
+                        type: type
                     });
                     drawMappingCanvas();
                 });
             });
+
             // Device palette drag/drop
-            document.querySelectorAll('.device-palette-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
+            document.querySelectorAll('.device-palette-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
                     // Add a new device at default position
                     const type = btn.dataset.device;
                     devices.push({
-                        x: 200+Math.random()*200, y: 200+Math.random()*200, label: type.charAt(0).toUpperCase()+type.slice(1), illum: true, type
+                        x: 200+Math.random()*200,
+                        y: 200+Math.random()*200,
+                        label: type.charAt(0).toUpperCase()+type.slice(1),
+                        illum: true,
+                        type: type
                     });
                     drawMappingCanvas();
                 });
             });
-            // TODO: Add drag-to-move, snap-to-grid/wall, and precise placement logic
-            // TODO: Add validation for total mapped area vs. allowed square footage
+
+
         // Feature notification flags
         const newFeatures = [
             { name: 'Advanced Mapping', tier: 'pro', description: 'Edit and manage advanced maps.' },
-            { name: 'Remote Agent Access', tier: 'elite', description: 'Control your home remotely.' }
+            { name: 'Remote Agent Access', tier: 'elite', description: 'Control your home remotely.' },
             // Add more features as needed
         ];
         newFeatures.forEach(feature => {
@@ -1313,16 +1351,16 @@ window.logFrontendEmergency = logFrontendEmergency;
             flag.style.position = 'fixed';
             flag.style.bottom = '10px';
             flag.style.left = '10px';
-        flag.innerHTML = `<b>New Feature:</b> ${feature.name}<br>${feature.description}`;
-        // Check if user tier allows feature
-        const userTier = window.dashboardUserTier || 'basic';
-        if (["basic", "pro", "elite"].indexOf(userTier) < ["basic", "pro", "elite"].indexOf(feature.tier)) {
-            flag.innerHTML += `<br><button style='margin-top:8px;' onclick='window.location.href="store.html"'>Upgrade to Access</button>`;
-        } else {
-            flag.innerHTML += `<br><span style='color:green;'>Available on your tier</span>`;
-        }
-        document.body.appendChild(flag);
-    });
+            flag.innerHTML = `<b>New Feature:</b> ${feature.name}<br>${feature.description}`;
+            // Check if user tier allows feature
+            const userTier = window.dashboardUserTier || 'basic';
+            if (["basic", "pro", "elite"].indexOf(userTier) < ["basic", "pro", "elite"].indexOf(feature.tier)) {
+                flag.innerHTML += `<br><button style='margin-top:8px;' onclick='window.location.href="store.html"'>Upgrade to Access</button>`;
+            } else {
+                flag.innerHTML += `<br><span style='color:green;'>Available on your tier</span>`;
+            }
+            document.body.appendChild(flag);
+        });
 
         // --- Mapping Editor Panel Logic ---
         fetch('/mapping-info').then(async resp => {

@@ -27,6 +27,7 @@
                 <input type="email" placeholder="Email" required><br>
                 <input type="password" placeholder="Password" required><br>
                 <button type="submit">Login</button>
+                <button type="button" id="temp-password-btn">Forgot/Temp Password?</button>
             </form>
         </div>
         <div id="signup-form" class="tab-content" style="display:none;">
@@ -36,6 +37,32 @@
                 <input type="password" placeholder="Password" required><br>
                 <button type="submit">Signup</button>
             </form>
+        </div>
+
+        <!-- Two-Factor Temp Password Modal -->
+        <div id="temp-password-modal" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%); background:#fff; border:1px solid #ccc; padding:2em; z-index:1000; max-width:400px;">
+            <h3>Request Temporary Password</h3>
+            <div id="temp-step1">
+                <input type="text" id="temp-user-id" placeholder="User ID or Username" required><br>
+                <input type="email" id="temp-email" placeholder="Registered Email" required><br>
+                <input type="text" id="temp-phone" placeholder="Registered Phone (SMS)" required><br>
+                <button id="send-temp-request">Send Verification Codes</button>
+            </div>
+            <div id="temp-step2" style="display:none;">
+                <input type="text" id="sms-code" placeholder="Enter SMS Code"><br>
+                <button id="verify-sms">Verify SMS</button>
+                <div id="email-instructions" style="margin-top:1em; color:#555;"></div>
+            </div>
+            <div id="temp-step3" style="display:none;">
+                <button id="get-temp-password">Get Temporary Password</button>
+                <div id="temp-password-result" style="margin-top:1em; color:green;"></div>
+                <hr style="margin:1em 0;">
+                <div style="margin-top:1em;">
+                    <p style="color:#888; font-size:0.95em;">If support is unavailable (service load/holiday), you may request an automated temporary password to your registered email:</p>
+                    <button id="auto-temp-password-btn" style="background:#eee; color:#333;">Auto-Issue Temp Password</button>
+                </div>
+            </div>
+            <button id="close-temp-modal" style="margin-top:1em;">Close</button>
         </div>
     </main>
 </body>
