@@ -1,3 +1,55 @@
+/* High Contrast Mode for Accessibility */
+body.high-contrast, .high-contrast {
+	background: #000 !important;
+	color: #fff !important;
+}
+body.high-contrast a, .high-contrast a {
+	color: #0ff !important;
+	text-decoration: underline !important;
+}
+body.high-contrast button, .high-contrast button {
+	background: #000 !important;
+	color: #fff !important;
+	border: 2px solid #fff !important;
+}
+body.high-contrast input, .high-contrast select, .high-contrast textarea {
+	background: #222 !important;
+	color: #fff !important;
+	border: 2px solid #fff !important;
+}
+
+/* Focus Outline for Keyboard Navigation */
+button:focus, a:focus, input:focus, select:focus, textarea:focus {
+	outline: 3px solid #0078d4 !important;
+	outline-offset: 2px;
+	background: #e0f7fa !important;
+	color: #000 !important;
+}
+
+/* Skip to Content Link */
+.skip-to-content {
+	position: absolute;
+	left: -999px;
+	top: 0;
+	background: #0078d4;
+	color: #fff;
+	padding: 8px 16px;
+	z-index: 10000;
+	border-radius: 0 0 8px 8px;
+}
+.skip-to-content:focus {
+	left: 10px;
+	top: 10px;
+}
+
+/* ARIA Live Region for Status Updates */
+#aria-status {
+	position: absolute;
+	left: -9999px;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
 body {
 	font-family: Arial, sans-serif;
 	margin: 0;

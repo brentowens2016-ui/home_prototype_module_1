@@ -1,3 +1,29 @@
+// --- Accessibility: Skip to Content Link ---
+if (!document.querySelector('.skip-to-content')) {
+    const skipLink = document.createElement('a');
+    skipLink.href = '#dashboard-root';
+    skipLink.className = 'skip-to-content';
+    skipLink.innerText = 'Skip to main content';
+    document.body.insertBefore(skipLink, document.body.firstChild);
+}
+
+// --- Accessibility: ARIA Live Region for Status Updates ---
+if (!document.getElementById('aria-status')) {
+    const ariaStatus = document.createElement('div');
+    ariaStatus.id = 'aria-status';
+    ariaStatus.setAttribute('role', 'status');
+    ariaStatus.setAttribute('aria-live', 'polite');
+    document.body.appendChild(ariaStatus);
+}
+
+// Helper to update ARIA live region
+function announceStatus(message) {
+    const ariaStatus = document.getElementById('aria-status');
+    if (ariaStatus) {
+        ariaStatus.textContent = '';
+        setTimeout(() => { ariaStatus.textContent = message; }, 50);
+    }
+}
 // Helper: Prompt user to upgrade or abort if tier restriction is detected
 // --- Live Video/Audio Feed UI for Remote Monitoring ---
 function renderLiveFeedPanel() {
